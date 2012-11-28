@@ -1,3 +1,7 @@
+import hashlib
+import urllib
+import base64
+
 # WebToPay Library version.
 VERSION = '1.6'
 
@@ -25,7 +29,17 @@ def build_request(data):
 
     ported from WebToPay->buildRequest
     """
-    pass
+    # Validate data
+    if 'sign_password' not in data or 'projectid' not in data:
+        raise WebToPayException('sign_password or projectid is not provided')
+
+    projectid = data.pop('projectid')
+    password = data.pop('sign_password')
+
+    qs = _prepare_query_string(data, projectid)
+    qs64 = _safe_base64_encode(qs)
+    return {'data': qs64,
+            'sign': hashlib.md5(qs64 + password).hexdigest()}
 
 def get_redirect_to_payment_url(data):
     """ Builds request and returns url to payment page with generated request
@@ -48,3 +62,18 @@ def validate_and_parse_data(query, project_id, password):
     Raises WebToPayException
 
     """
+
+
+def _prepare_query_string(data, projectid):
+    params = {'projectid': projectid,
+              'version': VERSION}
+    params.update(data)
+    return urllib.urlencode(params)
+
+def _safe_base64_encode(s):
+    """Encodes string to url-safe-base64
+
+    Url-safe-base64 is same as base64, but + is replaced to - and / to _
+    """
+    s64 = base64.b64encode(s)
+    return s64.replace('+', '-').replace('/', '_')
