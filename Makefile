@@ -1,9 +1,8 @@
-APPENGINE_HOME=/opt/google_appengine
-
 .PHONY: run
 run:
-	$(APPENGINE_HOME)/dev_appserver.py --use_sqlite .
+	./bin/dev_appserver --use_sqlite src
 
 .PHONY: upload
 upload:
-	$(APPENGINE_HOME)/appcfg.py update .
+	./bin/buildout
+	./bin/appcfg update parts/gae
