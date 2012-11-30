@@ -54,6 +54,8 @@ def get_redirect_to_payment_url(data):
 
     ported from WebToPay->redirectToPayment()
     """
+    rq = build_request(data)
+    return '%s?%s' % (PAY_URL, urllib.urlencode(rq))
 
 def validate_and_parse_data(query, project_id, password):
     """ Parses request (query) data and validates its signature.
