@@ -7,6 +7,10 @@ import webapp2
 from soaringcoupons.model import list_coupon_types, get_coupon_type
 from soaringcoupons.template import write_template
 
+class UnconfiguredHandler(webapp2.RequestHandler):
+    def get(self):
+        write_template(self.response, 'unconfigured.html')
+
 class MainHandler(webapp2.RequestHandler):
     def get(self):
         values = {'coupon_types': list_coupon_types()}

@@ -1,5 +1,7 @@
 from __future__ import absolute_import
 
+from google.appengine.ext import db
+
 class CouponType(object):
     id = None
     price = None
@@ -24,3 +26,23 @@ def get_coupon_type(id):
             return ct
 
     raise ValueError("Coupon type %s not found")
+
+
+class Settings(db.Model):
+    webtopay_project_id = db.StringProperty(required=False, default='')
+    webtopay_password = db.StringProperty(required=False, default='')
+    debug = db.BooleanProperty(required=True, default=True)
+
+    def is_configured(self):
+        return bool(self.webtopay_project_id)
+
+def get_settings():
+    """ Return dictionary of all application settings.
+    """
+    entity = Settings.get_or_insert('main')
+    # save settings in case schema changed
+    entity.put()
+    settings = {key: getattr(entity, key)
+                for key in Settings.properties().keys()}
+    settings['configured'] = entity.is_configured()
+    return settings
