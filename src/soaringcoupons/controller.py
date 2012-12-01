@@ -31,10 +31,10 @@ class OrderHandler(webapp2.RequestHandler):
 
     def post(self, name):
         ct = get_coupon_type(name)
-        errors = self.validate()
-        if errors:
-            self.show_form(ct, errors)
-            return
+        #errors = self.validate()
+        #if errors:
+        #    self.show_form(ct, errors)
+        #    return
 
         data = self.prepare_webtopay_request(ct)
         logging.info('Starting payment transaction for %s' % data)

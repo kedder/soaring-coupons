@@ -29,6 +29,7 @@ setup(
                      ],
       packages = find_packages('src'),
       package_dir = {'':'src'},
+      extras_require = dict(test=['mock']),
       install_requires = ['setuptools',
                           ],
       include_package_data = True,
