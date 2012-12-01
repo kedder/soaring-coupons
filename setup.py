@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/python
 ###############################################################################
 #
 # Copyright 2011 by CipherHealth, LLC
@@ -13,7 +13,7 @@ with open('README.md') as f:
     long_description = f.read()
 
 setup(
-      name='soaringtickets',
+      name='soaringcoupons',
       version='1.0.0',
       author = "Andrey Lebedev",
       author_email = "andrey@lebedev.lt",
