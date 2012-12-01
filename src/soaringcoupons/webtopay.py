@@ -147,9 +147,9 @@ def _parse_data(data):
             for k, v in urlparse.parse_qsl(s)}
 
 def _prepare_query_string(data, projectid):
-    params = {'projectid': projectid,
-              'version': VERSION}
-    params.update(data)
+    params = {k: unicode(v).encode('utf-8') for k, v in data.items()}
+    params['projectid'] = projectid
+    params['version'] = VERSION
     return urllib.urlencode(params)
 
 def _safe_base64_encode(s):

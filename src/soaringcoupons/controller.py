@@ -64,13 +64,20 @@ class OrderHandler(webapp2.RequestHandler):
         return errors
 
     def prepare_webtopay_request(self, order):
+        orderid = 1  # TODO
         data = {}
         data['projectid'] = self.app.config['webtopay_project_id']
         data['sign_password'] = self.app.config['webtopay_password']
         data['cancelurl'] = webapp2.uri_for('wtp_cancel', _full=True)
         data['accepturl'] = webapp2.uri_for('wtp_accept', _full=True)
         data['callbackurl'] = webapp2.uri_for('wtp_callback', _full=True)
-        data['orderid'] = 1  # todo
+        data['orderid'] = orderid
+        data['lang'] = 'LIT'
+        data['amount'] = order.price * 100
+        data['currency'] = 'LTL'
+        data['country'] = 'LT'
+        data['paytext'] = (u'%s. Užsakymas nr. [order_nr] svetainėje [site_name]' \
+                           % (order.description))
         data['test'] = '1'
 
         return data

@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import doctest
 import mock
 from pprint import pprint
@@ -42,14 +44,16 @@ def doctest_prepare_query_string():
         ...         'accepturl': 'http://local.test/',
         ...         'cancelurl': 'http://local.test/',
         ...         'callbackurl': 'http://local.test/',
+        ...         'paytext': u'U\u017esakymas',
         ...         'amount': 100,
         ...         'some-other-parameter': 'abc'}
         >>> qs = webtopay._prepare_query_string(data, '123')
 
-        >>> expected = ('orderid=123&accepturl=http%3A%2F%2Flocal.test%2F'
-        ...             '&cancelurl=http%3A%2F%2Flocal.test%2F'
-        ...             '&callbackurl=http%3A%2F%2Flocal.test%2F&amount=100'
-        ...             '&some-other-parameter=abc&version=1.6&projectid=123')
+        >>> expected = ('orderid=123&accepturl=http%3A%2F%2Flocal.test%2F&'
+        ...             'cancelurl=http%3A%2F%2Flocal.test%2F&'
+        ...             'callbackurl=http%3A%2F%2Flocal.test%2F&'
+        ...             'paytext=U%C5%BEsakymas&amount=100&'
+        ...             'some-other-parameter=abc&version=1.6&projectid=123')
 
 
     Expected and produced query strings should be the same
@@ -61,6 +65,7 @@ def doctest_prepare_query_string():
          'callbackurl': ['http://local.test/'],
          'cancelurl': ['http://local.test/'],
          'orderid': ['123'],
+         'paytext': ['U\\xc5\\xbesakymas'],
          'projectid': ['123'],
          'some-other-parameter': ['abc'],
          'version': ['1.6']}
@@ -71,6 +76,7 @@ def doctest_prepare_query_string():
          'callbackurl': ['http://local.test/'],
          'cancelurl': ['http://local.test/'],
          'orderid': ['123'],
+         'paytext': ['U\\xc5\\xbesakymas'],
          'projectid': ['123'],
          'some-other-parameter': ['abc'],
          'version': ['1.6']}
