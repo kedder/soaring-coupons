@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
-from __future__ import absolute_import
-
 import re
-import webapp2
 import logging
+from email.header import Header
+
+import webapp2
+from google.appengine.api import mail
 
 from soaringcoupons import model
-from soaringcoupons.template import write_template
+from soaringcoupons.template import write_template, render_template
 from soaringcoupons import webtopay
 
 def get_routes():
@@ -15,6 +16,7 @@ def get_routes():
             webapp2.Route(r'/accept', handler=OrderAcceptHandler, name='wtp_accept'),
             webapp2.Route(r'/cancel', handler=OrderCancelHandler, name='wtp_cancel'),
             webapp2.Route(r'/callback', handler=OrderCallbackHandler, name='wtp_callback'),
+            webapp2.Route(r'/coupon/<id>', handler=OrderCancelHandler, name='coupon'),
             ]
 
 class UnconfiguredHandler(webapp2.RequestHandler):
@@ -50,9 +52,7 @@ class OrderHandler(webapp2.RequestHandler):
         data = self.prepare_webtopay_request(order, ct)
         logging.info('Starting payment transaction for %s' % data)
         url = webtopay.get_redirect_to_payment_url(data)
-        self.response.out.write('Order: %s' % order.order_id)
-        return
-        #webapp2.redirect(url, abort=True)
+        webapp2.redirect(url, abort=True)
 
     def show_form(self, ct, errors={}):
         values = {'request': self.request.params,
@@ -108,16 +108,34 @@ class OrderCallbackHandler(webapp2.RequestHandler):
         orderid = params['orderid']
         status = params['status']
         if status == webtopay.STATUS_SUCCESS:
-            paid_amount = int(params['payamount']) / 100.0
-            model.order_process(orderid, params['p_email'],
-                                paid_amount, params['paycurrency'],
-                                payer_name=params['name'],
-                                payer_surname=params['surename'],
-                                payment_provider=params['payment'])
+            order, coupon = self.process_order(orderid, params)
+            self.send_confirmation_email(coupon)
 
         self.response.out.write('OK')
         logging.info("Callback for order %s executed with status %s" % \
                      (orderid, status))
+
+    def process_order(selfm, orderid, params):
+        paid_amount = int(params['payamount']) / 100.0
+        return model.order_process(orderid, params['p_email'],
+                                   paid_amount, params['paycurrency'],
+                                   payer_name=params['name'],
+                                   payer_surname=params['surename'],
+                                   payment_provider=params['payment'])
+
+    def send_confirmation_email(self, coupon):
+        subject = u"Jūsų bilietas pagal užsakymą %s" % coupon.order.order_id
+        coupon_url = webapp2.uri_for('coupon',
+                                     id=coupon.coupon_id,
+                                     _full=True)
+        body = render_template('coupon_email.txt', {'coupon': coupon,
+                                                    'url': coupon_url})
+        mail.send_mail(sender="Vilniaus Aeroklubas <info@sklandymas.lt>",
+                       to=coupon.order.payer_email,
+                       subject=Header(subject, 'utf-8').encode(),
+                       body=body)
+
+
 
 class OrderAcceptHandler(webapp2.RequestHandler):
     def get(self):

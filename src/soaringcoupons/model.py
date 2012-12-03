@@ -151,6 +151,10 @@ class Coupon(db.Model):
                                 choices=set([ST_ACTIVE, ST_USED]))
     use_time = db.DateTimeProperty()
 
+    @property
+    def coupon_id(self):
+        return self.key().name()
+
 def coupon_get(key_name):
     return Coupon.get_by_key_name(key_name)
 

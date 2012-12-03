@@ -61,7 +61,11 @@ def doctest_callback_success():
         >>> coupon.status == model.Coupon.ST_ACTIVE
         True
 
+    Make sure email was sent
 
+        >>> messages = mail_stub.get_sent_messages()
+        >>> len(messages)
+        1
     """
 
 def create_testapp():
@@ -79,6 +83,9 @@ def setUp(test):
     test.testbed.activate()
     policy = datastore_stub_util.PseudoRandomHRConsistencyPolicy(probability=0)
     test.testbed.init_datastore_v3_stub(consistency_policy=policy)
+
+    test.testbed.init_mail_stub()
+    test.globs['mail_stub'] = test.testbed.get_stub(testbed.MAIL_SERVICE_NAME)
 
 def tearDown(test):
     test.testbed.deactivate()

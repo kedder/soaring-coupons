@@ -1,0 +1,6 @@
+Sveiki,
+
+Jūs galite sugeneruoti bilieta čia: {{ url }}
+
+-- 
+Vilniaus Aeroklubas
