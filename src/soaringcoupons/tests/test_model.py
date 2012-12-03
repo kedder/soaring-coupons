@@ -3,6 +3,7 @@
 import doctest
 
 from google.appengine.ext import testbed
+from google.appengine.datastore import datastore_stub_util
 
 from soaringcoupons import model
 
@@ -73,7 +74,9 @@ def doctest_order_process():
         'EUR'
 
     Check created coupon
-        >>> coupon.parent() == order
+        >>> coupon.order is not None
+        True
+        >>> coupon.order == order
         True
         >>> coupon.status == model.Coupon.ST_ACTIVE
         True
@@ -82,8 +85,8 @@ def doctest_order_process():
         u'1'
 
     Make sure coupon is in database
-        >>> model.Coupon.all().count()
-        1
+        >>> model.coupon_get('1').key() == coupon.key()
+        True
     """
 
 def doctest_order_process_twice():
@@ -113,7 +116,8 @@ def doctest_order_process_twice():
 def setUp(test):
     test.testbed = testbed.Testbed()
     test.testbed.activate()
-    test.testbed.init_datastore_v3_stub()
+    policy = datastore_stub_util.PseudoRandomHRConsistencyPolicy(probability=0)
+    test.testbed.init_datastore_v3_stub(consistency_policy=policy)
 
 def tearDown(test):
     test.testbed.deactivate()

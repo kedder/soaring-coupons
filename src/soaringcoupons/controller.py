@@ -106,15 +106,18 @@ class OrderCallbackHandler(webapp2.RequestHandler):
                                                   config['webtopay_password'])
 
         orderid = params['orderid']
-        paid_amount = int(params['payamount']) / 100.0
-        model.order_process(orderid, params['p_email'],
-                            paid_amount, params['paycurrency'],
-                            payer_name=params['name'],
-                            payer_surname=params['surename'],
-                            payment_provider=params['payment'])
+        status = params['status']
+        if status == webtopay.STATUS_SUCCESS:
+            paid_amount = int(params['payamount']) / 100.0
+            model.order_process(orderid, params['p_email'],
+                                paid_amount, params['paycurrency'],
+                                payer_name=params['name'],
+                                payer_surname=params['surename'],
+                                payment_provider=params['payment'])
 
         self.response.out.write('OK')
-        logging.info("Callback for order %s executed" % orderid)
+        logging.info("Callback for order %s executed with status %s" % \
+                     (orderid, status))
 
 class OrderAcceptHandler(webapp2.RequestHandler):
     def get(self):

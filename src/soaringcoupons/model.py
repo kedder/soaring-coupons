@@ -84,6 +84,9 @@ def order_gen_id():
     batch = db.allocate_ids(key, 1)
     return str(batch[0])
 
+def order_get(key_name):
+    return Order.get_by_key_name(key_name)
+
 @db.transactional
 def order_create(order_id, coupon_type, test=False):
     order = Order(key_name=order_id,
@@ -109,7 +112,7 @@ def order_cancel(order_id):
     db.put(order)
     return order
 
-@db.transactional
+@db.transactional(xg=True)
 def order_process(order_id, payer_email,
                   paid_amount, paid_currency,
                   payer_name=None, payer_surname=None, payment_provider=None):
@@ -132,7 +135,7 @@ def order_process(order_id, payer_email,
     order.payer_surname = payer_surname
     order.status = Order.ST_PAID
     order.payment_time = datetime.datetime.now()
-    db.put_async(order)
+    db.put(order)
 
     # create coupon
     assert order.quantity == 1
@@ -143,15 +146,15 @@ def order_process(order_id, payer_email,
 class Coupon(db.Model):
     ST_ACTIVE = 1
     ST_USED = 2
+    order = db.ReferenceProperty(Order)
     status = db.IntegerProperty(required=True, default=ST_ACTIVE,
                                 choices=set([ST_ACTIVE, ST_USED]))
     use_time = db.DateTimeProperty()
 
-    @property
-    def order(self):
-        return self.parent()
+def coupon_get(key_name):
+    return Coupon.get_by_key_name(key_name)
 
 def coupon_create(order):
-    coupon = Coupon(parent=order, key_name=order.order_id)
-    db.put_async(coupon)
+    coupon = Coupon(order=order, key_name=order.order_id)
+    db.put(coupon)
     return coupon

@@ -6,6 +6,7 @@ import urllib
 import webtest
 import webapp2
 from google.appengine.ext import testbed
+from google.appengine.datastore import datastore_stub_util
 
 from soaringcoupons import controller, webtopay, model
 
@@ -20,7 +21,7 @@ def doctest_home():
         True
     """
 
-def doctest_callback():
+def doctest_callback_success():
     """
     Create test order
 
@@ -32,6 +33,7 @@ def doctest_callback():
         ...        'payamount': '20000',
         ...        'paycurrency': 'LTL',
         ...        'p_email': 'test@test.com',
+        ...        'status': '1',
         ...        'name': 'Bill',
         ...        'surename': 'Gates',
         ...        'payment': 'test'}
@@ -44,6 +46,20 @@ def doctest_callback():
         >>> resp = app.get('/callback', params=params)
         >>> resp.body
         'OK'
+
+    Check order status
+
+        >>> order = model.order_get('1')
+        >>> order.status == model.Order.ST_PAID
+        True
+
+    Chcek coupon status
+
+        >>> coupon = model.coupon_get('1')
+        >>> coupon is not None
+        True
+        >>> coupon.status == model.Coupon.ST_ACTIVE
+        True
 
 
     """
@@ -61,7 +77,8 @@ def create_testapp():
 def setUp(test):
     test.testbed = testbed.Testbed()
     test.testbed.activate()
-    test.testbed.init_datastore_v3_stub()
+    policy = datastore_stub_util.PseudoRandomHRConsistencyPolicy(probability=0)
+    test.testbed.init_datastore_v3_stub(consistency_policy=policy)
 
 def tearDown(test):
     test.testbed.deactivate()

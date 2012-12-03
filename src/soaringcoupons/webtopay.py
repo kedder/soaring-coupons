@@ -12,6 +12,11 @@ PAY_URL = 'https://www.mokejimai.lt/pay/'
 # Server URL where we can get XML with payment method data.
 XML_URL = 'https://www.mokejimai.lt/new/api/paymentMethods/'
 
+STATUS_NOT_PAID = '0'
+STATUS_SUCCESS = '1'
+STATUS_DELAYED = '2'
+STATUS_EXTRA = '3'
+
 class WebToPayException(Exception):
     # Missing field.
     E_MISSING = 1
