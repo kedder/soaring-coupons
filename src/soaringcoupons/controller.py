@@ -9,6 +9,14 @@ from soaringcoupons import model
 from soaringcoupons.template import write_template
 from soaringcoupons import webtopay
 
+def get_routes():
+    return [webapp2.Route(r'/', handler=MainHandler, name='home'),
+            webapp2.Route(r'/order/<name>', handler=OrderHandler, name='order'),
+            webapp2.Route(r'/accept', handler=OrderAcceptHandler, name='wtp_accept'),
+            webapp2.Route(r'/cancel', handler=OrderCancelHandler, name='wtp_cancel'),
+            webapp2.Route(r'/callback', handler=OrderCallbackHandler, name='wtp_callback'),
+            ]
+
 class UnconfiguredHandler(webapp2.RequestHandler):
     def get(self):
         write_template(self.response, 'unconfigured.html')
@@ -92,9 +100,12 @@ class OrderCancelHandler(webapp2.RequestHandler):
 
 class OrderCallbackHandler(webapp2.RequestHandler):
     def get(self):
-        params = webtopay.validate_and_parse_data(self.request.params)
+        config = self.app.config
+        params = webtopay.validate_and_parse_data(self.request.params,
+                                                  config['webtopay_project_id'],
+                                                  config['webtopay_password'])
 
-        paid_amount = int(params['payamount']) / 100
+        paid_amount = int(params['payamount']) / 100.0
         model.order_process(params['orderid'], params['p_email'],
                             paid_amount, params['paycurrency'],
                             payer_name=params['name'],

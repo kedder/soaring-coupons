@@ -1,10 +1,13 @@
 # -*- coding: utf-8 -*-
 
 import doctest
+import urllib
+
 import webtest
 import webapp2
-
 from google.appengine.ext import testbed
+
+from soaringcoupons import controller, webtopay, model
 
 def doctest_home():
     """
@@ -17,13 +20,40 @@ def doctest_home():
         True
     """
 
+def doctest_callback():
+    """
+    Create test order
+
+        >>> ct = model.CouponType('test', 200.0, 'Test coupon')
+        >>> order = model.order_create('1', ct)
+
+    Prepare request as webtopay would
+        >>> req = {'orderid': '1',
+        ...        'payamount': '20000',
+        ...        'paycurrency': 'LTL',
+        ...        'p_email': 'test@test.com',
+        ...        'name': 'Bill',
+        ...        'surename': 'Gates',
+        ...        'payment': 'test'}
+        >>> data = webtopay._safe_base64_encode(
+        ...                 webtopay._prepare_query_string(req, 'test'))
+        >>> signature = webtopay._sign(data, 'pass')
+
+        >>> app = create_testapp()
+        >>> params = {'data': data, 'ss1': signature}
+        >>> resp = app.get('/callback', params=params)
+        >>> resp.body
+        'OK'
+
+
+    """
+
 def create_testapp():
     config = {'webtopay_project_id': 'test',
               'webtopay_password': 'pass',
               'debug': False}
-    from soaringcoupons.main import routes
-    app = webapp2.WSGIApplication(routes=routes,
-                                  debug=config['debug'],
+    app = webapp2.WSGIApplication(routes=controller.get_routes(),
+                                  debug=True,
                                   config=config)
     return webtest.TestApp(app)
 

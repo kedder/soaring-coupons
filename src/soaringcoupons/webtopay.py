@@ -85,7 +85,7 @@ def build_request(data):
     qs = _prepare_query_string(data, projectid)
     qs64 = _safe_base64_encode(qs)
     return {'data': qs64,
-            'sign': hashlib.md5(qs64 + password).hexdigest()}
+            'sign': _sign(qs64, password)}
 
 def get_redirect_to_payment_url(data):
     """ Builds request and returns url to payment page with generated request
@@ -136,6 +136,8 @@ def validate_and_parse_data(query, project_id, password):
 
     return request
 
+def _sign(data, password):
+    return hashlib.md5(data + password).hexdigest()
 
 def _is_valid_ss1(ss1, data, password):
     sig = hashlib.md5(data + password).hexdigest()
