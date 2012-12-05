@@ -1,6 +1,6 @@
-from __future__ import absolute_import
-
 import datetime
+import random
+import string
 
 from google.appengine.ext import db
 
@@ -29,6 +29,18 @@ def get_coupon_type(id):
 
     raise ValueError("Coupon type %s not found")
 
+
+class Counter(db.Model):
+    cnt = db.IntegerProperty(default=0L, indexed=False)
+
+@db.transactional
+def counter_next():
+    c = Counter.get_by_key_name('c0')
+    if c is None:
+        c = Counter(key_name='c0')
+    c.cnt += 1
+    c.put()
+    return c.cnt
 
 class Settings(db.Model):
     """ System settings
@@ -80,9 +92,10 @@ class Order(db.Model):
 def order_gen_id():
     """Generate unique order id.
     """
-    key = db.Key.from_path('Order', 1)
-    batch = db.allocate_ids(key, 1)
-    return str(batch[0])
+    cnt = counter_next()
+    # add some random digits to make order ids less predictable
+    seed = ''.join(random.choice(string.digits) for i in range(6))
+    return "%s%s" % (cnt, seed)
 
 def order_get(key_name):
     return Order.get_by_key_name(key_name)

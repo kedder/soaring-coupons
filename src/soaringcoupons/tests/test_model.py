@@ -1,11 +1,28 @@
 # -*- coding: utf-8 -*-
 
 import doctest
+import random
 
+import mock
 from google.appengine.ext import testbed
 from google.appengine.datastore import datastore_stub_util
 
 from soaringcoupons import model
+
+def doctest_order_gen_id():
+    """
+    Mock random.choice to return always '0'
+        >>> x = mock.patch('random.choice').start()
+
+        >>> random.choice.return_value = '0'
+
+        >>> model.order_gen_id()
+        '1000000'
+        >>> model.order_gen_id()
+        '2000000'
+        >>> model.order_gen_id()
+        '3000000'
+    """
 
 def doctest_order_create():
     """
@@ -113,6 +130,23 @@ def doctest_order_process_twice():
 
     """
 
+def doctest_counter():
+    """ Naive test for counter
+
+        >>> model.counter_next()
+        1L
+        >>> model.counter_next()
+        2L
+        >>> model.counter_next()
+        3L
+        >>> model.counter_next()
+        4L
+        >>> model.counter_next()
+        5L
+        >>> model.counter_next()
+        6L
+    """
+
 def setUp(test):
     test.testbed = testbed.Testbed()
     test.testbed.activate()
@@ -121,6 +155,7 @@ def setUp(test):
 
 def tearDown(test):
     test.testbed.deactivate()
+    mock.patch.stopall()
 
 DOCTEST_OPTION_FLAGS = (doctest.NORMALIZE_WHITESPACE|
                         doctest.ELLIPSIS|
