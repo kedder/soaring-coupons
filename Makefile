@@ -1,6 +1,6 @@
 .PHONY: run
 run:
-	./bin/dev_appserver --use_sqlite src
+	./bin/dev_appserver --use_sqlite --high_replication parts/gae
 
 .PHONY: upload
 upload:
