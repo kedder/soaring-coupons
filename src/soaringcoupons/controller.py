@@ -14,10 +14,9 @@ from soaringcoupons import webtopay
 def get_routes():
     return [webapp2.Route(r'/', handler=MainHandler, name='home'),
             webapp2.Route(r'/order/<name>', handler=OrderHandler, name='order'),
-            webapp2.Route(r'/accept', handler=OrderAcceptHandler, name='wtp_accept'),
             webapp2.Route(r'/cancel', handler=OrderCancelHandler, name='wtp_cancel'),
             webapp2.Route(r'/callback', handler=OrderCallbackHandler, name='wtp_callback'),
-            webapp2.Route(r'/coupon/<id>', handler=OrderCancelHandler, name='coupon'),
+            webapp2.Route(r'/coupon/<id>', handler=CouponHandler, name='coupon'),
             webapp2.Route(r'/qr/<id>', handler=CouponQrHandler, name='qr'),
             ]
 
@@ -83,7 +82,7 @@ class OrderHandler(webapp2.RequestHandler):
         data['projectid'] = self.app.config['webtopay_project_id']
         data['sign_password'] = self.app.config['webtopay_password']
         data['cancelurl'] = webapp2.uri_for('wtp_cancel', _full=True)
-        data['accepturl'] = webapp2.uri_for('wtp_accept', _full=True)
+        data['accepturl'] = webapp2.uri_for('coupon', id=order.order_id, _full=True)
         data['callbackurl'] = webapp2.uri_for('wtp_callback', _full=True)
         data['orderid'] = order.order_id
         data['lang'] = 'LIT'
@@ -117,7 +116,7 @@ class OrderCallbackHandler(webapp2.RequestHandler):
         logging.info("Callback for order %s executed with status %s" % \
                      (orderid, status))
 
-    def process_order(selfm, orderid, params):
+    def process_order(self, orderid, params):
         paid_amount = int(params['payamount']) / 100.0
         return model.order_process(orderid, params['p_email'],
                                    paid_amount, params['paycurrency'],
@@ -137,6 +136,18 @@ class OrderCallbackHandler(webapp2.RequestHandler):
                        subject=Header(subject, 'utf-8').encode(),
                        body=body)
 
+class CouponHandler(webapp2.RequestHandler):
+    def get(self, id):
+        coupon = model.coupon_get(id)
+        if coupon is None:
+            webapp2.abort(404)
+
+        values = {'coupon': coupon,
+                  'qr': webapp2.uri_for('qr', id=id)
+                  }
+
+        return write_template(self.response, 'coupon.html', values)
+
 class CouponQrHandler(webapp2.RequestHandler):
     def get(self, id):
         url = webapp2.uri_for('coupon', id=id, _full=True)
@@ -148,8 +159,3 @@ class CouponQrHandler(webapp2.RequestHandler):
 
         self.response.headers.add("Content-Type", "image/png")
         img.save(self.response.out)
-
-
-class OrderAcceptHandler(webapp2.RequestHandler):
-    def get(self):
-        self.response.out.write('Payment accepted')
