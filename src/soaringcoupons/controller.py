@@ -4,6 +4,7 @@ import logging
 from email.header import Header
 
 import webapp2
+import qrcode
 from google.appengine.api import mail
 
 from soaringcoupons import model
@@ -17,6 +18,7 @@ def get_routes():
             webapp2.Route(r'/cancel', handler=OrderCancelHandler, name='wtp_cancel'),
             webapp2.Route(r'/callback', handler=OrderCallbackHandler, name='wtp_callback'),
             webapp2.Route(r'/coupon/<id>', handler=OrderCancelHandler, name='coupon'),
+            webapp2.Route(r'/qr/<id>', handler=CouponQrHandler, name='qr'),
             ]
 
 class UnconfiguredHandler(webapp2.RequestHandler):
@@ -135,6 +137,17 @@ class OrderCallbackHandler(webapp2.RequestHandler):
                        subject=Header(subject, 'utf-8').encode(),
                        body=body)
 
+class CouponQrHandler(webapp2.RequestHandler):
+    def get(self, id):
+        url = webapp2.uri_for('coupon', id=id, _full=True)
+        qr = qrcode.QRCode(box_size=6,
+                           border=4)
+        qr.add_data(url)
+        qr.make(fit=True)
+        img = qr.make_image()
+
+        self.response.headers.add("Content-Type", "image/png")
+        img.save(self.response.out)
 
 
 class OrderAcceptHandler(webapp2.RequestHandler):

@@ -31,6 +31,8 @@ setup(
       package_dir = {'':'src'},
       extras_require = dict(test=['mock', 'webtest']),
       install_requires = ['setuptools',
+                          'Pillow',
+                          'qrcode'
                           ],
       include_package_data = True,
       zip_safe = False
