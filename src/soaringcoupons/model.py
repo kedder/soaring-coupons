@@ -92,6 +92,9 @@ class Order(db.Model):
     def is_paid(self):
         return self.status == Order.ST_PAID
 
+    def get_coupon_type(self):
+        return get_coupon_type(self.coupon_type)
+
 def order_gen_id():
     """Generate unique order id.
     """

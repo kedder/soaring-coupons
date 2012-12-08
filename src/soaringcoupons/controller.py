@@ -155,6 +155,7 @@ class CouponHandler(webapp2.RequestHandler):
             webapp2.abort(404)
 
         values = {'coupon': coupon,
+                  'coupon_type': coupon.order.get_coupon_type(),
                   'qr': webapp2.uri_for('qr', id=id)
                   }
 
