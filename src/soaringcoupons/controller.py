@@ -16,6 +16,7 @@ def get_routes():
             webapp2.Route(r'/order/<name>', handler=OrderHandler, name='order'),
             webapp2.Route(r'/cancel', handler=OrderCancelHandler, name='wtp_cancel'),
             webapp2.Route(r'/callback', handler=OrderCallbackHandler, name='wtp_callback'),
+            webapp2.Route(r'/accept/<id>', handler=OrderAcceptHandler, name='wtp_accept'),
             webapp2.Route(r'/coupon/<id>', handler=CouponHandler, name='coupon'),
             webapp2.Route(r'/qr/<id>', handler=CouponQrHandler, name='qr'),
             webapp2.Route(r'/check/<id>', handler=CheckHandler, name='check'),
@@ -136,6 +137,15 @@ class OrderCallbackHandler(webapp2.RequestHandler):
                        to=coupon.order.payer_email,
                        subject=Header(subject, 'utf-8').encode(),
                        body=body)
+
+class OrderAcceptHandler(webapp2.RequestHandler):
+    def get(self, id):
+        order = model.order_get(id)
+        if order is None:
+            webapp2.abort(404)
+
+        values = {'order': order}
+        write_template(self.response, 'accept.html', values)
 
 class CouponHandler(webapp2.RequestHandler):
     def get(self, id):
