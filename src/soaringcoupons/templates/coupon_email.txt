@@ -1,6 +1,7 @@
 Sveiki,
 
-Jūs galite sugeneruoti bilieta čia: {{ url }}
+Mes gavome apmokėjimą pagal užsakymą {{ coupon.order.order_id }}.  Jūs galite
+atspausdinti bilieta čia: {{ url }}.
 
 -- 
 Vilniaus Aeroklubas

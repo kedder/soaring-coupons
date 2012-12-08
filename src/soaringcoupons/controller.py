@@ -128,9 +128,7 @@ class OrderCallbackHandler(webapp2.RequestHandler):
 
     def send_confirmation_email(self, coupon):
         subject = u"Jūsų bilietas pagal užsakymą %s" % coupon.order.order_id
-        coupon_url = webapp2.uri_for('coupon',
-                                     id=coupon.coupon_id,
-                                     _full=True)
+        coupon_url = webapp2.uri_for('coupon', id=coupon.coupon_id, _full=True)
         body = render_template('coupon_email.txt', {'coupon': coupon,
                                                     'url': coupon_url})
         mail.send_mail(sender="Vilniaus Aeroklubas <info@sklandymas.lt>",
