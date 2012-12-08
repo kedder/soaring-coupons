@@ -99,7 +99,7 @@ class OrderHandler(webapp2.RequestHandler):
 
 class OrderCancelHandler(webapp2.RequestHandler):
     def get(self):
-        pass
+        write_template(self.response, 'cancel.html')
 
 class OrderCallbackHandler(webapp2.RequestHandler):
     def get(self):
