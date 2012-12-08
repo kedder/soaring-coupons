@@ -89,6 +89,9 @@ class Order(db.Model):
     def order_id(self):
         return self.key().name()
 
+    def is_paid(self):
+        return self.status == Order.ST_PAID
+
 def order_gen_id():
     """Generate unique order id.
     """

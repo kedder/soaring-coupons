@@ -144,7 +144,8 @@ class OrderAcceptHandler(webapp2.RequestHandler):
         if order is None:
             webapp2.abort(404)
 
-        values = {'order': order}
+        values = {'order': order,
+                  'coupon_url': webapp2.uri_for('coupon', id=order.order_id)}
         write_template(self.response, 'accept.html', values)
 
 class CouponHandler(webapp2.RequestHandler):

@@ -1,4 +1,22 @@
 {% extends "base_generic.html" %}
 {% block main %}
-Bilietas {{ order.order_id }}: {{ order.status }}
+
+<h2>Užsakymas {{order.order_id}} priimtas</h2>
+
+{% if order.is_paid() %}
+
+  <p>Užsakymas yra priimtas ir apmokėtas. Dabar galite
+  <a href="{{ coupon_url }}">atspausdinti Jūsų bilietą</a>. Nuoroda į
+  bilieto puslapį taip pat atsiuntėme el.  pašto adresu {{ order.payer_email }}.</p>
+
+{% else %}
+
+  <p>Užsakymas yra priimtas, tačiau informacijos apie amokėjimą dar neturime.
+  Kai tik gausime informaciją apie amokėjimą (ši informacija bus perduota mums
+  automatiškai po to, kai apmokėsite užsakymą Jūsų pasirinktu būdų), adresu {{
+  order.payer_email }}
+  išsiusime jums nuorodą į Jūsų bilietą.</p>
+
+{% endif  %}
+
 {% endblock %}
