@@ -18,6 +18,7 @@ def get_routes():
             webapp2.Route(r'/callback', handler=OrderCallbackHandler, name='wtp_callback'),
             webapp2.Route(r'/coupon/<id>', handler=CouponHandler, name='coupon'),
             webapp2.Route(r'/qr/<id>', handler=CouponQrHandler, name='qr'),
+            webapp2.Route(r'/check/<id>', handler=CheckHandler, name='check'),
             ]
 
 class UnconfiguredHandler(webapp2.RequestHandler):
@@ -146,11 +147,11 @@ class CouponHandler(webapp2.RequestHandler):
                   'qr': webapp2.uri_for('qr', id=id)
                   }
 
-        return write_template(self.response, 'coupon.html', values)
+        write_template(self.response, 'coupon.html', values)
 
 class CouponQrHandler(webapp2.RequestHandler):
     def get(self, id):
-        url = webapp2.uri_for('coupon', id=id, _full=True)
+        url = webapp2.uri_for('check', id=id, _full=True)
         qr = qrcode.QRCode(box_size=6,
                            border=4)
         qr.add_data(url)
@@ -159,3 +160,12 @@ class CouponQrHandler(webapp2.RequestHandler):
 
         self.response.headers.add("Content-Type", "image/png")
         img.save(self.response.out)
+
+class CheckHandler(webapp2.RequestHandler):
+    def get(self, id):
+        coupon = model.coupon_get(id)
+        if coupon is None:
+            webapp2.abort(404)
+
+        values = {'coupon': coupon}
+        write_template(self.response, 'check.html', values)
