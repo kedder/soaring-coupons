@@ -1,9 +1,10 @@
 {% extends "base_generic.html" %}
 {% block main %}
-<h2>Order {{ coupon_type.id }} </h2>
-<p>Price: {{ coupon_type.price }} </p>
+<h2>Užsakomas {{ coupon_type.description }} </h2>
+<p>Kaina: {{ coupon_type.price }} Lt</p>
 
 <form method="post">
+    <!--
   <p>
   Vardas:
   {{ errors.name | error }}
@@ -20,6 +21,7 @@
   {{ errors.email | error}}
   <input name='email' type='text' value='{{ request.email }}' />
   </p>
+  -->
 
   <p>
   <input type='submit' value='Nusipirkti' />
