@@ -1,0 +1,18 @@
+body {
+  background-image: url(/static/images/mainbg.jpg);
+  background-repeat: no-repeat;
+  background-position: center top;
+  padding-top: 30pt;
+}
+
+.important {
+  color: #c00;
+  padding: 6pt;
+  border: 2px solid #c00;
+}
+
+@media print {
+  .noprint {
+      display:none;
+  }
+}
