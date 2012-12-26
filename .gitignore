@@ -4,3 +4,4 @@ develop-eggs
 bin
 src/*.egg-info
 downloads
+tmp
