@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import datetime
 import random
 import string
@@ -15,8 +16,8 @@ class CouponType(object):
         self.description = description
 
 
-coupon_types = [CouponType('training', 150.0, 'Mokomasis skrydis'),
-                CouponType('acro', 300.0, 'Akrobatinis skrydis')
+coupon_types = [CouponType('training', 150.0, u'Apžvalginis skrydis'),
+                CouponType('acro', 300.0, u'Pilotažinis skrydis')
                 ]
 
 def list_coupon_types():
