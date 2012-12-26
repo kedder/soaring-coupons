@@ -20,6 +20,7 @@ def get_routes():
             webapp2.Route(r'/coupon/<id>', handler=CouponHandler, name='coupon'),
             webapp2.Route(r'/qr/<id>', handler=CouponQrHandler, name='qr'),
             webapp2.Route(r'/check/<id>', handler=CheckHandler, name='check'),
+            webapp2.Route(r'/admin/list', handler=CouponListHandler, name='check'),
             ]
 
 class UnconfiguredHandler(webapp2.RequestHandler):
@@ -181,3 +182,9 @@ class CheckHandler(webapp2.RequestHandler):
 
         values = {'coupon': coupon}
         write_template(self.response, 'check.html', values)
+
+class CouponListHandler(webapp2.RequestHandler):
+    def get(self):
+        values = {'coupons': model.coupon_list_active(),
+                  'coupon_count': model.coupon_count_active()}
+        write_template(self.response, 'coupon_list.html', values)

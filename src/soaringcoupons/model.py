@@ -181,3 +181,9 @@ def coupon_create(order):
     coupon = Coupon(order=order, key_name=order.order_id)
     db.put(coupon)
     return coupon
+
+def coupon_list_active():
+    return Coupon.all().filter('status =', Coupon.ST_ACTIVE).order('__key__')
+
+def coupon_count_active():
+    return coupon_list_active().count()

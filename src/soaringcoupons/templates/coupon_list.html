@@ -1,0 +1,25 @@
+{% extends "base_generic.html" %}
+{% block main %}
+
+<h2>Galiojantys bilietai</h2>
+<p>Galiojančių bilietų: <strong>{{ coupon_count }}</strong> vnt.</p>
+<table class='condensed'>
+  <tr>
+    <th>Nr</th>
+    <th>Email</th>
+    <th>Tipas</th>
+    <th>Pirkimo data</th>
+    <th>Testinis?</th>
+  </tr>
+  {% for c in coupons %}
+  <tr>
+    <td>{{ c.coupon_id }}</td>
+    <td><a href="mailto:{{ c.order.payer_email }}">{{ c.order.payer_email }}</a></td>
+    <td>{{ c.order.coupon_type }}</td>
+    <td>{{ c.order.payment_time }}</td>
+    <td>{{ c.order.test }}</td>
+  </tr>
+  {% endfor %}
+</table>
+
+{% endblock %}

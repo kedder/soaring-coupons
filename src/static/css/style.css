@@ -5,6 +5,10 @@ body {
   padding-top: 30pt;
 }
 
+table {
+  background: white;
+}
+
 .important {
   color: #c00;
   padding: 6pt;
