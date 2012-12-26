@@ -19,7 +19,8 @@ def get_routes():
             webapp2.Route(r'/accept/<id>', handler=OrderAcceptHandler, name='wtp_accept'),
             webapp2.Route(r'/coupon/<id>', handler=CouponHandler, name='coupon'),
             webapp2.Route(r'/qr/<id>', handler=CouponQrHandler, name='qr'),
-            webapp2.Route(r'/check/<id>', handler=CheckHandler, name='check'),
+
+            webapp2.Route(r'/admin/check/<id>', handler=CheckHandler, name='check'),
             webapp2.Route(r'/admin/list', handler=CouponListHandler, name='check'),
             ]
 
