@@ -21,7 +21,7 @@ def get_routes():
             webapp2.Route(r'/qr/<id>', handler=CouponQrHandler, name='qr'),
 
             webapp2.Route(r'/admin/check/<id>', handler=CheckHandler, name='check'),
-            webapp2.Route(r'/admin/list', handler=CouponListHandler, name='check'),
+            webapp2.Route(r'/admin/list', handler=CouponListHandler, name='list_active'),
             ]
 
 class UnconfiguredHandler(webapp2.RequestHandler):
