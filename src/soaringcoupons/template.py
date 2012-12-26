@@ -15,5 +15,7 @@ def write_template(response, name, values={}):
 
 loader = jinja2.FileSystemLoader(os.path.join(os.path.dirname(__file__),
                                               'templates'))
-jinja_environment = jinja2.Environment(autoescape=True, loader=loader)
+jinja_environment = jinja2.Environment(autoescape=True,
+                                       undefined=jinja2.StrictUndefined,
+                                       loader=loader)
 jinja_environment.filters['error'] = filter_error
