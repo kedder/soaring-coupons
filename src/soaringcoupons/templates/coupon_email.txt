@@ -1,7 +1,7 @@
 Sveiki,
 
 Mes gavome apmokėjimą pagal užsakymą {{ coupon.order.order_id }}.  Jūs galite
-atspausdinti bilieta čia: {{ url }}.
+atspausdinti kvietimą čia: {{ url }}.
 
 -- 
 Vilniaus Aeroklubas

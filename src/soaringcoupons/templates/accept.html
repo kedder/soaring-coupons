@@ -6,8 +6,8 @@
 {% if order.is_paid() %}
 
   <p>Užsakymas yra priimtas ir apmokėtas. Dabar galite
-  <a href="{{ coupon_url }}">atspausdinti Jūsų bilietą</a>. Nuoroda į
-  bilieto puslapį taip pat atsiuntėme el.  pašto adresu {{ order.payer_email }}.</p>
+  <a href="{{ coupon_url }}">atspausdinti Jūsų kvietimą</a>. Nuoroda į
+  kvietimo puslapį taip pat atsiuntėme el.  pašto adresu {{ order.payer_email }}.</p>
 
 {% else %}
 
@@ -15,7 +15,7 @@
   Kai tik gausime informaciją apie amokėjimą (ši informacija bus perduota mums
   automatiškai po to, kai apmokėsite užsakymą Jūsų pasirinktu būdų), adresu {{
   order.payer_email }}
-  išsiusime jums nuorodą į Jūsų bilietą.</p>
+  išsiusime jums nuorodą į Jūsų kvietimą.</p>
 
 {% endif  %}
 
