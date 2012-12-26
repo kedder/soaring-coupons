@@ -12,6 +12,10 @@ handlers:
 - url: /static
   static_dir: static/
 
+- url: /admin/.*
+  login: admin
+  script: soaringcoupons.main.app
+
 - url: .*
   script: soaringcoupons.main.app
 
