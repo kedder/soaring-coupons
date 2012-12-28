@@ -39,7 +39,8 @@ ERR_INVALID_EMAIL = u'Nekorektiškas el. pašto adresas'
 
 EMAIL_RE = re.compile(r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$')
 
-EMAIL_SENDER = "Vilniaus Aeroklubas <aeroklubas@sklandymas.lt>"
+EMAIL_SENDER = "Vilniaus Aeroklubas <vilniaus.aeroklubas@gmail.com>"
+EMAIL_REPLYTO = "Vilniaus Aeroklubas <aeroklubas@sklandymas.lt>"
 
 class OrderHandler(webapp2.RequestHandler):
     def get(self, name):
@@ -136,6 +137,7 @@ class OrderCallbackHandler(webapp2.RequestHandler):
         body = render_template('coupon_email.txt', {'coupon': coupon,
                                                     'url': coupon_url})
         mail.send_mail(sender=EMAIL_SENDER,
+                       reply_to=EMAIL_REPLYTO,
                        to=coupon.order.payer_email,
                        subject=Header(subject, 'utf-8').encode(),
                        body=body)
