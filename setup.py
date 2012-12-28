@@ -32,6 +32,8 @@ setup(
       extras_require = dict(test=['mock', 'webtest']),
       install_requires = ['setuptools',
                           'Pillow',
+                          'jinja2',
+                          'webapp2',
                           'qrcode'
                           ],
       include_package_data = True,
