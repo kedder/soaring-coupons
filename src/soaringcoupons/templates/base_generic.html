@@ -10,7 +10,7 @@
 	<meta name="verify-webtopay" content="1cae60c5943ec345ba6abb625dceb4e6">
 
 	<link rel="stylesheet" href="/static/css/base.css">
-	<link rel="stylesheet" href="/static/css/skeleton.css">
+<!--	<link rel="stylesheet" href="/static/css/skeleton.css">-->
 	<link rel="stylesheet" href="/static/css/layout.css">
 	<link rel="stylesheet" href="/static/css/tables.css">
 	<link rel="stylesheet" href="/static/css/style.css">
@@ -23,14 +23,14 @@
   </head>
   <body>
     <div class="container">
-      <div class="sixteen columns">
-        <div class="userinfo">
+      <div class="userinfo">
         {% if user.logged %}
-          <strong>{{ user.nickname }}</strong> | 
-          <a href={{ user.logout_url }}>Baigti darbą</a>
+        <strong>{{ user.nickname }}</strong> | 
+        <a href={{ user.logout_url }}>Baigti darbą</a>
         {% endif %}
-        </div>
+      </div>
 
+      <div class="main">
         {% block main %}
         {% endblock %}
       </div>

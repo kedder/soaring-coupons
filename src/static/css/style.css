@@ -2,7 +2,6 @@ body {
   background-image: url(/static/images/mainbg.jpg);
   background-repeat: no-repeat;
   background-position: center top;
-  padding-top: 30pt;
 }
 
 table {
@@ -19,8 +18,46 @@ table {
   border: 2px solid #c00;
 }
 
+/* Base layout */
+
+.main {
+   padding-top: 30px
+}
+
+.container {
+  width: 960px;
+  margin: 0 auto;
+}
+
+.rightblock {
+  float: right;
+  margin: 0 0 20px 20px;
+}
+
+/* Tablet portrait */
+@media only screen and (min-width: 768px) and (max-width: 959px) {
+  .container {
+    width: 768px;
+  }
+}
+
+/* Mobile portrait */
+@media only screen and (max-width: 767px) {
+  .container {
+    width: 300px;
+  }
+  .rightblock {
+    float: none;
+    margin: 0;
+  }
+}
+
 @media print {
   .noprint {
       display:none;
+  }
+
+  .container {
+    width: 100%;
   }
 }
