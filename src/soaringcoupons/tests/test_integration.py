@@ -81,11 +81,14 @@ def create_testapp():
 def setUp(test):
     test.testbed = testbed.Testbed()
     test.testbed.activate()
+
     policy = datastore_stub_util.PseudoRandomHRConsistencyPolicy(probability=0)
     test.testbed.init_datastore_v3_stub(consistency_policy=policy)
 
     test.testbed.init_mail_stub()
     test.globs['mail_stub'] = test.testbed.get_stub(testbed.MAIL_SERVICE_NAME)
+
+    test.testbed.init_user_stub()
 
 def tearDown(test):
     test.testbed.deactivate()
