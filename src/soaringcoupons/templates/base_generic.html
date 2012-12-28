@@ -24,6 +24,13 @@
   <body>
     <div class="container">
       <div class="sixteen columns">
+        <div class="userinfo">
+        {% if user.logged %}
+          <strong>{{ user.nickname }}</strong> | 
+          <a href={{ user.logout_url }}>Baigti darbą</a>
+        {% endif %}
+        </div>
+
         {% block main %}
         {% endblock %}
       </div>

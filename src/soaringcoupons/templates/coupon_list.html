@@ -9,15 +9,17 @@
     <th>Email</th>
     <th>Tipas</th>
     <th>Pirkimo data</th>
+    <th>Sumokėta</th>
     <th>Testinis?</th>
   </tr>
   {% for c in coupons %}
   <tr>
-    <td>{{ c.coupon_id }}</td>
+    <td><a href='{{ check_url(c.coupon_id) }}'>{{ c.coupon_id }}</a></td>
     <td><a href="mailto:{{ c.order.payer_email }}">{{ c.order.payer_email }}</a></td>
-    <td>{{ c.order.coupon_type }}</td>
-    <td>{{ c.order.payment_time }}</td>
-    <td>{{ c.order.test }}</td>
+    <td>{{ c.order.coupon_type | coupon_type }}</td>
+    <td>{{ c.order.payment_time | datetime }}</td>
+    <td>{{ c.order.paid_amount }} {{ c.order.paid_currency }}</td>
+    <td>{{ c.order.test | yesno }}</td>
   </tr>
   {% endfor %}
 </table>

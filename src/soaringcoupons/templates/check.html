@@ -1,4 +1,10 @@
 {% extends "base_generic.html" %}
 {% block main %}
-Kvietimas {{ coupon.coupon_id }}: {{ coupon.status }}
+<h2>Kvietimas {{ coupon.coupon_id }}: galioja</h2>
+
+<p>Tipas: {{ coupon.order.coupon_type }} </p>
+<p>Kaina: {{ coupon.order.price }} {{ coupon.order.currency }} </p>
+<p>Pirkėjas: {{ coupon.order.payer_email }}</p>
+
+<button>Panaudoti</button>
 {% endblock %}

@@ -9,6 +9,10 @@ table {
   background: white;
 }
 
+.userinfo {
+  float: right;
+}
+
 .important {
   color: #c00;
   padding: 6pt;
