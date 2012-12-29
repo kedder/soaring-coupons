@@ -5,7 +5,7 @@
 <!--[if (gte IE 9)|!(IE)]><!--><html lang="en"> <!--<![endif]-->
   <head>
 	<meta charset="utf-8">
-	<title>Soaring Coupons</title>
+  <title>{% block title %}{%endblock %} Pramoginiai skrydžiai</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 	<meta name="verify-webtopay" content="1cae60c5943ec345ba6abb625dceb4e6">
 
@@ -25,7 +25,7 @@
     <div class="container">
       <div class="userinfo">
         {% if user.logged %}
-        <strong>{{ user.nickname }}</strong> | 
+        <strong>{{ user.nickname }}</strong> |
         <a href={{ user.logout_url }}>Baigti darbą</a>
         {% endif %}
       </div>

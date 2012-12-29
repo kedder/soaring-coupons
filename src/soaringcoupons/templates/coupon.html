@@ -1,7 +1,10 @@
 {% extends "base_generic.html" %}
+
+{% block title %}Kvietimas {{coupon.coupon_id}} |{% endblock %}
+
 {% block main %}
 
-<h2>Kvietimas {{ coupon.coupon_id }}: {{ coupon_type.description }}</h2>
+<h2>Kvietimas {{ coupon.coupon_id }}: {{ coupon_type.description | lower }}</h2>
 
 <p class='noprint important'>Atspausdinkite šitą kvietimą arba išsaugokite jo numerį:
 {{ coupon.coupon_id }}.</p>
@@ -11,7 +14,8 @@
     <img src='{{ qr }}' />
 </div>
 
-<p>Šis kvietimas suteikia teisę atlikti vieną skrydį ({{ coupon_type.description }})
+<p>Šis kvietimas suteikia teisę atlikti vieną skrydį ({{
+coupon_type.description | lower }})
 Paluknio aerodrome.</p>
 
 <h3>Kada atvažiuoti?</h3>
