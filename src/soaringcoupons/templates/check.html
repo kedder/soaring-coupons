@@ -3,13 +3,41 @@
 {% block title %}Kvietimas {{coupon.coupon_id}} |{% endblock %}
 
 {% block main %}
-<h2>Kvietimas {{ coupon.coupon_id }}: galioja</h2>
-
+<h3>{{ coupon.order.coupon_type | coupon_type }} </h3>
 <form method="post">
-    <p>Tipas: {{ coupon.order.coupon_type }} </p>
-    <p>Kaina: {{ coupon.order.price }} {{ coupon.order.currency }} </p>
-    <p>Pirkėjas: {{ coupon.order.payer_email }}</p>
+    {% if coupon.order.test %}
+    <div class='important'>Dėmėsio! Kvietimas yra <strong>testinis</strong>.</div>
+    {% endif %}
 
-    <input type='submit' value='Panaudoti' />
+    <dl>
+        <dt>Kvietimo nr</dt>
+        <dd>{{ coupon.coupon_id }}</dd>
+
+        <dt>Kaina</dt>
+        <dd>{{ coupon.order.price }} {{ coupon.order.currency }} </dd>
+
+        <dt>Sumokėta</dt>
+        <dd>{{ coupon.order.paid_amount }} {{ coupon.order.paid_currency }} </dd>
+
+        <dt>Pirkėjas</dt>
+        <dd><a href="{{ coupon.order.payer_email }}">{{ coupon.order.payer_email }}</a></dd>
+
+        <dt>Pirkimo laikas</dt>
+        <dd>{{ coupon.order.payment_time | datetime }}</dd>
+
+        {% if not coupon.active %}
+        <dt>Panaudojimo laikas</dt>
+        <dd>{{ coupon.use_time | datetime }}</dd>
+        {% endif %}
+    </dl>
+
+    {% if coupon.active %}
+        <p>Kvietimas galioja.</p>
+        <input type='submit' style='width: 100%; height: 60px' value='Panaudoti' />
+    {% else %}
+        <div class="important">
+            Kvietimas jau panaudotas.
+        </div>
+    {% endif %}
 </form>
 {% endblock %}

@@ -179,6 +179,10 @@ class Coupon(db.Model):
     def coupon_id(self):
         return self.key().name()
 
+    @property
+    def active(self):
+        return self.status == Coupon.ST_ACTIVE
+
 def coupon_get(key_name):
     return Coupon.get_by_key_name(key_name)
 
@@ -191,7 +195,7 @@ def coupon_create(order):
 @db.transactional
 def coupon_use(coupon_id):
     c = coupon_get(coupon_id)
-    if c.status != Coupon.ST_ACTIVE:
+    if not c.active:
         raise ValueError("Cannot use non-active coupon %s" % coupon_id)
     c.status = Coupon.ST_USED
     c.use_time = datetime.datetime.now()
