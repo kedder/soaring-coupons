@@ -18,13 +18,19 @@ table {
   border: 2px solid #c00;
 }
 
+.status {
+  background-color: infobackground;
+  padding: 6px 12px;
+  border-bottom: 1px outset infobackground;
+}
+
 /* Base layout */
 
 .main {
    padding-top: 30px
 }
 
-.container {
+.container, .status .inner {
   width: 960px;
   margin: 0 auto;
 }
@@ -36,14 +42,14 @@ table {
 
 /* Tablet portrait */
 @media only screen and (min-width: 768px) and (max-width: 959px) {
-  .container {
+  .container, .status .inner {
     width: 768px;
   }
 }
 
 /* Mobile portrait */
 @media only screen and (max-width: 767px) {
-  .container {
+  .container, .status .inner {
     width: 300px;
   }
   .rightblock {
@@ -59,5 +65,9 @@ table {
 
   .container {
     width: 100%;
+  }
+
+  .status {
+    display: none;
   }
 }

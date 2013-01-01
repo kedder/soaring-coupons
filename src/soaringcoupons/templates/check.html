@@ -5,9 +5,11 @@
 {% block main %}
 <h2>Kvietimas {{ coupon.coupon_id }}: galioja</h2>
 
-<p>Tipas: {{ coupon.order.coupon_type }} </p>
-<p>Kaina: {{ coupon.order.price }} {{ coupon.order.currency }} </p>
-<p>Pirkėjas: {{ coupon.order.payer_email }}</p>
+<form method="post">
+    <p>Tipas: {{ coupon.order.coupon_type }} </p>
+    <p>Kaina: {{ coupon.order.price }} {{ coupon.order.currency }} </p>
+    <p>Pirkėjas: {{ coupon.order.payer_email }}</p>
 
-<button>Panaudoti</button>
+    <input type='submit' value='Panaudoti' />
+</form>
 {% endblock %}

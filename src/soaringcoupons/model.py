@@ -2,6 +2,7 @@
 import datetime
 import random
 import string
+import logging
 
 from google.appengine.ext import db
 
@@ -117,6 +118,7 @@ def order_create(order_id, coupon_type, test=False):
                   create_time = datetime.datetime.now(),
                   status=Order.ST_PENDING)
     db.put(order)
+    logging.info("Order %s (%s, test=%s) created" % (order_id, coupon_type, test))
     return order
 
 @db.transactional
@@ -130,6 +132,7 @@ def order_cancel(order_id):
         raise ValueError("Cannot cancel non-pending order %s" % order_id)
     order.status = Order.ST_CANCELLED
     db.put(order)
+    logging.info("Order %s cancelled" % order.order_id)
     return order
 
 @db.transactional(xg=True)
@@ -156,6 +159,7 @@ def order_process(order_id, payer_email,
     order.status = Order.ST_PAID
     order.payment_time = datetime.datetime.now()
     db.put(order)
+    logging.info("Order %s processed" % order.order_id)
 
     # create coupon
     assert order.quantity == 1
@@ -181,7 +185,19 @@ def coupon_get(key_name):
 def coupon_create(order):
     coupon = Coupon(order=order, key_name=order.order_id)
     db.put(coupon)
+    logging.info("Coupon %s created" % coupon.coupon_id)
     return coupon
+
+@db.transactional
+def coupon_use(coupon_id):
+    c = coupon_get(coupon_id)
+    if c.status != Coupon.ST_ACTIVE:
+        raise ValueError("Cannot use non-active coupon %s" % coupon_id)
+    c.status = Coupon.ST_USED
+    c.use_time = datetime.datetime.now()
+    db.put(c)
+    logging.info("Coupon %s used" % coupon_id)
+    return c
 
 def coupon_list_active():
     return Coupon.all().filter('status =', Coupon.ST_ACTIVE).order('__key__')

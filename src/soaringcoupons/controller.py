@@ -186,10 +186,16 @@ class CheckHandler(webapp2.RequestHandler):
         values = {'coupon': coupon}
         write_template(self.response, 'check.html', values)
 
+    def post(self, id):
+        model.coupon_use(id)
+        msg = "Kvietimas panaudotas"
+        webapp2.redirect(webapp2.uri_for('list_active', msg=msg), abort=True)
+
 class CouponListHandler(webapp2.RequestHandler):
     def get(self):
         values = {'coupons': model.coupon_list_active(),
                   'coupon_count': model.coupon_count_active(),
                   'check_url': lambda id: webapp2.uri_for('check', id=id)}
+        logging.info("RENDERING TEMPLATE %s", values)
         write_template(self.response, 'coupon_list.html', values)
 
