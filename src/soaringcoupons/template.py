@@ -15,14 +15,17 @@ def make_globals():
                        'admin': users.is_current_user_admin(),
                        'nickname': user.nickname() if user else None,
                        'logout_url': users.create_logout_url(home)
-                       }
+                       },
+              'request': webapp2.get_request().params
               }
 
     return values
 
 def render_template(name, values={}):
-    g = make_globals()
-    return jinja_environment.get_template(name, globals=g).render(values)
+    ns = make_globals()
+    ns.update(values)
+    tpl = jinja_environment.get_template(name)
+    return tpl.render(ns)
 
 def write_template(response, name, values={}):
     response.out.write(render_template(name, values))
