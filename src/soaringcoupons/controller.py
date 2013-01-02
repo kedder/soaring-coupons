@@ -196,6 +196,5 @@ class CouponListHandler(webapp2.RequestHandler):
         values = {'coupons': model.coupon_list_active(),
                   'coupon_count': model.coupon_count_active(),
                   'check_url': lambda id: webapp2.uri_for('check', id=id)}
-        logging.info("RENDERING TEMPLATE %s", values)
         write_template(self.response, 'coupon_list.html', values)
 
