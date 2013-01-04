@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import doctest
+import datetime
 import random
 
 import mock
@@ -9,19 +10,25 @@ from google.appengine.datastore import datastore_stub_util
 
 from soaringcoupons import model
 
+class FakeDateTime(datetime.datetime):
+    @classmethod
+    def now(self):
+        return datetime.datetime(2012, 1, 4)
+
 def doctest_order_gen_id():
     """
     Mock random.choice to return always '0'
-        >>> x = mock.patch('random.choice').start()
+        >>> x = mock.patch('datetime.datetime', FakeDateTime).start()
 
+        >>> x = mock.patch('random.choice').start()
         >>> random.choice.return_value = '0'
 
         >>> model.order_gen_id()
-        '1000000'
+        '121000000'
         >>> model.order_gen_id()
-        '2000000'
+        '122000000'
         >>> model.order_gen_id()
-        '3000000'
+        '123000000'
     """
 
 def doctest_order_create():

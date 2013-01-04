@@ -104,7 +104,8 @@ def order_gen_id():
     cnt = counter_next()
     # add some random digits to make order ids less predictable
     seed = ''.join(random.choice(string.digits) for i in range(6))
-    return "%s%s" % (cnt, seed)
+    year = datetime.datetime.now().strftime('%y')
+    return "%s%s%s" % (year, cnt, seed)
 
 def order_get(key_name):
     return Order.get_by_key_name(key_name)
