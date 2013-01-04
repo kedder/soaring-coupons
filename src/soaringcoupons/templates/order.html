@@ -1,7 +1,7 @@
 {% extends "base_generic.html" %}
-{% block title %}{{coupon_type.description}} |{% endblock %}
+{% block title %}{{coupon_type.title}} |{% endblock %}
 {% block main %}
-<h2>Užsakomas {{ coupon_type.description | lower }} </h2>
+<h2>Užsakomas {{ coupon_type.title | lower }} </h2>
 <p>Kaina: {{ coupon_type.price }} Lt</p>
 
 <form method="post">

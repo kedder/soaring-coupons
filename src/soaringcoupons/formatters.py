@@ -24,7 +24,7 @@ def format_yesno(value):
 def format_coupon_type(value):
     try:
         ct = model.get_coupon_type(value)
-        return ct.description
+        return ct.title
     except ValueError:
         return '?'
 

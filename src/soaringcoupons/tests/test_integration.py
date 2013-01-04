@@ -25,7 +25,7 @@ def doctest_callback_success():
     """
     Create test order
 
-        >>> ct = model.CouponType('test', 200.0, 'Test coupon')
+        >>> ct = model.CouponType('test', 200.0, 'Test coupon', 'Test coupon')
         >>> order = model.order_create('1', ct)
 
     Prepare request as webtopay would

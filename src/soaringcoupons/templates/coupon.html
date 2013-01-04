@@ -4,7 +4,7 @@
 
 {% block main %}
 
-<h2>Kvietimas {{ coupon.coupon_id }}: {{ coupon_type.description | lower }}</h2>
+<h2>Kvietimas {{ coupon.coupon_id }}: {{ coupon_type.title | lower }}</h2>
 
 <p class='noprint important'>Atspausdinkite šitą kvietimą arba išsaugokite jo numerį:
 {{ coupon.coupon_id }}.</p>
@@ -15,7 +15,7 @@
 </div>
 
 <p>Šis kvietimas suteikia teisę atlikti vieną skrydį ({{
-coupon_type.description | lower }})
+coupon_type.title | lower }})
 Paluknio aerodrome.</p>
 
 <h3>Kada atvažiuoti?</h3>

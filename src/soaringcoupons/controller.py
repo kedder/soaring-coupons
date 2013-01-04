@@ -102,7 +102,7 @@ class OrderHandler(webapp2.RequestHandler):
         data['currency'] = 'LTL'
         data['country'] = 'LT'
         data['paytext'] = (u'%s. Užsakymas nr. [order_nr] svetainėje [site_name]' \
-                           % (ct.description))
+                           % (ct.title))
         data['test'] = order.test
 
         return data

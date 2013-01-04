@@ -2,7 +2,7 @@
 {% block main %}
 <ul>
 {% for ct in coupon_types %}
-<li><a href='order/{{ct.id}}'>{{ct.description}}</a>, {{ct.price}} Lt</li>
+<li><a href='order/{{ct.id}}'>{{ct.title}}</a>, {{ct.price}} Lt</li>
 {% endfor %}
 </ul>
 {% endblock %}

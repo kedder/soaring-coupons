@@ -33,7 +33,7 @@ def doctest_order_gen_id():
 
 def doctest_order_create():
     """
-        >>> ct = model.CouponType('test', 300.0, "Test flight")
+        >>> ct = model.CouponType('test', 300.0, "Test flight", "Test flight")
         >>> order = model.order_create(model.order_gen_id(), ct, test=True)
 
         >>> order.coupon_type
@@ -52,7 +52,7 @@ def doctest_order_cancel():
     """
     Create order
 
-        >>> ct = model.CouponType('test', 300.0, "Test flight")
+        >>> ct = model.CouponType('test', 300.0, "Test flight", "Test flight")
         >>> order = model.order_create(model.order_gen_id(), ct, test=True)
 
     Cancelling order changes its status
@@ -72,7 +72,7 @@ def doctest_order_process():
     """
     Create sample order
 
-        >>> ct = model.CouponType('test', 300.0, "Test flight")
+        >>> ct = model.CouponType('test', 300.0, "Test flight", "Test flight")
         >>> order = model.order_create('1', ct, test=True)
 
     Process successful payment
@@ -117,7 +117,7 @@ def doctest_order_process_twice():
     """
     Create sample order
 
-        >>> ct = model.CouponType('test', 300.0, "Test flight")
+        >>> ct = model.CouponType('test', 300.0, "Test flight", "Test flight")
         >>> order = model.order_create('2', ct, test=True)
 
     Process successful payment
