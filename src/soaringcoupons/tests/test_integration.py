@@ -17,7 +17,7 @@ def doctest_home():
         >>> resp.status
         '200 OK'
 
-        >>> 'Soaring Coupons' in resp
+        >>> 'Pramoginiai skryd\xc5\xbeiai' in resp
         True
     """
 
@@ -71,6 +71,7 @@ def doctest_callback_success():
 def create_testapp():
     config = {'webtopay_project_id': 'test',
               'webtopay_password': 'pass',
+              'home_url': None,
               'debug': False}
     app = webapp2.WSGIApplication(routes=controller.get_routes(),
                                   debug=True,
