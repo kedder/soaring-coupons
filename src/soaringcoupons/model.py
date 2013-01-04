@@ -50,6 +50,7 @@ class Settings(db.Model):
     webtopay_project_id = db.StringProperty(required=False, default='')
     webtopay_password = db.StringProperty(required=False, default='')
     debug = db.BooleanProperty(required=True, default=True)
+    home_url = db.StringProperty(required=False, default='')
 
     def is_configured(self):
         return bool(self.webtopay_project_id)

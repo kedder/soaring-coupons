@@ -30,6 +30,11 @@ class UnconfiguredHandler(webapp2.RequestHandler):
 
 class MainHandler(webapp2.RequestHandler):
     def get(self):
+        home_url = self.app.config['home_url']
+        if home_url:
+            webapp2.redirect(home_url, abort=True)
+            return
+
         values = {'coupon_types': model.list_coupon_types()}
         write_template(self.response, 'index.html', values)
 
