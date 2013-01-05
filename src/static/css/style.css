@@ -89,3 +89,9 @@ dd {
     width: 100%;
   }
 }
+
+@media handheld {
+  .nohandheld {
+    display: none;
+  }
+}
