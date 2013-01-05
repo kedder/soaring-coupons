@@ -4,7 +4,7 @@ Siunčiame Jums Vilniaus aeroklubo Kvietimą skrydžiui sklandytuvu (užsakymas 
 coupon.order.order_id }}). Atvažiuodami skristi, būtinai su savimi turėkite
 atspausdintą Kvietimą. Atspausdinti Kvietimą galitečia:
 
-{{ url }}.
+{{ url }}
 
 *Svarbu!* Kvietimas galioja 1 skrydžiui Paluknio aerodrome, 1 asmeniui iki šių
 metų rugsėjo 30d. Skristi neleidžiama apsvaigusiems nuo alkoholio, narkotinių
