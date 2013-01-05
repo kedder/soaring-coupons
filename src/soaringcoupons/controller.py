@@ -94,7 +94,7 @@ class OrderHandler(webapp2.RequestHandler):
         data['projectid'] = self.app.config['webtopay_project_id']
         data['sign_password'] = self.app.config['webtopay_password']
         data['cancelurl'] = webapp2.uri_for('wtp_cancel', _full=True)
-        data['accepturl'] = webapp2.uri_for('coupon', id=order.order_id, _full=True)
+        data['accepturl'] = webapp2.uri_for('accept', id=order.order_id, _full=True)
         data['callbackurl'] = webapp2.uri_for('wtp_callback', _full=True)
         data['orderid'] = order.order_id
         data['lang'] = 'LIT'
