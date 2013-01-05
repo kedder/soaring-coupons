@@ -4,7 +4,10 @@
 
 {% block main %}
 
-<h2>{{ coupon.coupon_id }}. {{ coupon_type.title}}</h2>
+<div class="logo">
+	<img class="logo" alt="Vilniaus Aeroklubas" src="/static/images/logo.png" />
+</div>
+<h3>{{ coupon.coupon_id }}. {{ coupon_type.title}}</h3>
 
 <p class='noprint important'>Atspausdinkite šį kvietimą. Parodykite šį kvietimą
 skrydžių vadovui prieš skrydį.</p>
@@ -17,14 +20,14 @@ skrydžių vadovui prieš skrydį.</p>
 <p>Kviečiame į Paluknio aerodromą patirti skrydžio jausmą bemotoriu sklandytuvu,
 pasigrožėti gamta iš viršaus, taip susipažįstant su sklandymo sportu.</p>
 
-<h3>Apie pramogą</h3>
+<h4>Apie pramogą</h4>
 
 <p>{{ coupon_type.description }} Tačiau aerodrome pasiruoškite praleisti
 daugiau laiko &mdash; laukdami skrydžio ar dalindamiesi įspūdžiais po jo,
 pasigrožėsite kitų sklandytuvų bei lėktuvų skrydžiais, galėsite apsilankyti
 kavinėje ar surengti savo vaišes aerodromo gamtoje.</p>
 
-<h3>Kaip mus rasti?</h3>
+<h4>Kaip mus rasti?</h4>
 
 <p>Paluknio aerodromas įsikūręs 35 kilometre šalia plento važiuojant iš
 Vilniaus link Druskininkų keliu A4. Pravažiavę Paluknio miestelį, kairėje
@@ -32,18 +35,18 @@ pusėje pamatysite aerodromą. Įvažiavimas &mdash; keliuku šalia iškelto
 sklandytuvo. Žemėlapį rasite čia: <a
 	href="http://goo.gl/maps/edazK">http://goo.gl/maps/edazK</a>.</p>
 
-<h3>Ką apsirengti?</h3>
+<h4>Ką apsirengti?</h4>
 
 <p>Aprangai ypatingų reikalavimų nėra &mdash; kad būtų patogu ir nekristų
 apavas nuo kojų.</p>
 
 
-<h3>Kada skraidome?</h3>
+<h4>Kada skraidome?</h4>
 
 <p>Skraidome nuo gegužės iki rugsėjo pabaigos palankiomis oro sąlygomis &mdash;
 nelyjant, nesant labai stipriam vėjui ar karščiui virš +30&deg;C.</p>
 
-<h3>Svarbu!</h3>
+<h4>Svarbu!</h4>
 
 <p>Kvietimas galioja 1 skrydžiui 1 asmeniui iki šių metų rugsėjo 30d.
 Kviečiame atvykti Jums patogiu laiku. Skristi neleidžiama apsvaigusiems nuo
@@ -53,8 +56,6 @@ važiuodami į aerodromą skrydį suderinkite paskambinę telefonu <span
 arba <span itemprop="telephone"><a href="tel:+37061515060">+370 615
 		15060</a></span>.</p>
 
-
-<hr />
 <p>Kvietimas {{ coupon.coupon_id}} įsigytas {{ coupon.order.payment_time | date
 }}.</p>
 

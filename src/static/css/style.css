@@ -18,6 +18,10 @@ table {
   border: 2px solid #c00;
 }
 
+.logo {
+  text-align: center;
+}
+
 .status {
   background-color: infobackground;
   padding: 6px 12px;
@@ -83,9 +87,5 @@ dd {
 
   .container {
     width: 100%;
-  }
-
-  .status {
-    display: none;
   }
 }

@@ -23,10 +23,10 @@
   </head>
   <body>
     {% if request.msg is defined %}
-      <div class="status"><div class='inner'>{{ request.msg }}</div></div>
+      <div class="status noprint"><div class='inner'>{{ request.msg }}</div></div>
     {% endif %}
     <div class="container">
-      <div class="userinfo">
+      <div class="userinfo noprint">
         {% if user.logged %}
         <strong>{{ user.nickname }}</strong> |
         <a href={{ user.logout_url }}>Baigti darbą</a>
