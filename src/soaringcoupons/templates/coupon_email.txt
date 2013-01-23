@@ -1,16 +1,17 @@
 Sveiki!
 
-Siunčiame Jums Vilniaus aeroklubo kvietimą skrydžiui sklandytuvu (užsakymas {{
-coupon.order.order_id }}). Atvažiuodami skristi, būtinai su savimi turėkite
-atspausdintą kvietimą. Atspausdinti kvietimą galite čia:
+Siunčiame Jums Vilniaus aeroklubo kvietimą skrydžiui sklandytuvu
+(užsakymas {{ coupon.order.order_id }}). Atvažiuodami skristi, būtinai
+su savimi turėkite atspausdintą kvietimą. Atspausdinti kvietimą galite
+čia:
 
 {{ url }}
 
-*Svarbu!* Kvietimas galioja 1 skrydžiui Paluknio aerodrome, 1 asmeniui iki šių
-metų rugsėjo 30d. Skristi neleidžiama apsvaigusiems nuo alkoholio, narkotinių
-medžiagų ar turintiems sveikatos sutrikimų. Būtinai prieš važiuodami į
-aerodromą skrydį suderinkite paskambinę telefonu +370 633 02222 arba +370 615
-15060.
+*Svarbu!* Kvietimas galioja 1 skrydžiui Paluknio aerodrome, 1 asmeniui
+iki šių metų rugsėjo 30d. Skristi neleidžiama apsvaigusiems nuo
+alkoholio, narkotinių medžiagų ar turintiems sveikatos sutrikimų.
+Būtinai prieš važiuodami į aerodromą skrydį suderinkite paskambinę
+telefonu +370 633 02222 arba +370 615 15060.
 
 Jei turite klausimų, kreipkitės el. paštu aeroklubas@sklandymas.lt arba
 telefonu +370 615 15060.
