@@ -125,6 +125,8 @@ class OrderCallbackHandler(webapp2.RequestHandler):
         if status == webtopay.STATUS_SUCCESS:
             order, coupon = self.process_order(orderid, params)
             self.send_confirmation_email(coupon)
+        else:
+            logging.info("Request unprocessed. params: %s" % params)
 
         self.response.out.write('OK')
 
