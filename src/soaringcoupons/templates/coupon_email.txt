@@ -1,8 +1,8 @@
 Sveiki!
 
-Siunčiame Jums Vilniaus aeroklubo Kvietimą skrydžiui sklandytuvu (užsakymas {{
+Siunčiame Jums Vilniaus aeroklubo kvietimą skrydžiui sklandytuvu (užsakymas {{
 coupon.order.order_id }}). Atvažiuodami skristi, būtinai su savimi turėkite
-atspausdintą Kvietimą. Atspausdinti Kvietimą galitečia:
+atspausdintą kvietimą. Atspausdinti kvietimą galite čia:
 
 {{ url }}
 
