@@ -3,6 +3,7 @@ import datetime
 import random
 import string
 import logging
+import textwrap
 from collections import namedtuple
 
 from google.appengine.ext import db
@@ -22,19 +23,26 @@ CouponType = namedtuple('CouponType', ['id', 'price', 'title', 'description'])
 
 coupon_types = [CouponType('training', 150.0,
                            u'Apžvalginis skrydis sklandytuvu',
-                           u'Sklandytuvas išvelkamas autoišvilktuvu ir '
-                           u'atkabinamas maždaug 300 m. aukštyje. Su patyrusiu '
-                           u'pilotu apskrisite apžvalginį ratą virš aerodromo. '
-                           u'Skrydis trunka apie 5 min.'
+                           textwrap.dedent(u"""
+                                           Sklandytuvas išvelkamas
+                                           autoišvilktuvu ir maždaug 300 m.
+                                           aukštyje atkabinamas.  Pakilę su
+                                           patyrusiu pilotu, virš aerodromo
+                                           apsuksite apžvalginį ratą. Skrydis
+                                           truks apie 5 min.
+                                           """)
                            ),
                 CouponType('acro', 300.0,
-                           u'Pilotažinis skrydis sklandytuvu',
-                           u'Sklandytuvas išvelkamas lėktuvu ir atkabinamas '
-                           u'aerodromo rajone. Skrisdami su patyrusiu pilotu, '
-                           u'susipažinsite su sklandytuvo skrydžio galimybėmis, '
-                           u'pamėginsite patys pilotuoti sklandytuvą, '
-                           u'pasigrožėsite gamta iš aukštai. Skrydis trunka '
-                           u'20-30 min.'
+                           u'Pilotavimo skrydis sklandytuvu',
+                           textwrap.dedent(u"""
+                                           Sklandytuvas išvelkamas lėktuvu
+                                           ir aerodromo rajone atkabinamas.
+                                           Skrisdami su patyrusiu pilotu,
+                                           pasigrožėsite gamta , susipažinsite
+                                           su sklandytuvo skrydžio galimybėmis,
+                                           pamėginsite patys pilotuoti. Skrydis
+                                           trunka 20-30 min.
+                                           """)
                            )
                 ]
 
