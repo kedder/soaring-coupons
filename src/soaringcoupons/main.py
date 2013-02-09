@@ -6,7 +6,7 @@ from soaringcoupons import model
 settings = model.get_settings()
 
 if not settings['configured']:
-    routes = [(r'/', controller.UnconfiguredHandler)]
+    routes = [webapp2.Route(r'/', controller.UnconfiguredHandler, name='home')]
 else:
     routes = controller.get_routes()
 
