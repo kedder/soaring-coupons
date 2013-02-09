@@ -80,10 +80,10 @@ class Settings(db.Model):
     def is_configured(self):
         return bool(self.webtopay_project_id)
 
-def get_settings():
+def get_settings(version='main'):
     """ Return dictionary of all application settings.
     """
-    entity = Settings.get_or_insert('main')
+    entity = Settings.get_or_insert(version)
     # save settings in case schema changed
     entity.put()
     settings = {key: getattr(entity, key)

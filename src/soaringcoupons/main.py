@@ -1,10 +1,11 @@
+import os
 import webapp2
 
 from soaringcoupons import controller
 from soaringcoupons import model
 
-settings = model.get_settings()
-
+version, ts = os.environ['CURRENT_VERSION_ID'].split('.')
+settings = model.get_settings(version)
 if not settings['configured']:
     routes = [webapp2.Route(r'/', controller.UnconfiguredHandler, name='home')]
 else:

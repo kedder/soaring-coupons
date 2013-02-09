@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import os
 import re
 import logging
 from email.header import Header

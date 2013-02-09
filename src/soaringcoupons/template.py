@@ -10,13 +10,17 @@ from soaringcoupons import formatters
 def make_globals():
     user = users.get_current_user()
     home = webapp2.uri_for('home')
+    version = os.environ['CURRENT_VERSION_ID']
+    majorversion, minorversion = version.split('.')
 
     values = {'user': {'logged': user is not None,
                        'admin': users.is_current_user_admin(),
                        'nickname': user.nickname() if user else None,
                        'logout_url': users.create_logout_url(home)
                        },
-              'request': webapp2.get_request().params
+              'request': webapp2.get_request().params,
+              'version': version,
+              'majorversion': majorversion,
               }
 
     return values
