@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
-
-import doctest
+import unittest
 import datetime
 import random
 
@@ -15,160 +14,107 @@ class FakeDateTime(datetime.datetime):
     def now(self):
         return datetime.datetime(2012, 1, 4)
 
-def doctest_order_gen_id():
-    """
-    Mock random.choice to return always '0'
-        >>> x = mock.patch('datetime.datetime', FakeDateTime).start()
+class ModelTestCase(unittest.TestCase):
 
-        >>> x = mock.patch('random.choice').start()
-        >>> random.choice.return_value = '0'
+    def test_order_gen_id(self):
+        # Mock random.choice to return always '0'
+        mock.patch('datetime.datetime', FakeDateTime).start()
+        mock.patch('random.choice').start()
+        random.choice.return_value = '0'
 
-        >>> model.order_gen_id()
-        '121000000'
-        >>> model.order_gen_id()
-        '122000000'
-        >>> model.order_gen_id()
-        '123000000'
-    """
+        self.assertEqual(model.order_gen_id(), '121000000')
+        self.assertEqual(model.order_gen_id(), '122000000')
+        self.assertEqual(model.order_gen_id(), '123000000')
 
-def doctest_order_create():
-    """
-        >>> ct = model.CouponType('test', 300.0, "Test flight", "Test flight")
-        >>> order = model.order_create(model.order_gen_id(), ct, test=True)
+    def test_order_create(self):
+        ct = model.CouponType('test', 300.0, "Test flight", "Test flight")
+        order = model.order_create(model.order_gen_id(), ct, test=True)
 
-        >>> order.coupon_type
-        'test'
-        >>> order.price
-        300.0
-        >>> order.status == model.Order.ST_PENDING
-        True
-        >>> order.currency
-        'LTL'
-        >>> order.create_time
-        datetime.datetime(...)
-    """
+        self.assertEqual(order.coupon_type, 'test')
+        self.assertEqual(order.price, 300.0)
+        self.assertEqual(order.status == model.Order.ST_PENDING, True)
+        self.assertEqual(order.currency, 'LTL')
+        self.assertIsNotNone(order.create_time)
 
-def doctest_order_cancel():
-    """
-    Create order
+    def test_order_cancel(self):
+        # Create order
+        ct = model.CouponType('test', 300.0, "Test flight", "Test flight")
+        order = model.order_create(model.order_gen_id(), ct, test=True)
 
-        >>> ct = model.CouponType('test', 300.0, "Test flight", "Test flight")
-        >>> order = model.order_create(model.order_gen_id(), ct, test=True)
+        # Cancelling order changes its status
+        cancelled = model.order_cancel(order.key().name())
+        self.assertEqual(cancelled.status, model.Order.ST_CANCELLED)
 
-    Cancelling order changes its status
-        >>> cancelled = model.order_cancel(order.key().name())
-        >>> cancelled.status == model.Order.ST_CANCELLED
-        True
-
-    You cannot cancel already cancelled order
-        >>> model.order_cancel(order.key().name())
-        Traceback (most recent call last):
-        ...
-        ValueError: Cannot cancel non-pending order ...
-
-"""
-
-def doctest_order_process():
-    """
-    Create sample order
-
-        >>> ct = model.CouponType('test', 300.0, "Test flight", "Test flight")
-        >>> order = model.order_create('1', ct, test=True)
-
-    Process successful payment
-
-        >>> order, coupon = model.order_process(order.order_id,
-        ...                                     'test@test.com', 100.0, 'EUR',
-        ...                                     payer_name='Andrey',
-        ...                                     payer_surname='Lebedev',
-        ...                                     payment_provider='dnb')
-        >>> order.status == model.Order.ST_PAID
-        True
-        >>> order.payer_name
-        'Andrey'
-        >>> order.payer_surname
-        'Lebedev'
-        >>> order.payer_email
-        u'test@test.com'
-        >>> order.payment_time != None
-        True
-        >>> order.paid_amount
-        100.0
-        >>> order.paid_currency
-        'EUR'
-
-    Check created coupon
-        >>> coupon.order is not None
-        True
-        >>> coupon.order == order
-        True
-        >>> coupon.status == model.Coupon.ST_ACTIVE
-        True
-        >>> coupon.use_time
-        >>> coupon.key().name()
-        u'1'
-
-    Make sure coupon is in database
-        >>> model.coupon_get('1').key() == coupon.key()
-        True
-    """
-
-def doctest_order_process_twice():
-    """
-    Create sample order
-
-        >>> ct = model.CouponType('test', 300.0, "Test flight", "Test flight")
-        >>> order = model.order_create('2', ct, test=True)
-
-    Process successful payment
-
-        >>> order, coupon = model.order_process(order.order_id,
-        ...                                     'test@test.com', 100.0, 'EUR',
-        ...                                     payer_name='Andrey',
-        ...                                     payer_surname='Lebedev',
-        ...                                     payment_provider='dnb')
-
-    Attempt to process payment second time and expect the exception
-        >>> model.order_process(order.order_id, 'test@test.com', 100.0, 'EUR')
-        Traceback (most recent call last):
-        ...
-        ValueError: Cannot process non-pending order ...
+        # You cannot cancel already cancelled order
+        with self.assertRaisesRegexp(ValueError,
+                                     r'Cannot cancel non-pending order .*'):
+            model.order_cancel(order.key().name())
 
 
-    """
+    def test_order_process(self):
+        # Create sample order
+        ct = model.CouponType('test', 300.0, "Test flight", "Test flight")
+        order = model.order_create('1', ct, test=True)
 
-def doctest_counter():
-    """ Naive test for counter
+        # Process successful payment
 
-        >>> model.counter_next()
-        1L
-        >>> model.counter_next()
-        2L
-        >>> model.counter_next()
-        3L
-        >>> model.counter_next()
-        4L
-        >>> model.counter_next()
-        5L
-        >>> model.counter_next()
-        6L
-    """
+        order, coupon = model.order_process(order.order_id,
+                                            'test@test.com', 100.0, 'EUR',
+                                            payer_name='Andrey',
+                                            payer_surname='Lebedev',
+                                            payment_provider='dnb')
+        self.assertEqual(order.status, model.Order.ST_PAID)
+        self.assertEqual(order.payer_name, 'Andrey')
+        self.assertEqual(order.payer_surname, 'Lebedev')
+        self.assertEqual(order.payer_email, u'test@test.com')
+        self.assertIsNotNone(order.payment_time)
+        self.assertEqual(order.paid_amount, 100.0)
+        self.assertEqual(order.paid_currency, 'EUR')
 
-def setUp(test):
-    test.testbed = testbed.Testbed()
-    test.testbed.activate()
-    policy = datastore_stub_util.PseudoRandomHRConsistencyPolicy(probability=0)
-    test.testbed.init_datastore_v3_stub(consistency_policy=policy)
+        # Check created coupon
+        self.assertIsNotNone(coupon.order)
+        self.assertIs(coupon.order, order)
+        self.assertEqual(coupon.status, model.Coupon.ST_ACTIVE)
+        self.assertIsNone(coupon.use_time)
+        self.assertEqual(coupon.key().name(), u'1')
 
-def tearDown(test):
-    test.testbed.deactivate()
-    mock.patch.stopall()
+        # Make sure coupon is in database
+        self.assertEqual(model.coupon_get('1').key(), coupon.key())
 
-DOCTEST_OPTION_FLAGS = (doctest.NORMALIZE_WHITESPACE|
-                        doctest.ELLIPSIS|
-                        doctest.REPORT_ONLY_FIRST_FAILURE|
-                        doctest.REPORT_NDIFF
-                        )
-def test_suite():
-    return doctest.DocTestSuite(setUp=setUp, tearDown=tearDown,
-                                optionflags=DOCTEST_OPTION_FLAGS)
+    def test_order_process_twice(self):
+        # Create sample order
+
+        ct = model.CouponType('test', 300.0, "Test flight", "Test flight")
+        order = model.order_create('2', ct, test=True)
+
+        # Process successful payment
+
+        order, coupon = model.order_process(order.order_id,
+                                            'test@test.com', 100.0, 'EUR',
+                                            payer_name='Andrey',
+                                            payer_surname='Lebedev',
+                                            payment_provider='dnb')
+
+        # Attempt to process payment second time and expect the exception
+        with self.assertRaisesRegexp(ValueError,
+                                     r'Cannot process non-pending order .*'):
+            model.order_process(order.order_id, 'test@test.com', 100.0, 'EUR')
+
+    def test_counter(self):
+        # Naive test for counter
+        self.assertEqual(model.counter_next(), 1)
+        self.assertEqual(model.counter_next(), 2)
+        self.assertEqual(model.counter_next(), 3)
+        self.assertEqual(model.counter_next(), 4)
+        self.assertEqual(model.counter_next(), 5)
+        self.assertEqual(model.counter_next(), 6)
+
+    def setUp(self):
+        self.testbed = testbed.Testbed()
+        self.testbed.activate()
+        policy = datastore_stub_util.PseudoRandomHRConsistencyPolicy(probability=0)
+        self.testbed.init_datastore_v3_stub(consistency_policy=policy)
+
+    def tearDown(self):
+        self.testbed.deactivate()
+        mock.patch.stopall()
