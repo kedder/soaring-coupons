@@ -124,8 +124,9 @@ class OrderCallbackHandler(webapp2.RequestHandler):
         logging.info("Executing callback for order %s with status %s" % \
                      (orderid, status))
         if status == webtopay.STATUS_SUCCESS:
-            order, coupon = self.process_order(orderid, params)
-            self.send_confirmation_email(coupon)
+            order, coupons = self.process_order(orderid, params)
+            for coupon in coupons:
+                self.send_confirmation_email(coupon)
         else:
             logging.info("Request unprocessed. params: %s" % params)
 
@@ -157,8 +158,13 @@ class OrderAcceptHandler(webapp2.RequestHandler):
         if order is None:
             webapp2.abort(404)
 
+        coupons = model.order_find_coupons(order.order_id)
+        coupon_urls = map(lambda c: webapp2.uri_for('coupon', id=c.coupon_id),
+                          coupons)
+
+
         values = {'order': order,
-                  'coupon_url': webapp2.uri_for('coupon', id=order.order_id)}
+                  'coupons': zip(coupons, coupon_urls)}
         write_template(self.response, 'accept.html', values)
 
 class CouponHandler(webapp2.RequestHandler):

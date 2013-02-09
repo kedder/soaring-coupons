@@ -5,8 +5,14 @@
 
 {% if order.is_paid() %}
 
-  <p>Užsakymas yra priimtas ir apmokėtas. Dabar galite
-  <a href="{{ coupon_url }}">atspausdinti Jūsų kvietimą</a>. Nuoroda į
+  <p>Užsakymas yra priimtas ir apmokėtas. Dabar galite atspausdinti Jūsų
+  kvietimą:
+
+  {% for coupon, coupon_url in coupons %}
+      <a href="{{ coupon_url }}">{{ coupon.coupon_id }}</a>{{ '.' if loop.last else ', ' }}
+  {% endfor %}
+  
+  Nuoroda į
   kvietimo puslapį taip pat atsiuntėme el.  pašto adresu {{ order.payer_email }}.</p>
 
 {% else %}

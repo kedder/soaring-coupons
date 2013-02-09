@@ -5,7 +5,7 @@ import random
 
 import mock
 from google.appengine.ext import testbed
-from google.appengine.datastore import datastore_stub_util
+from google.appengine.datastore.datastore_stub_util import PseudoRandomHRConsistencyPolicy
 
 from soaringcoupons import model
 
@@ -16,15 +16,15 @@ class FakeDateTime(datetime.datetime):
 
 class ModelTestCase(unittest.TestCase):
 
-    def test_order_gen_id(self):
+    def test_coupon_gen_id(self):
         # Mock random.choice to return always '0'
         mock.patch('datetime.datetime', FakeDateTime).start()
         mock.patch('random.choice').start()
         random.choice.return_value = '0'
 
-        self.assertEqual(model.order_gen_id(), '121000000')
-        self.assertEqual(model.order_gen_id(), '122000000')
-        self.assertEqual(model.order_gen_id(), '123000000')
+        self.assertEqual(model.coupon_gen_id(), '121000000')
+        self.assertEqual(model.coupon_gen_id(), '122000000')
+        self.assertEqual(model.coupon_gen_id(), '123000000')
 
     def test_order_create(self):
         ct = model.CouponType('test', 300.0, "Test flight", "Test flight")
@@ -57,12 +57,11 @@ class ModelTestCase(unittest.TestCase):
         order = model.order_create('1', ct, test=True)
 
         # Process successful payment
-
-        order, coupon = model.order_process(order.order_id,
-                                            'test@test.com', 100.0, 'EUR',
-                                            payer_name='Andrey',
-                                            payer_surname='Lebedev',
-                                            payment_provider='dnb')
+        order, coupons = model.order_process(order.order_id,
+                                             'test@test.com', 100.0, 'EUR',
+                                             payer_name='Andrey',
+                                             payer_surname='Lebedev',
+                                             payment_provider='dnb')
         self.assertEqual(order.status, model.Order.ST_PAID)
         self.assertEqual(order.payer_name, 'Andrey')
         self.assertEqual(order.payer_surname, 'Lebedev')
@@ -72,14 +71,17 @@ class ModelTestCase(unittest.TestCase):
         self.assertEqual(order.paid_currency, 'EUR')
 
         # Check created coupon
+        self.assertEqual(len(coupons), 1)
+        coupon = coupons[0]
         self.assertIsNotNone(coupon.order)
         self.assertIs(coupon.order, order)
         self.assertEqual(coupon.status, model.Coupon.ST_ACTIVE)
         self.assertIsNone(coupon.use_time)
-        self.assertEqual(coupon.key().name(), u'1')
+        cid = coupon.coupon_id
+        self.assertEqual(len(cid), 9)
 
         # Make sure coupon is in database
-        self.assertEqual(model.coupon_get('1').key(), coupon.key())
+        self.assertEqual(model.coupon_get(cid).key(), coupon.key())
 
     def test_order_process_twice(self):
         # Create sample order
@@ -100,6 +102,22 @@ class ModelTestCase(unittest.TestCase):
                                      r'Cannot process non-pending order .*'):
             model.order_process(order.order_id, 'test@test.com', 100.0, 'EUR')
 
+    def test_order_find_coupons(self):
+        # We need to see results of order_process immediately in this test
+        self.cpolicy.SetProbability(1.0)
+
+        # Create two orders and process successful payment
+        ct = model.CouponType('test', 300.0, "Test flight", "Test flight")
+        order1 = model.order_create('1', ct, test=True)
+        model.order_process(order1.order_id, 'test@test.com', 100.0, 'EUR')
+        order2 = model.order_create('2', ct, test=True)
+        model.order_process(order2.order_id, 'test@test.com', 100.0, 'EUR')
+
+        coupons = model.order_find_coupons(order1.order_id)
+        self.assertEqual(len(coupons), 1)
+
+        self.assertEqual(coupons[0].order.order_id, order1.order_id)
+
     def test_counter(self):
         # Naive test for counter
         self.assertEqual(model.counter_next(), 1)
@@ -109,11 +127,28 @@ class ModelTestCase(unittest.TestCase):
         self.assertEqual(model.counter_next(), 5)
         self.assertEqual(model.counter_next(), 6)
 
+    def test_spawn_coupons(self):
+        ct = model.CouponType('test', 300.0, "Test flight", "Test flight")
+        coupons = model.coupon_spawn(ct, 4,
+                                     email="test@test.com",
+                                     notes="2% parama")
+        self.assertEqual(len(coupons), 4)
+        c1 = coupons[0]
+        order = c1.order
+        self.assertTrue(c1.active)
+        self.assertIsNotNone(order)
+        self.assertEqual(order.quantity, 4)
+
+        # make sure all coupon ids are different
+        coupon_ids = [c.coupon_id for c in coupons]
+        self.assertEqual(len(set(coupon_ids)), 4)
+
+
     def setUp(self):
         self.testbed = testbed.Testbed()
         self.testbed.activate()
-        policy = datastore_stub_util.PseudoRandomHRConsistencyPolicy(probability=0)
-        self.testbed.init_datastore_v3_stub(consistency_policy=policy)
+        self.cpolicy = PseudoRandomHRConsistencyPolicy(probability=0)
+        self.testbed.init_datastore_v3_stub(consistency_policy=self.cpolicy)
 
     def tearDown(self):
         self.testbed.deactivate()

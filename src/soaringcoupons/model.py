@@ -96,6 +96,7 @@ class Order(db.Model):
     ST_PENDING = 1
     ST_PAID = 2
     ST_CANCELLED = 3
+    ST_SPAWNED = 4
 
     coupon_type = db.StringProperty(required=True)
     quantity = db.IntegerProperty(required=True, default=1)
@@ -109,9 +110,11 @@ class Order(db.Model):
     payment_provider = db.StringProperty()
     test = db.BooleanProperty(required=True, default=False)
     status = db.IntegerProperty(required=True, default=ST_PENDING,
-                               choices=set([ST_PENDING, ST_PAID, ST_CANCELLED]))
+                                choices=set([ST_PENDING, ST_PAID,
+                                             ST_CANCELLED, ST_SPAWNED]))
     create_time = db.DateTimeProperty(required=True)
     payment_time = db.DateTimeProperty()
+    notes = db.StringProperty()
 
     @property
     def order_id(self):
@@ -127,10 +130,7 @@ def order_gen_id():
     """Generate unique order id.
     """
     cnt = counter_next()
-    # add some random digits to make order ids less predictable
-    seed = ''.join(random.choice(string.digits) for i in range(6))
-    year = datetime.datetime.now().strftime('%y')
-    return "%s%s%s" % (year, cnt, seed)
+    return str(cnt)
 
 def order_get(key_name):
     return Order.get_by_key_name(key_name)
@@ -172,7 +172,7 @@ def order_process(order_id, payer_email,
     Creates Coupon object.  Payment information must be validated before
     passing to this method.
 
-    Returns pair: order, coupon
+    Returns pair: order, coupons
     """
     order = Order.get_by_key_name(order_id)
     if order.status != Order.ST_PENDING:
@@ -190,9 +190,14 @@ def order_process(order_id, payer_email,
 
     # create coupon
     assert order.quantity == 1
-    coupon = coupon_create(order)
+    coupons = coupon_create(order)
 
-    return order, coupon
+    return order, coupons
+
+def order_find_coupons(order_id):
+    orderkey = db.Key.from_path('Order', order_id)
+    res = Coupon.all().filter('order =', orderkey)
+    return list(res)
 
 class Coupon(db.Model):
     ST_ACTIVE = 1
@@ -213,11 +218,25 @@ class Coupon(db.Model):
 def coupon_get(key_name):
     return Coupon.get_by_key_name(key_name)
 
+def coupon_gen_id():
+    """Generate unique order id.
+    """
+    cnt = counter_next()
+    # add some random digits to make order ids less predictable
+    seed = ''.join(random.choice(string.digits) for i in range(6))
+    year = datetime.datetime.now().strftime('%y')
+    return "%s%s%s" % (year, cnt, seed)
+
 def coupon_create(order):
-    coupon = Coupon(order=order, key_name=order.order_id)
-    db.put(coupon)
-    logging.info("Coupon %s created" % coupon.coupon_id)
-    return coupon
+    coupons = []
+    for x in range(order.quantity):
+        coupon_id = coupon_gen_id()
+        coupon = Coupon(order=order, key_name=coupon_id)
+        db.put(coupon)
+        coupons.append(coupon)
+        logging.info("Coupon %s created" % coupon_id)
+
+    return coupons
 
 @db.transactional
 def coupon_use(coupon_id):
@@ -235,3 +254,19 @@ def coupon_list_active():
 
 def coupon_count_active():
     return coupon_list_active().count()
+
+def coupon_spawn(coupon_type, count, email, notes, test=False):
+    """ Create given number of coupons without going through purchase workflow
+
+    """
+    logging.info("Spawning %s coupons", count)
+    order_id = order_gen_id()
+
+    order = order_create(order_id, coupon_type, test=test)
+    order.status = Order.ST_SPAWNED
+    order.notes = notes
+    order.payer_email = email
+    order.quantity = count
+    db.put(order)
+
+    return coupon_create(order)
