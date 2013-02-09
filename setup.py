@@ -22,7 +22,7 @@ setup(
       long_description = long_description,
       license = "GPLv3",
       keywords = ["soaring", "coupons", "gae"],
-      classifiers = ['Development Status :: 3 - Alpha',
+      classifiers = ['Development Status :: 5 - Production/Stable',
                      'Programming Language :: Python :: 2.7',
                      'Natural Language :: Lithuanian',
                      'License :: OSI Approved :: GNU Affero General Public License v3'
