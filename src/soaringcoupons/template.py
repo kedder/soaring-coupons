@@ -11,7 +11,10 @@ def make_globals():
     user = users.get_current_user()
     home = webapp2.uri_for('home')
     version = os.environ['CURRENT_VERSION_ID']
-    majorversion, minorversion = version.split('.')
+    if '.' in version:
+        majorversion, minorversion = version.split('.')
+    else:
+        majorversion, minorversion = version, ''
 
     values = {'user': {'logged': user is not None,
                        'admin': users.is_current_user_admin(),
