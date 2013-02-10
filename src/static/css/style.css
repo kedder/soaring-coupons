@@ -45,6 +45,10 @@ dd {
   margin: 0 0 0 160px;
   padding: 0 0 0.5em 0;
 }
+dd:after {
+  content: ".";
+  visibility: hidden;
+}
 
 /* Forms */
 .errors {
