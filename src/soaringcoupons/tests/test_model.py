@@ -138,6 +138,7 @@ class ModelTestCase(unittest.TestCase):
         self.assertTrue(c1.active)
         self.assertIsNotNone(order)
         self.assertEqual(order.quantity, 4)
+        self.assertIsNotNone(order.payment_time)
 
         # make sure all coupon ids are different
         coupon_ids = [c.coupon_id for c in coupons]

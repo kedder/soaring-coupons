@@ -267,6 +267,7 @@ def coupon_spawn(coupon_type, count, email, notes, test=False):
     order.notes = notes
     order.payer_email = email
     order.quantity = count
+    order.payment_time = datetime.datetime.now()
     db.put(order)
 
     return coupon_create(order)
