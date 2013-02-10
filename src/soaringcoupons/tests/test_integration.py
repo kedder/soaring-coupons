@@ -75,6 +75,35 @@ class IntegrationTestCase(unittest.TestCase):
         resp = app.get('/accept/1')
         self.assertIn('<a href="/coupon/1001"', resp)
 
+    def test_spawn(self):
+        app = create_testapp()
+        resp = app.get('/admin/spawn')
+        self.assertEqual(resp.status, '200 OK')
+
+        # submit with empty fields
+        resp = app.post('/admin/spawn', {})
+        self.assertEqual(resp.status, '200 OK')
+        self.assertIn('This field is required.', resp.body)
+
+        # email validation works
+        resp = app.post('/admin/spawn', {'email': 'hello@wiorld@gmail.com'})
+        self.assertEqual(resp.status, '200 OK')
+        self.assertIn('Invalid e-mail address.', resp.body)
+
+        # submit correct fields
+        data = {'coupon_type': 'acro',
+                'email': 'test@test.com',
+                'count': '10',
+                'notes': '2%'}
+
+        resp = app.post('/admin/spawn', data)
+        self.assertEqual(resp.status, '302 Moved Temporarily')
+
+        # Make sure emails are sent out
+        messages = self.mail_stub.get_sent_messages()
+        self.assertEqual(len(messages), 10)
+        self.assertEqual(messages[0].to, 'test@test.com')
+
     def setUp(self):
         self.testbed = testbed.Testbed()
         self.testbed.activate()

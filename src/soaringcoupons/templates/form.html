@@ -1,0 +1,11 @@
+{% macro field(field) -%}
+    {{ field.label(class='required' if field.flags.required else '') }}
+    {% if field.errors %}
+      <span class="errors">
+        {% for error in field.errors %}
+          {{ error }}
+        {% endfor %}
+      </span>     
+    {% endif %}
+    {{ field }}
+{%- endmacro %}

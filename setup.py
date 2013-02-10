@@ -34,7 +34,8 @@ setup(
                           'Pillow',
                           'jinja2',
                           'webapp2',
-                          'qrcode'
+                          'qrcode',
+                          'wtforms'
                           ],
       include_package_data = True,
       zip_safe = False

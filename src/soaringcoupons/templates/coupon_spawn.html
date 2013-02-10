@@ -1,0 +1,37 @@
+{% extends "base_generic.html" %}
+{% from "form.html" import field %}
+{% block title %}Kvietimų generatorius |{% endblock %}
+{% block main %}
+
+<h2>Kvietimų generatorius</h2>
+
+<div class="container">
+  <div class="six columns alpha">
+
+    <form method="post">
+      {{ field(form.coupon_type) }}
+      {{ field(form.email) }}
+      {{ field(form.count) }}
+      {{ field(form.notes) }}
+
+      <div>
+        <input type="submit" value="Sugeneruoti" />
+      </div>
+    </form>
+  </div>
+
+  <div class="eight columns omega">
+
+    <label>&nbsp; <!-- align with first input field --></label>
+    <p>Ši forma leidžia sugeneruoti kvietimus, neperkant juos įprastiniu būdų. Po
+    formos užpildymo, į įvestą el. pašto adresą bus išsiųsti laiškai su nuorodomis
+    į kvietimus (po vieną laišką kiekvienam kvietimui).</p>
+
+    <p><strong>Dėmesio!</strong> Serverio apribojimai leidžia išsiųsti ne daugiau
+    kaip 100 laiškų per dieną. Į tai įeina visi laiškai siunčiami po kvietimų
+    pirkimo arba po jų sugeneravimo.</p>
+  </div>
+
+</div>      
+
+{% endblock %}

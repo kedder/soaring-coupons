@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
-import os
 import re
 import logging
 from email.header import Header
 
 import webapp2
 import qrcode
+from wtforms import Form, validators, SelectField, TextField, IntegerField
 from google.appengine.api import mail
 
 from soaringcoupons import model
@@ -23,6 +23,7 @@ def get_routes():
 
             webapp2.Route(r'/admin/check/<id>', handler=CheckHandler, name='check'),
             webapp2.Route(r'/admin/list', handler=CouponListHandler, name='list_active'),
+            webapp2.Route(r'/admin/spawn', handler=CouponSpawnHandler, name='spawn'),
             ]
 
 class UnconfiguredHandler(webapp2.RequestHandler):
@@ -40,13 +41,22 @@ class MainHandler(webapp2.RequestHandler):
         write_template(self.response, 'index.html', values)
 
 
-ERR_MISSING = u'Laukas yra privalomas'
-ERR_INVALID_EMAIL = u'Nekorektiškas el. pašto adresas'
-
 EMAIL_RE = re.compile(r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$')
 
 EMAIL_SENDER = "Vilniaus Aeroklubas <vilniaus.aeroklubas@gmail.com>"
 EMAIL_REPLYTO = "Vilniaus Aeroklubas <aeroklubas@sklandymas.lt>"
+
+def send_confirmation_email(coupon):
+    subject = (u"Kvietimas skrydziui sklandytuvu "
+               u"Paluknio aerodrome nr. %s" % coupon.coupon_id)
+    coupon_url = webapp2.uri_for('coupon', id=coupon.coupon_id, _full=True)
+    body = render_template('coupon_email.txt', {'coupon': coupon,
+                                                'url': coupon_url})
+    mail.send_mail(sender=EMAIL_SENDER,
+                   reply_to=EMAIL_REPLYTO,
+                   to=coupon.order.payer_email,
+                   subject=Header(subject, 'utf-8').encode(),
+                   body=body)
 
 class OrderHandler(webapp2.RequestHandler):
     def get(self, name):
@@ -55,10 +65,6 @@ class OrderHandler(webapp2.RequestHandler):
 
     def post(self, name):
         ct = model.get_coupon_type(name)
-        #errors = self.validate()
-        #if errors:
-        #    self.show_form(ct, errors)
-        #    return
 
         order_id = model.order_gen_id()
         order = model.order_create(order_id, ct, test=self.app.config['debug'])
@@ -73,22 +79,6 @@ class OrderHandler(webapp2.RequestHandler):
                   'coupon_type': ct,
                   'errors': errors}
         write_template(self.response, 'order.html', values)
-
-    def validate(self):
-        """ Validate form input
-        """
-        errors = {}
-
-        # Validate required fields
-        for field in ['name', 'surname', 'email']:
-            if not self.request.get(field):
-                errors[field] = ERR_MISSING
-
-        # validate email
-        if 'email' not in errors:
-            if not EMAIL_RE.match(self.request.get('email')):
-                errors['email'] = ERR_INVALID_EMAIL
-        return errors
 
     def prepare_webtopay_request(self, order, ct):
         data = {}
@@ -126,7 +116,7 @@ class OrderCallbackHandler(webapp2.RequestHandler):
         if status == webtopay.STATUS_SUCCESS:
             order, coupons = self.process_order(orderid, params)
             for coupon in coupons:
-                self.send_confirmation_email(coupon)
+                send_confirmation_email(coupon)
         else:
             logging.info("Request unprocessed. params: %s" % params)
 
@@ -139,18 +129,6 @@ class OrderCallbackHandler(webapp2.RequestHandler):
                                    payer_name=params.get('name'),
                                    payer_surname=params.get('surename'),
                                    payment_provider=params['payment'])
-
-    def send_confirmation_email(self, coupon):
-        subject = (u"Kvietimas skrydziui sklandytuvu "
-                   u"Paluknio aerodrome nr. %s" % coupon.order.order_id)
-        coupon_url = webapp2.uri_for('coupon', id=coupon.coupon_id, _full=True)
-        body = render_template('coupon_email.txt', {'coupon': coupon,
-                                                    'url': coupon_url})
-        mail.send_mail(sender=EMAIL_SENDER,
-                       reply_to=EMAIL_REPLYTO,
-                       to=coupon.order.payer_email,
-                       subject=Header(subject, 'utf-8').encode(),
-                       body=body)
 
 class OrderAcceptHandler(webapp2.RequestHandler):
     def get(self, id):
@@ -213,3 +191,50 @@ class CouponListHandler(webapp2.RequestHandler):
                   'check_url': lambda id: webapp2.uri_for('check', id=id)}
         write_template(self.response, 'coupon_list.html', values)
 
+
+class CouponSpawnForm(Form):
+    coupon_type = SelectField(u'Skridžio tipas',
+                              [validators.InputRequired()])
+    email = TextField(u'El. pašto adresas',
+                      [validators.InputRequired(),
+                       validators.Regexp(EMAIL_RE,
+                                         message=u'Invalid e-mail address.')])
+    count = IntegerField(u'Kvietimų kiekis',
+                         [validators.InputRequired(),
+                          validators.NumberRange(min=1, max=100)])
+    notes = TextField(u'Pastabos',
+                      [validators.InputRequired()])
+
+    def __init__(self, *args, **kwargs):
+        super(CouponSpawnForm, self).__init__(*args, **kwargs)
+        ctypes = [(t.id, t.title) for t in model.list_coupon_types()]
+        ctypes.insert(0, ('', ''))  # empty choice at the front
+        self.coupon_type.choices = ctypes
+
+
+class CouponSpawnHandler(webapp2.RequestHandler):
+    def get(self):
+        form = CouponSpawnForm()
+        values = {'form': form}
+        write_template(self.response, 'coupon_spawn.html', values)
+
+    def post(self):
+        form = CouponSpawnForm(self.request.params)
+        if form.validate():
+            self.generate(form.data)
+            webapp2.redirect(webapp2.uri_for('spawn', msg='Kuponai sugeneruoti'),
+                             abort=True)
+            return
+
+        else:
+            values = {'form': form}
+            write_template(self.response, 'coupon_spawn.html', values)
+
+    def generate(self, data):
+        ct = model.get_coupon_type(data['coupon_type'])
+        coupons = model.coupon_spawn(ct, data['count'],
+                                     data['email'], data['notes'],
+                                     test=self.app.config['debug'])
+
+        for c in coupons:
+            send_confirmation_email(c)
