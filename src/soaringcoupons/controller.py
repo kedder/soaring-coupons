@@ -193,7 +193,7 @@ class CouponListHandler(webapp2.RequestHandler):
 
 
 class CouponSpawnForm(Form):
-    coupon_type = SelectField(u'Skridžio tipas',
+    coupon_type = SelectField(u'Skrydžio tipas',
                               [validators.InputRequired()])
     email = TextField(u'El. pašto adresas',
                       [validators.InputRequired(),
