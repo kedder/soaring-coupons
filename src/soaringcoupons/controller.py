@@ -43,7 +43,7 @@ class MainHandler(webapp2.RequestHandler):
 
 EMAIL_RE = re.compile(r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$')
 
-EMAIL_SENDER = "Vilniaus Aeroklubas <vilniaus.aeroklubas@gmail.com>"
+EMAIL_SENDER = "Vilniaus Aeroklubas <dalia.vainiene@gmail.com>"
 EMAIL_REPLYTO = "Vilniaus Aeroklubas <aeroklubas@sklandymas.lt>"
 
 def send_confirmation_email(coupon):
