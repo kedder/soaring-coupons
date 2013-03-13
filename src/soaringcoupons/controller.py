@@ -52,6 +52,7 @@ def send_confirmation_email(coupon):
     coupon_url = webapp2.uri_for('coupon', id=coupon.coupon_id, _full=True)
     body = render_template('coupon_email.txt', {'coupon': coupon,
                                                 'url': coupon_url})
+    logging.info("Sending confirmation email to %s" % coupon.order.payer_email)
     mail.send_mail(sender=EMAIL_SENDER,
                    reply_to=EMAIL_REPLYTO,
                    to=coupon.order.payer_email,
@@ -113,6 +114,7 @@ class OrderCallbackHandler(webapp2.RequestHandler):
         status = params['status']
         logging.info("Executing callback for order %s with status %s" % \
                      (orderid, status))
+
         if status == webtopay.STATUS_SUCCESS:
             order, coupons = self.process_order(orderid, params)
             for coupon in coupons:
