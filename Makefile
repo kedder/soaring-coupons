@@ -4,12 +4,12 @@ run:
 
 .PHONY: upload-production
 upload-production:
-	./bin/buildout
+	./bin/buildout -N
 	./bin/appcfg update parts/gae
 
 .PHONY: upload-testing
 upload-testing:
-	./bin/buildout
+	./bin/buildout -N
 	./bin/appcfg update parts/gae --version=test
 
 .PHONY: test
