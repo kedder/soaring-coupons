@@ -118,6 +118,62 @@ class ModelTestCase(unittest.TestCase):
 
         self.assertEqual(coupons[0].order.order_id, order1.order_id)
 
+    def test_order_count_by_status(self):
+        self.cpolicy.SetProbability(1.0)
+
+        def neworder(status):
+            o = model.Order(status=status,
+                            price=300.0,
+                            create_time=datetime.datetime.now(),
+                            coupon_type="test")
+            o.put()
+
+        # Create some orders
+        neworder(model.Order.ST_PENDING)
+        neworder(model.Order.ST_PENDING)
+        neworder(model.Order.ST_PENDING)
+
+        neworder(model.Order.ST_PAID)
+        neworder(model.Order.ST_PAID)
+
+        neworder(model.Order.ST_SPAWNED)
+
+        # Calculate statistics
+        stats = model.order_count_by_status()
+
+        # Verify stats
+        self.assertEqual(stats,
+                         {model.Order.ST_PENDING: 3,
+                          model.Order.ST_SPAWNED: 1,
+                          model.Order.ST_PAID: 2})
+
+    def test_coupon_count_by_type(self):
+        self.cpolicy.SetProbability(1.0)
+
+        def newcoupon(type):
+            o = model.Order(status=model.Order.ST_PAID,
+                            price=300.0,
+                            create_time=datetime.datetime.now(),
+                            coupon_type=type)
+            o.put()
+            c = model.Coupon(order=o,
+                             status=model.Coupon.ST_ACTIVE,
+                             )
+            c.put()
+
+        newcoupon("training")
+        newcoupon("training")
+        newcoupon("acro")
+
+        # Calculate statistics
+        stats = model.coupon_count_by_type()
+
+        # Verify stats
+        self.assertEqual(stats,
+                         {"training": 2,
+                          "acro": 1})
+
+
     def test_counter(self):
         # Naive test for counter
         self.assertEqual(model.counter_next(), 1)

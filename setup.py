@@ -29,7 +29,7 @@ setup(
                      ],
       packages = find_packages('src'),
       package_dir = {'':'src'},
-      extras_require = dict(test=['mock', 'webtest']),
+      extras_require = dict(test=['mock', 'webtest', 'coverage']),
       install_requires = ['setuptools',
                           'Pillow',
                           'jinja2',

@@ -22,6 +22,7 @@ def make_globals():
                        'logout_url': users.create_logout_url(home)
                        },
               'request': webapp2.get_request().params,
+              'uri_for': webapp2.uri_for,
               'version': version,
               'majorversion': majorversion,
               }
@@ -42,6 +43,7 @@ FILTERS = {'error': formatters.filter_error,
            'date': formatters.format_date,
            'yesno': formatters.format_yesno,
            'coupon_type': formatters.format_coupon_type,
+           'order_status': formatters.format_order_status,
            }
 
 loader = jinja2.FileSystemLoader(os.path.join(os.path.dirname(__file__),

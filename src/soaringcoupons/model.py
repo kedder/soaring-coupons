@@ -4,7 +4,7 @@ import random
 import string
 import logging
 import textwrap
-from collections import namedtuple
+from collections import namedtuple, defaultdict
 
 from google.appengine.ext import db
 
@@ -142,7 +142,7 @@ def order_create(order_id, coupon_type, test=False):
                   price=coupon_type.price,
                   currency='LTL',
                   test=test,
-                  create_time = datetime.datetime.now(),
+                  create_time=datetime.datetime.now(),
                   status=Order.ST_PENDING)
     db.put(order)
     logging.info("Order %s (%s, test=%s) created" % (order_id, coupon_type, test))
@@ -199,6 +199,14 @@ def order_find_coupons(order_id):
     res = Coupon.all().filter('order =', orderkey)
     return list(res)
 
+def order_count_by_status():
+    counts = defaultdict(int)
+
+    for order in Order.all():
+        counts[order.status] += 1
+
+    return counts
+
 class Coupon(db.Model):
     ST_ACTIVE = 1
     ST_USED = 2
@@ -249,11 +257,14 @@ def coupon_use(coupon_id):
     logging.info("Coupon %s used" % coupon_id)
     return c
 
+
 def coupon_list_active():
     return Coupon.all().filter('status =', Coupon.ST_ACTIVE).order('__key__')
 
+
 def coupon_count_active():
     return coupon_list_active().count()
+
 
 def coupon_spawn(coupon_type, count, email, notes, test=False):
     """ Create given number of coupons without going through purchase workflow
@@ -271,3 +282,12 @@ def coupon_spawn(coupon_type, count, email, notes, test=False):
     db.put(order)
 
     return coupon_create(order)
+
+
+def coupon_count_by_type():
+    counts = defaultdict(int)
+
+    for coupon in Coupon.all():
+        counts[coupon.order.coupon_type] += 1
+
+    return counts

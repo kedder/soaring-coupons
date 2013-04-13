@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import jinja2
 
 from soaringcoupons import model
@@ -27,4 +28,14 @@ def format_coupon_type(value):
         return ct.title
     except ValueError:
         return '?'
+
+
+def format_order_status(value):
+    statusmap = {model.Order.ST_PENDING: u"Laukia apmokėjimo",
+                 model.Order.ST_PAID: u"Apmokėtas",
+                 model.Order.ST_CANCELLED: u"Atšauktas",
+                 model.Order.ST_SPAWNED: u"Sugeneruotas",
+                 }
+    return statusmap[value]
+
 

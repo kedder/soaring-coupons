@@ -6,7 +6,7 @@ from email.header import Header
 import webapp2
 import qrcode
 from wtforms import Form, validators, SelectField, TextField, IntegerField
-from google.appengine.api import mail
+from google.appengine.api import mail, memcache
 
 from soaringcoupons import model
 from soaringcoupons.template import write_template, render_template
@@ -21,6 +21,7 @@ def get_routes():
             webapp2.Route(r'/coupon/<id>', handler=CouponHandler, name='coupon'),
             webapp2.Route(r'/qr/<id>', handler=CouponQrHandler, name='qr'),
 
+            webapp2.Route(r'/admin', handler=DashboardHandler, name='dashboard'),
             webapp2.Route(r'/admin/check/<id>', handler=CheckHandler, name='check'),
             webapp2.Route(r'/admin/list', handler=CouponListHandler, name='list_active'),
             webapp2.Route(r'/admin/spawn', handler=CouponSpawnHandler, name='spawn'),
@@ -240,3 +241,16 @@ class CouponSpawnHandler(webapp2.RequestHandler):
 
         for c in coupons:
             send_confirmation_email(c)
+
+
+class DashboardHandler(webapp2.RequestHandler):
+    def get(self):
+        values = memcache.get('stats')
+        if not values:
+            bystatus = model.order_count_by_status()
+            bytype = model.coupon_count_by_type()
+            values = {'orders_by_status': bystatus,
+                      'coupons_by_type': bytype}
+            memcache.add('stats', values, 60 * 60 * 24)
+
+        write_template(self.response, "dashboard.html", values)
