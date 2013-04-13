@@ -34,19 +34,19 @@
 
     var typechart = new google.visualization.PieChart(document.getElementById('coupon-type-chart'));
     var statuschart = new google.visualization.PieChart(document.getElementById('order-status-chart'));
-    
+
     typechart.draw(couponsByTypeData,
                    {backgroundColor: 'transparent',
-          		  is3D: true,
-          		  title: 'Kuponai pagal tipą',
-          		  pieSliceText: 'percentage'});
+                    is3D: true,
+                    title: 'Kvietimai pagal tipą',
+                    pieSliceText: 'percentage'});
 
-    
+
     statuschart.draw(orderByStatusData, 
-				   {backgroundColor: 'transparent',
-  	  				is3D: true,
-  	  				title: 'Užsakymai pagal statusą',
-  	  				pieSliceText: 'percentage'});
+                     {backgroundColor: 'transparent',
+                      is3D: true,
+                      title: 'Užsakymai pagal statusą',
+                      pieSliceText: 'percentage'});
   }
 </script>
 

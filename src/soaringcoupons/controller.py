@@ -225,7 +225,8 @@ class CouponSpawnHandler(webapp2.RequestHandler):
         form = CouponSpawnForm(self.request.params)
         if form.validate():
             self.generate(form.data)
-            webapp2.redirect(webapp2.uri_for('spawn', msg='Kuponai sugeneruoti'),
+            webapp2.redirect(webapp2.uri_for('spawn',
+                                             msg='Kvietimai sugeneruoti'),
                              abort=True)
             return
 
