@@ -202,7 +202,7 @@ def order_find_coupons(order_id):
 def order_count_by_status():
     counts = defaultdict(int)
 
-    for order in Order.all():
+    for order in Order.all().filter("test =", False):
         counts[order.status] += 1
 
     return counts
@@ -287,7 +287,10 @@ def coupon_spawn(coupon_type, count, email, notes, test=False):
 def coupon_count_by_type():
     counts = defaultdict(int)
 
-    for coupon in Coupon.all():
+    coupons = Coupon.all()
+    for coupon in coupons:
+        if coupon.order.test:
+            continue
         counts[coupon.order.coupon_type] += 1
 
     return counts

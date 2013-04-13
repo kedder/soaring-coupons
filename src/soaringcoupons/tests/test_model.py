@@ -121,11 +121,12 @@ class ModelTestCase(unittest.TestCase):
     def test_order_count_by_status(self):
         self.cpolicy.SetProbability(1.0)
 
-        def neworder(status):
+        def neworder(status, test=False):
             o = model.Order(status=status,
                             price=300.0,
                             create_time=datetime.datetime.now(),
-                            coupon_type="test")
+                            coupon_type="test",
+                            test=test)
             o.put()
 
         # Create some orders
@@ -137,6 +138,8 @@ class ModelTestCase(unittest.TestCase):
         neworder(model.Order.ST_PAID)
 
         neworder(model.Order.ST_SPAWNED)
+        neworder(model.Order.ST_SPAWNED, test=True)
+        neworder(model.Order.ST_SPAWNED, test=True)
 
         # Calculate statistics
         stats = model.order_count_by_status()
@@ -150,11 +153,12 @@ class ModelTestCase(unittest.TestCase):
     def test_coupon_count_by_type(self):
         self.cpolicy.SetProbability(1.0)
 
-        def newcoupon(type):
+        def newcoupon(type, test=False):
             o = model.Order(status=model.Order.ST_PAID,
                             price=300.0,
                             create_time=datetime.datetime.now(),
-                            coupon_type=type)
+                            coupon_type=type,
+                            test=test)
             o.put()
             c = model.Coupon(order=o,
                              status=model.Coupon.ST_ACTIVE,
@@ -164,6 +168,7 @@ class ModelTestCase(unittest.TestCase):
         newcoupon("training")
         newcoupon("training")
         newcoupon("acro")
+        newcoupon("acro", test=True)
 
         # Calculate statistics
         stats = model.coupon_count_by_type()
