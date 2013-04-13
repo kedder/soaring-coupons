@@ -199,10 +199,18 @@ def order_find_coupons(order_id):
     res = Coupon.all().filter('order =', orderkey)
     return list(res)
 
+
 def order_count_by_status():
+    """Return order statistics by status.
+
+    Pending orders are explicitly excluded.
+    """
     counts = defaultdict(int)
 
-    for order in Order.all().filter("test =", False):
+    orders = Order.all()
+    orders.filter("test =", False)
+    orders.filter("status != ", Order.ST_PENDING)
+    for order in orders:
         counts[order.status] += 1
 
     return counts

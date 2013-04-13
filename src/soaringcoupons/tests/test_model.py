@@ -146,8 +146,7 @@ class ModelTestCase(unittest.TestCase):
 
         # Verify stats
         self.assertEqual(stats,
-                         {model.Order.ST_PENDING: 3,
-                          model.Order.ST_SPAWNED: 1,
+                         {model.Order.ST_SPAWNED: 1,
                           model.Order.ST_PAID: 2})
 
     def test_coupon_count_by_type(self):
