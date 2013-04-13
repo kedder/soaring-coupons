@@ -1,6 +1,8 @@
 .PHONY: run
 run:
-	./bin/dev_appserver --use_sqlite --high_replication parts/gae
+	./bin/python parts/google_appengine/dev_appserver.py parts/gae
+#	./bin/dev_appserver parts/gae
+#--use_sqlite --high_replication parts/gae
 
 .PHONY: upload-production
 upload-production:
