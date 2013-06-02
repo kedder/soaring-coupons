@@ -43,6 +43,7 @@ FILTERS = {'error': formatters.filter_error,
            'date': formatters.format_date,
            'yesno': formatters.format_yesno,
            'coupon_type': formatters.format_coupon_type,
+           'coupon_status': formatters.format_coupon_status,
            'order_status': formatters.format_order_status,
            }
 

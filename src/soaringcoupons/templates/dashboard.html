@@ -2,14 +2,29 @@
 {% block title %}Statistika |{% endblock %}
 {% block main %}
 <h2>Statistika</h2> 
-<ul>
-</ul>
-
-<div class="eight columns alpha">
-  <div id="coupon-type-chart" style='height: 400px'></div>
+<div class="row">
+    <div class="eight columns alpha">
+        <table class='condensed'>
+            <colgroup>
+                <col width="40%" />
+            </colgroup>
+            {% for status, cnt in coupons_by_status.items() %}
+            <tr>
+                <td>{{status | coupon_status}}</td>
+                <td>{{cnt}}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
 </div>
-<div class="eight columns omega">
-  <div id="order-status-chart" style='height: 400px'></div>
+
+<div class="row">
+    <div class="eight columns alpha">
+        <div id="coupon-type-chart" style='height: 400px'></div>
+    </div>
+    <div class="eight columns omega">
+        <div id="order-status-chart" style='height: 400px'></div>
+    </div>
 </div>
 
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>

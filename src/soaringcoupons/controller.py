@@ -248,10 +248,14 @@ class DashboardHandler(webapp2.RequestHandler):
     def get(self):
         values = memcache.get('stats')
         if not values:
-            bystatus = model.order_count_by_status()
+            byorderstatus = model.order_count_by_status()
             bytype = model.coupon_count_by_type()
-            values = {'orders_by_status': bystatus,
-                      'coupons_by_type': bytype}
+            bycouponstatus = model.coupon_count_by_status()
+
+            values = {'orders_by_status': byorderstatus,
+                      'coupons_by_type': bytype,
+                      'coupons_by_status': bycouponstatus}
+            logging.info("Uncached: %s" % values)
             memcache.add('stats', values, 60 * 60 * 24)
 
         write_template(self.response, "dashboard.html", values)

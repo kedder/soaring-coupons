@@ -292,13 +292,25 @@ def coupon_spawn(coupon_type, count, email, notes, test=False):
     return coupon_create(order)
 
 
+def _coupon_get_valid():
+    return (c for c in Coupon.all() if not c.order.test)
+
 def coupon_count_by_type():
+    """Return coupon counts by type (training, acro, etc)
+    """
     counts = defaultdict(int)
 
-    coupons = Coupon.all()
-    for coupon in coupons:
-        if coupon.order.test:
-            continue
+    for coupon in _coupon_get_valid():
         counts[coupon.order.coupon_type] += 1
+
+    return counts
+
+def coupon_count_by_status():
+    """Return coupon statistics by status (active / used)
+    """
+    counts = defaultdict(int)
+
+    for coupon in _coupon_get_valid():
+        counts[coupon.status] += 1
 
     return counts
