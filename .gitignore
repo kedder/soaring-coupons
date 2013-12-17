@@ -6,3 +6,5 @@ src/*.egg-info
 downloads
 tmp
 .settings
+
+*.sublime-*
