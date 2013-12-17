@@ -21,7 +21,7 @@ class CouponType(object):
 
 CouponType = namedtuple('CouponType', ['id', 'price', 'title', 'description'])
 
-coupon_types = [CouponType('training', 150.0,
+coupon_types = [CouponType('training', 120.0,
                            u'Apžvalginis skrydis sklandytuvu',
                            textwrap.dedent(u"""
                                            Sklandytuvas išvelkamas
@@ -32,7 +32,7 @@ coupon_types = [CouponType('training', 150.0,
                                            truks apie 5 min.
                                            """)
                            ),
-                CouponType('acro', 300.0,
+                CouponType('acro', 240.0,
                            u'Pilotavimo skrydis sklandytuvu',
                            textwrap.dedent(u"""
                                            Sklandytuvas išvelkamas lėktuvu
