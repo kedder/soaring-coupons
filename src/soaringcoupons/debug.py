@@ -10,6 +10,7 @@ console::
 
 from soaringcoupons import model
 
+
 def create_coupon():
     """Create sample order and process it
     """

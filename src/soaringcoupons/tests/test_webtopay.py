@@ -5,6 +5,7 @@ import mock
 
 from soaringcoupons import webtopay
 
+
 class WebToPayTestCase(unittest.TestCase):
 
     def test_build_request_no_projectid(self):
@@ -17,7 +18,8 @@ class WebToPayTestCase(unittest.TestCase):
                 'sign_password': 'asdfghjkl'
                 }
         with self.assertRaisesRegexp(webtopay.WebToPayException,
-                                     'sign_password or projectid is not provided'):
+                                     'sign_password or projectid is not '
+                                     'provided'):
             webtopay.build_request(data)
 
     def test_build_request(self):
@@ -49,7 +51,6 @@ class WebToPayTestCase(unittest.TestCase):
                     'paytext=U%C5%BEsakymas&amount=100&'
                     'some-other-parameter=abc&version=1.6&projectid=123')
 
-
         # Expected and produced query strings should be the same
         self.assertDictEqual(urlparse.parse_qs(expected),
                              urlparse.parse_qs(qs))
@@ -80,7 +81,8 @@ class WebToPayTestCase(unittest.TestCase):
         with mock.patch('soaringcoupons.webtopay._is_valid_ss1') as m:
             m.return_value = True
             with self.assertRaisesRegexp(webtopay.WebToPayException,
-                                         'Bad project id: 30432, should be: 21'):
+                                         'Bad project id: 30432, should '
+                                         'be: 21'):
                 webtopay.validate_and_parse_data(data, '21', '')
 
         with mock.patch('soaringcoupons.webtopay._is_valid_ss1') as m:

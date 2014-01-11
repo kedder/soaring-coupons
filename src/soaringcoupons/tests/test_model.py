@@ -5,14 +5,17 @@ import random
 
 import mock
 from google.appengine.ext import testbed
-from google.appengine.datastore.datastore_stub_util import PseudoRandomHRConsistencyPolicy
+from google.appengine.datastore.datastore_stub_util import \
+    PseudoRandomHRConsistencyPolicy
 
 from soaringcoupons import model
+
 
 class FakeDateTime(datetime.datetime):
     @classmethod
     def now(self):
         return datetime.datetime(2012, 1, 4)
+
 
 class ModelTestCase(unittest.TestCase):
 
@@ -49,7 +52,6 @@ class ModelTestCase(unittest.TestCase):
         with self.assertRaisesRegexp(ValueError,
                                      r'Cannot cancel non-pending order .*'):
             model.order_cancel(order.key().name())
-
 
     def test_order_process(self):
         # Create sample order
@@ -177,7 +179,6 @@ class ModelTestCase(unittest.TestCase):
                          {"training": 2,
                           "acro": 1})
 
-
     def test_counter(self):
         # Naive test for counter
         self.assertEqual(model.counter_next(), 1)
@@ -203,7 +204,6 @@ class ModelTestCase(unittest.TestCase):
         # make sure all coupon ids are different
         coupon_ids = [c.coupon_id for c in coupons]
         self.assertEqual(len(set(coupon_ids)), 4)
-
 
     def setUp(self):
         self.testbed = testbed.Testbed()

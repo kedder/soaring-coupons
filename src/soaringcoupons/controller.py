@@ -12,24 +12,35 @@ from soaringcoupons import model
 from soaringcoupons.template import write_template, render_template
 from soaringcoupons import webtopay
 
+
 def get_routes():
     return [webapp2.Route(r'/', handler=MainHandler, name='home'),
             webapp2.Route(r'/order/<name>', handler=OrderHandler, name='order'),
-            webapp2.Route(r'/cancel', handler=OrderCancelHandler, name='wtp_cancel'),
-            webapp2.Route(r'/callback', handler=OrderCallbackHandler, name='wtp_callback'),
-            webapp2.Route(r'/accept/<id>', handler=OrderAcceptHandler, name='wtp_accept'),
-            webapp2.Route(r'/coupon/<id>', handler=CouponHandler, name='coupon'),
+            webapp2.Route(r'/cancel', handler=OrderCancelHandler,
+                          name='wtp_cancel'),
+            webapp2.Route(r'/callback', handler=OrderCallbackHandler,
+                          name='wtp_callback'),
+            webapp2.Route(r'/accept/<id>', handler=OrderAcceptHandler,
+                          name='wtp_accept'),
+            webapp2.Route(r'/coupon/<id>', handler=CouponHandler,
+                          name='coupon'),
             webapp2.Route(r'/qr/<id>', handler=CouponQrHandler, name='qr'),
 
-            webapp2.Route(r'/admin', handler=DashboardHandler, name='dashboard'),
-            webapp2.Route(r'/admin/check/<id>', handler=CheckHandler, name='check'),
-            webapp2.Route(r'/admin/list', handler=CouponListHandler, name='list_active'),
-            webapp2.Route(r'/admin/spawn', handler=CouponSpawnHandler, name='spawn'),
+            webapp2.Route(r'/admin', handler=DashboardHandler,
+                          name='dashboard'),
+            webapp2.Route(r'/admin/check/<id>', handler=CheckHandler,
+                          name='check'),
+            webapp2.Route(r'/admin/list', handler=CouponListHandler,
+                          name='list_active'),
+            webapp2.Route(r'/admin/spawn', handler=CouponSpawnHandler,
+                          name='spawn'),
             ]
+
 
 class UnconfiguredHandler(webapp2.RequestHandler):
     def get(self):
         write_template(self.response, 'unconfigured.html')
+
 
 class MainHandler(webapp2.RequestHandler):
     def get(self):
@@ -47,6 +58,7 @@ EMAIL_RE = re.compile(r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$')
 EMAIL_SENDER = "Vilniaus Aeroklubas <dalia.vainiene@gmail.com>"
 EMAIL_REPLYTO = "Vilniaus Aeroklubas <aeroklubas@sklandymas.lt>"
 
+
 def send_confirmation_email(coupon):
     subject = (u"Kvietimas skrydziui sklandytuvu "
                u"Paluknio aerodrome nr. %s" % coupon.coupon_id)
@@ -59,6 +71,7 @@ def send_confirmation_email(coupon):
                    to=coupon.order.payer_email,
                    subject=Header(subject, 'utf-8').encode(),
                    body=body)
+
 
 class OrderHandler(webapp2.RequestHandler):
     def get(self, name):
@@ -87,22 +100,25 @@ class OrderHandler(webapp2.RequestHandler):
         data['projectid'] = self.app.config['webtopay_project_id']
         data['sign_password'] = self.app.config['webtopay_password']
         data['cancelurl'] = webapp2.uri_for('wtp_cancel', _full=True)
-        data['accepturl'] = webapp2.uri_for('wtp_accept', id=order.order_id, _full=True)
+        data['accepturl'] = webapp2.uri_for('wtp_accept', id=order.order_id,
+                                            _full=True)
         data['callbackurl'] = webapp2.uri_for('wtp_callback', _full=True)
         data['orderid'] = order.order_id
         data['lang'] = 'LIT'
         data['amount'] = order.price * 100
         data['currency'] = 'LTL'
         data['country'] = 'LT'
-        data['paytext'] = (u'%s. Užsakymas nr. [order_nr] svetainėje [site_name]' \
-                           % (ct.title))
+        data['paytext'] = (u'%s. Užsakymas nr. [order_nr] svetainėje '
+                           u'[site_name]' % (ct.title))
         data['test'] = order.test
 
         return data
 
+
 class OrderCancelHandler(webapp2.RequestHandler):
     def get(self):
         write_template(self.response, 'cancel.html')
+
 
 class OrderCallbackHandler(webapp2.RequestHandler):
     def get(self):
@@ -113,7 +129,7 @@ class OrderCallbackHandler(webapp2.RequestHandler):
 
         orderid = params['orderid']
         status = params['status']
-        logging.info("Executing callback for order %s with status %s" % \
+        logging.info("Executing callback for order %s with status %s" %
                      (orderid, status))
 
         if status == webtopay.STATUS_SUCCESS:
@@ -133,6 +149,7 @@ class OrderCallbackHandler(webapp2.RequestHandler):
                                    payer_surname=params.get('surename'),
                                    payment_provider=params['payment'])
 
+
 class OrderAcceptHandler(webapp2.RequestHandler):
     def get(self, id):
         order = model.order_get(id)
@@ -143,10 +160,10 @@ class OrderAcceptHandler(webapp2.RequestHandler):
         coupon_urls = map(lambda c: webapp2.uri_for('coupon', id=c.coupon_id),
                           coupons)
 
-
         values = {'order': order,
                   'coupons': zip(coupons, coupon_urls)}
         write_template(self.response, 'accept.html', values)
+
 
 class CouponHandler(webapp2.RequestHandler):
     def get(self, id):
@@ -161,6 +178,7 @@ class CouponHandler(webapp2.RequestHandler):
 
         write_template(self.response, 'coupon.html', values)
 
+
 class CouponQrHandler(webapp2.RequestHandler):
     def get(self, id):
         url = webapp2.uri_for('check', id=id, _full=True)
@@ -172,6 +190,7 @@ class CouponQrHandler(webapp2.RequestHandler):
 
         self.response.headers.add("Content-Type", "image/png")
         img.save(self.response.out)
+
 
 class CheckHandler(webapp2.RequestHandler):
     def get(self, id):
@@ -186,6 +205,7 @@ class CheckHandler(webapp2.RequestHandler):
         model.coupon_use(id)
         msg = "Kvietimas panaudotas"
         webapp2.redirect(webapp2.uri_for('list_active', msg=msg), abort=True)
+
 
 class CouponListHandler(webapp2.RequestHandler):
     def get(self):

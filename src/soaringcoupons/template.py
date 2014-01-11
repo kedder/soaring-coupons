@@ -7,6 +7,7 @@ from google.appengine.api import users
 
 from soaringcoupons import formatters
 
+
 def make_globals():
     user = users.get_current_user()
     home = webapp2.uri_for('home')
@@ -29,11 +30,13 @@ def make_globals():
 
     return values
 
+
 def render_template(name, values={}):
     ns = make_globals()
     ns.update(values)
     tpl = jinja_environment.get_template(name)
     return tpl.render(ns)
+
 
 def write_template(response, name, values={}):
     response.out.write(render_template(name, values))

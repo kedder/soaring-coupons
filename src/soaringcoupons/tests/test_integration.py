@@ -5,9 +5,11 @@ import webtest
 import webapp2
 import mock
 from google.appengine.ext import testbed
-from google.appengine.datastore.datastore_stub_util import PseudoRandomHRConsistencyPolicy
+from google.appengine.datastore.datastore_stub_util import \
+    PseudoRandomHRConsistencyPolicy
 
 from soaringcoupons import controller, webtopay, model
+
 
 class IntegrationTestCase(unittest.TestCase):
     def test_home(self):
@@ -32,7 +34,7 @@ class IntegrationTestCase(unittest.TestCase):
                'surename': 'Gates',
                'payment': 'test'}
         data = webtopay._safe_base64_encode(
-                        webtopay._prepare_query_string(req, 'test'))
+            webtopay._prepare_query_string(req, 'test'))
         signature = webtopay._sign(data, 'pass')
 
         app = create_testapp()
@@ -57,7 +59,8 @@ class IntegrationTestCase(unittest.TestCase):
         self.assertEqual(len(messages), 1)
 
         # Make sure email contains correct link to coupon
-        self.assertRegexpMatches(messages[0].body.payload, r'http://.*/coupon/1001')
+        self.assertRegexpMatches(messages[0].body.payload,
+                                 r'http://.*/coupon/1001')
 
     def test_accept(self):
         # We need to see results of order_process immediately in this test
@@ -112,7 +115,7 @@ class IntegrationTestCase(unittest.TestCase):
         self.testbed.init_datastore_v3_stub(consistency_policy=self.cpolicy)
 
         self.testbed.init_mail_stub()
-        self.mail_stub= self.testbed.get_stub(testbed.MAIL_SERVICE_NAME)
+        self.mail_stub = self.testbed.get_stub(testbed.MAIL_SERVICE_NAME)
 
         self.testbed.init_user_stub()
 

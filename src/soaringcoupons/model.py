@@ -8,16 +8,6 @@ from collections import namedtuple, defaultdict
 
 from google.appengine.ext import db
 
-class CouponType(object):
-    id = None
-    price = None
-    t = None
-
-    def __init__(self, id, price, description=None):
-        self.id = id
-        self.price = price
-        self.description = description
-
 
 CouponType = namedtuple('CouponType', ['id', 'price', 'title', 'description'])
 
@@ -46,8 +36,10 @@ coupon_types = [CouponType('training', 150.0,
                            )
                 ]
 
+
 def list_coupon_types():
-    return coupon_types;
+    return coupon_types
+
 
 def get_coupon_type(id):
     for ct in coupon_types:
@@ -60,6 +52,7 @@ def get_coupon_type(id):
 class Counter(db.Model):
     cnt = db.IntegerProperty(default=0L, indexed=False)
 
+
 @db.transactional
 def counter_next():
     c = Counter.get_by_key_name('c0')
@@ -68,6 +61,7 @@ def counter_next():
     c.cnt += 1
     c.put()
     return c.cnt
+
 
 class Settings(db.Model):
     """ System settings
@@ -79,6 +73,7 @@ class Settings(db.Model):
 
     def is_configured(self):
         return bool(self.webtopay_project_id)
+
 
 def get_settings(version='main'):
     """ Return dictionary of all application settings.
@@ -126,14 +121,17 @@ class Order(db.Model):
     def get_coupon_type(self):
         return get_coupon_type(self.coupon_type)
 
+
 def order_gen_id():
     """Generate unique order id.
     """
     cnt = counter_next()
     return str(cnt)
 
+
 def order_get(key_name):
     return Order.get_by_key_name(key_name)
+
 
 @db.transactional
 def order_create(order_id, coupon_type, test=False):
@@ -145,8 +143,10 @@ def order_create(order_id, coupon_type, test=False):
                   create_time=datetime.datetime.now(),
                   status=Order.ST_PENDING)
     db.put(order)
-    logging.info("Order %s (%s, test=%s) created" % (order_id, coupon_type, test))
+    logging.info("Order %s (%s, test=%s) created" %
+                 (order_id, coupon_type, test))
     return order
+
 
 @db.transactional
 def order_cancel(order_id):
@@ -161,6 +161,7 @@ def order_cancel(order_id):
     db.put(order)
     logging.info("Order %s cancelled" % order.order_id)
     return order
+
 
 @db.transactional(xg=True)
 def order_process(order_id, payer_email,
@@ -194,6 +195,7 @@ def order_process(order_id, payer_email,
 
     return order, coupons
 
+
 def order_find_coupons(order_id):
     orderkey = db.Key.from_path('Order', order_id)
     res = Coupon.all().filter('order =', orderkey)
@@ -215,6 +217,7 @@ def order_count_by_status():
 
     return counts
 
+
 class Coupon(db.Model):
     ST_ACTIVE = 1
     ST_USED = 2
@@ -231,8 +234,10 @@ class Coupon(db.Model):
     def active(self):
         return self.status == Coupon.ST_ACTIVE
 
+
 def coupon_get(key_name):
     return Coupon.get_by_key_name(key_name)
+
 
 def coupon_gen_id():
     """Generate unique order id.
@@ -242,6 +247,7 @@ def coupon_gen_id():
     seed = ''.join(random.choice(string.digits) for i in range(6))
     year = datetime.datetime.now().strftime('%y')
     return "%s%s%s" % (year, cnt, seed)
+
 
 def coupon_create(order):
     coupons = []
@@ -253,6 +259,7 @@ def coupon_create(order):
         logging.info("Coupon %s created" % coupon_id)
 
     return coupons
+
 
 @db.transactional
 def coupon_use(coupon_id):
@@ -295,6 +302,7 @@ def coupon_spawn(coupon_type, count, email, notes, test=False):
 def _coupon_get_valid():
     return (c for c in Coupon.all() if not c.order.test)
 
+
 def coupon_count_by_type():
     """Return coupon counts by type (training, acro, etc)
     """
@@ -304,6 +312,7 @@ def coupon_count_by_type():
         counts[coupon.order.coupon_type] += 1
 
     return counts
+
 
 def coupon_count_by_status():
     """Return coupon statistics by status (active / used)

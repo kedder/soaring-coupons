@@ -3,6 +3,8 @@ import unittest
 from datetime import datetime
 
 from soaringcoupons import formatters
+
+
 class FormattersTestCase(unittest.TestCase):
     def test_format_yesno(self):
         self.assertEqual(formatters.format_yesno(True), u'Taip')
