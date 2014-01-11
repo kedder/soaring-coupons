@@ -1,0 +1,13 @@
+# Configuration script to Travis-CI
+language: python
+python:
+  - "2.7"
+install:
+  - pip install coverage --use-mirrors
+  - pip install python-coveralls --use-mirrors
+script:
+  - python bootstrap.py
+  - ./bin/buildout
+  - coverage run --source=src/soaringcoupons ./bin/test -v
+# after_success:
+#   coveralls
