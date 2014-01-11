@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import unittest
+import base64
 
 import webtest
 import webapp2
@@ -59,8 +60,10 @@ class IntegrationTestCase(unittest.TestCase):
         self.assertEqual(len(messages), 1)
 
         # Make sure email contains correct link to coupon
-        self.assertRegexpMatches(messages[0].body.payload,
-                                 r'http://.*/coupon/1001')
+        msg = messages[0]
+        self.assertEqual(msg.body.encoding, 'base64')
+        msg_contents = base64.b64decode(msg.body.payload)
+        self.assertRegexpMatches(msg_contents, r'http://.*/coupon/1001')
 
     def test_accept(self):
         # We need to see results of order_process immediately in this test
