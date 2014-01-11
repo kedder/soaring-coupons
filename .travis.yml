@@ -5,8 +5,8 @@ python:
 install:
   - python bootstrap.py
   - ./bin/buildout
-  - pip install coverage --use-mirrors
-  - pip install python-coveralls --use-mirrors
+  - pip install coverage
+  - pip install python-coveralls
 script:
   - coverage run --source=src/soaringcoupons ./bin/test
 after_success:
