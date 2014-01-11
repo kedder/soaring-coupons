@@ -3,12 +3,11 @@ language: python
 python:
   - "2.7"
 install:
-  - pip install coverage --use-mirrors
-  - pip install python-coveralls --use-mirrors
-  - pip install .
-script:
   - python bootstrap.py
   - ./bin/buildout
+  - pip install coverage --use-mirrors
+  - pip install python-coveralls --use-mirrors
+script:
   - coverage run --source=src/soaringcoupons ./bin/test
-# after_success:
-#   coveralls
+after_success:
+  # coveralls
