@@ -1,3 +1,6 @@
+APPCFG=./bin/python ./parts/google_appengine/appcfg.py
+#APPCFG=./bin/appcfg
+
 all: bin/python
 
 .venv:
@@ -22,12 +25,12 @@ run:
 .PHONY: upload-production
 upload-production:
 	./bin/buildout -N
-	./bin/appcfg update parts/gae
+	$(APPCFG) update parts/gae
 
 .PHONY: upload-testing
 upload-testing:
 	./bin/buildout -N
-	./bin/appcfg update parts/gae --version=test
+	$(APPCFG) update parts/gae --version=test
 
 .PHONY: test
 test:
