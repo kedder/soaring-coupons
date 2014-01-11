@@ -10,4 +10,4 @@ install:
 script:
   - coverage run --source=src/soaringcoupons ./bin/test
 after_success:
-  # coveralls
+  coveralls
