@@ -36,6 +36,7 @@ setup(
                         'jinja2',
                         'webapp2',
                         'qrcode',
+                        'six',
                         'wtforms'
                         ],
     include_package_data = True,

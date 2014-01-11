@@ -5,7 +5,7 @@ python:
 install:
   - pip install coverage --use-mirrors
   - pip install python-coveralls --use-mirrors
-  - python setup.py install
+  - python setup.py install --always-unzip
 script:
   - python bootstrap.py
   - ./bin/buildout
