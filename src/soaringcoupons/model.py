@@ -235,6 +235,13 @@ class Coupon(db.Model):
         return self.status == Coupon.ST_ACTIVE
 
 
+class CouponeSearchSpec(object):
+    def __init__(self, year=None, active=None, number=None):
+        self.year = year
+        self.active = active
+        self.number = number
+
+
 def coupon_get(key_name):
     return Coupon.get_by_key_name(key_name)
 
@@ -271,6 +278,16 @@ def coupon_use(coupon_id):
     db.put(c)
     logging.info("Coupon %s used" % coupon_id)
     return c
+
+
+def coupon_search(spec):
+    """Search coupons given CouponeSearchSpec
+    """
+    return []
+
+
+def coupon_count(spec):
+    return coupon_search(spec).count()
 
 
 def coupon_list_active():

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import unittest
 import datetime
-import random
+from contextlib import contextmanager
 
 import mock
 from google.appengine.ext import testbed
@@ -11,23 +11,14 @@ from google.appengine.datastore.datastore_stub_util import \
 from soaringcoupons import model
 
 
-class FakeDateTime(datetime.datetime):
-    @classmethod
-    def now(self):
-        return datetime.datetime(2012, 1, 4)
-
-
 class ModelTestCase(unittest.TestCase):
 
     def test_coupon_gen_id(self):
-        # Mock random.choice to return always '0'
-        mock.patch('datetime.datetime', FakeDateTime).start()
-        mock.patch('random.choice').start()
-        random.choice.return_value = '0'
-
-        self.assertEqual(model.coupon_gen_id(), '121000000')
-        self.assertEqual(model.coupon_gen_id(), '122000000')
-        self.assertEqual(model.coupon_gen_id(), '123000000')
+        with mock.patch("random.choice", return_value="0"):
+            with freeze_time(datetime.datetime(2012, 1, 4)):
+                self.assertEqual(model.coupon_gen_id(), '121000000')
+                self.assertEqual(model.coupon_gen_id(), '122000000')
+                self.assertEqual(model.coupon_gen_id(), '123000000')
 
     def test_order_create(self):
         ct = model.CouponType('test', 300.0, "Test flight", "Test flight")
@@ -119,6 +110,25 @@ class ModelTestCase(unittest.TestCase):
         self.assertEqual(len(coupons), 1)
 
         self.assertEqual(coupons[0].order.order_id, order1.order_id)
+
+    def test_coupon_search(self):
+        self.cpolicy.SetProbability(1.0)
+
+        ct = model.CouponType('test', 300.0, "Test flight", "Test flight")
+
+        with freeze_time(datetime.datetime(2013, 2, 16)):
+            order1 = model.order_create('1', ct, test=True)
+            model.order_process(order1.order_id, 'test@test.com', 100.0, 'EUR')
+
+        with freeze_time(datetime.datetime(2013, 12, 31)):
+            order2 = model.order_create('2', ct, test=True)
+            o, coupons = model.order_process(order2.order_id, 'test@test.com',
+                                             100.0, 'EUR')
+            model.coupon_use(coupons[0].coupon_id)
+
+        with freeze_time(datetime.datetime(2014, 1, 11)):
+            order2 = model.order_create('3', ct, test=True)
+            model.order_process(order2.order_id, 'test@test.com', 100.0, 'EUR')
 
     def test_order_count_by_status(self):
         self.cpolicy.SetProbability(1.0)
@@ -214,3 +224,36 @@ class ModelTestCase(unittest.TestCase):
     def tearDown(self):
         self.testbed.deactivate()
         mock.patch.stopall()
+
+
+@contextmanager
+def freeze_time(dt):
+    real_date = datetime.date
+    real_datetime = datetime.datetime
+
+    class FakeDateType(type):
+        def __instancecheck__(self, instance):
+            return isinstance(instance, real_date)
+
+    class FakeDate(real_date):
+        __metaclass__ = FakeDateType
+
+        def __new__(cls, *args, **kwargs):
+            return real_date.__new__(real_date, *args, **kwargs)
+
+        @staticmethod
+        def today():
+            return dt.date()
+
+    class FakeDateTime(real_datetime):
+        def __new__(cls, *args, **kwargs):
+            return real_datetime.__new__(real_datetime, *args, **kwargs)
+
+        @staticmethod
+        def now():
+            return dt
+
+    date_patch = mock.patch("datetime.date", FakeDate)
+    datetime_patch = mock.patch("datetime.datetime", FakeDateTime)
+    with date_patch, datetime_patch:
+        yield
