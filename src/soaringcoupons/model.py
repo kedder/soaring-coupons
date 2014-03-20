@@ -33,7 +33,30 @@ coupon_types = [CouponType('training', 150.0,
                                            pamėginsite patys pilotuoti. Skrydis
                                            trunka 20-30 min.
                                            """)
-                           )
+                           ),
+                CouponType('plane_short', 200.0,
+                           u'Apžvalginis skrydis lėktuvu 3 asmenims',
+                           textwrap.dedent(u"""
+                                           Kviečiame į Paluknio aerodromą —
+                                           įspūdingam 10-ties minučių
+                                           apžvalginiam skrydžiui keturviečiu
+                                           lėktuvu — patirti skrydžio jausmą,
+                                           pasigrožėti gamta iš aukštai bei iš
+                                           arčiau susipažinti su aviacija.
+                                           """)
+                           ),
+                CouponType('plane_long', 500.0,
+                           u'Apžvalginis skrydis lėktuvu virš Trakų 3 asmenims',
+                           textwrap.dedent(u"""
+                                           Kviečiame į Paluknio aerodromą —
+                                           įspūdingam 30-ties minučių
+                                           apžvalginiam skrydžiui virš Trakų
+                                           keturviečiu lėktuvu — patirti
+                                           skrydžio jausmą, pasigrožėti gamta
+                                           iš aukštai bei iš arčiau susipažinti
+                                           su aviacija.
+                                           """)
+                           ),
                 ]
 
 
