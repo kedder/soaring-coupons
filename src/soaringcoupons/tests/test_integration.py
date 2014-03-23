@@ -206,6 +206,21 @@ class IntegrationTestCase(unittest.TestCase):
         self.assertEqual(resp.status, "200 OK")
         self.assertIn("Kvietimas galioja.", resp)
 
+    def test_admin_check_use(self):
+        app = create_testapp()
+        self.cpolicy.SetProbability(1.0)
+
+        ct = model.get_coupon_type("plane_long")
+        order = model.order_create("1", ct)
+        coupons = model.coupon_create(order)
+        cid = coupons[0].coupon_id
+
+        resp = app.post("/admin/check/%s" % cid)
+        self.assertEqual(resp.status, "302 Moved Temporarily")
+
+        used = model.coupon_get(cid)
+        self.assertEqual(used.status, model.Coupon.ST_USED)
+
     def setUp(self):
         self.testbed = testbed.Testbed()
         self.testbed.activate()
