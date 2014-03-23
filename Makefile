@@ -39,6 +39,7 @@ test:
 .PHONY: coverage
 coverage:
 	coverage run --source=src/soaringcoupons --omit='*.html,*.txt' ./bin/test
+	coverage report
 	coverage html
 	@echo
 	@echo Now run:
