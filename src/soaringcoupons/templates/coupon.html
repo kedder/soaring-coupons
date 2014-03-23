@@ -1,4 +1,5 @@
 {% extends "base_generic.html" %}
+{% import "coupon_content.html" as cc %}
 
 {% block title %}Kvietimas {{coupon.coupon_id}} |{% endblock %}
 
@@ -10,7 +11,7 @@
 <div class="logo">
 	<img class="logo" alt="Vilniaus Aeroklubas" src="/static/images/logo.png" />
 </div>
-<h3>{{ coupon.coupon_id }}. {{ coupon_type.title}}</h3>
+<h3>{{ coupon.coupon_id }}. {{ cc.title(coupon)}}</h3>
 
 <p class='noprint important'>Atvažiuodami skristi, būtinai su savimi
 turėkite atspausdintą šį kvietimą.</p>
@@ -20,23 +21,17 @@ turėkite atspausdintą šį kvietimą.</p>
     <img src='{{ qr }}' />
 </div>
 
-<p>Kviečiame į Paluknio aerodromą patirti skrydžio jausmą bemotoriu sklandytuvu,
-pasigrožėti gamta iš viršaus, taip susipažįstant su sklandymo sportu.</p>
+<p>{{ cc.welcome(coupon) }}</p>
 
-<h4>Apie pramogą</h4>
-
-<p>{{ coupon_type.description }} Tačiau aerodrome pasiruoškite praleisti
-daugiau laiko &mdash; laukdami skrydžio ar dalindamiesi įspūdžiais po jo,
-pasigrožėsite kitų sklandytuvų bei lėktuvų skrydžiais, galėsite apsilankyti
-kavinėje ar surengti savo vaišes aerodromo gamtoje.</p>
+<p>Aerodrome pasiruoškite praleisti daugiau laiko — laukdami skrydžio ar dalindamiesi įspūdžiais po jo. Pasigrožėsite sklandytuvų bei lėktuvų skrydžiais, galėsite apsilankyti kavinėje ar surengti savo vaišes aerodromo gamtoje.</p>
 
 <h4>Kaip mus rasti?</h4>
 
-<p>Paluknio aerodromas įsikūręs 35 kilometre šalia plento važiuojant iš
-Vilniaus link Druskininkų keliu A4. Pravažiavę Paluknio miestelį, kairėje
-pusėje pamatysite aerodromą. Įvažiavimas &mdash; keliuku šalia iškelto
-sklandytuvo. Žemėlapį rasite čia: <a
-	href="http://goo.gl/maps/edazK">http://goo.gl/maps/edazK</a>.</p>
+<p>Paluknio aerodromas — įsikūręs šalia kelio, važiuojant iš Vilniaus link
+Druskininkų, 35-tąjame kilometre. Pravažiavę Paluknio miestelį, kairėje pusėje
+pamatysite aerodromą. Įvažiavimas — keliuku šalia iškelto sklandytuvo. Žemėlapį
+rasite čia: <a
+href="http://goo.gl/maps/edazK">http://goo.gl/maps/edazK</a>.</p>
 
 <h4>Ką apsirengti?</h4>
 
@@ -51,16 +46,15 @@ nelyjant, nesant labai stipriam vėjui ar karščiui virš +30&deg;C.</p>
 
 <h4>Svarbu!</h4>
 
-<p>Kvietimas galioja 1 skrydžiui 1 asmeniui iki šių metų rugsėjo 30d.
-Kviečiame atvykti Jums patogiu laiku. Skristi neleidžiama apsvaigusiems nuo
-alkoholio, narkotinių medžiagų ar turintiems sveikatos sutrikimų. Būtinai prieš
-važiuodami į aerodromą skrydį suderinkite paskambinę telefonu <span
-	itemprop="telephone"><a href="tel:+37063302222">+370 633 02222</a></span>
-arba <span itemprop="telephone"><a href="tel:+37061515060">+370 615
-		15060</a></span>.</p>
+<p>
 
-<p>Kvietimas {{ coupon.coupon_id}} įsigytas {{ coupon.order.payment_time | date
-}}.</p>
+{{ cc.validity(coupon) }}. Kviečiame atvykti Jums patogiu laiku, iš anksto
+skrydį suderinus  telefonu <span itemprop="telephone"><a
+href="tel:+37063302222">+370&nbsp;633&nbsp;02222</a></span> arba <span
+itemprop="telephone"><a
+href="tel:+37061515060">+370&nbsp;615&nbsp;15060</a></span>. Skristi
+neleidžiama apsvaigusiems nuo alkoholio, narkotinių medžiagų ar turintiems
+sveikatos sutrikimų. </p>
 
 {% endblock %}
 

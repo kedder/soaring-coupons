@@ -3,61 +3,23 @@ import datetime
 import random
 import string
 import logging
-import textwrap
 from collections import namedtuple, defaultdict
 
 from google.appengine.ext import db
 
 
-CouponType = namedtuple('CouponType', ['id', 'price', 'title', 'description'])
+CouponType = namedtuple('CouponType', ['id', 'price', 'title'])
 
-coupon_types = [CouponType('training', 150.0,
-                           u'Apžvalginis skrydis sklandytuvu',
-                           textwrap.dedent(u"""
-                                           Sklandytuvas išvelkamas
-                                           autoišvilktuvu ir maždaug 300 m.
-                                           aukštyje atkabinamas.  Pakilę su
-                                           patyrusiu pilotu, virš aerodromo
-                                           apsuksite apžvalginį ratą. Skrydis
-                                           truks apie 5 min.
-                                           """)
-                           ),
-                CouponType('acro', 300.0,
-                           u'Pilotavimo skrydis sklandytuvu',
-                           textwrap.dedent(u"""
-                                           Sklandytuvas išvelkamas lėktuvu
-                                           ir aerodromo rajone atkabinamas.
-                                           Skrisdami su patyrusiu pilotu,
-                                           pasigrožėsite gamta , susipažinsite
-                                           su sklandytuvo skrydžio galimybėmis,
-                                           pamėginsite patys pilotuoti. Skrydis
-                                           trunka 20-30 min.
-                                           """)
-                           ),
-                CouponType('plane_short', 200.0,
-                           u'Apžvalginis skrydis lėktuvu 3 asmenims',
-                           textwrap.dedent(u"""
-                                           Kviečiame į Paluknio aerodromą —
-                                           įspūdingam 10-ties minučių
-                                           apžvalginiam skrydžiui keturviečiu
-                                           lėktuvu — patirti skrydžio jausmą,
-                                           pasigrožėti gamta iš aukštai bei iš
-                                           arčiau susipažinti su aviacija.
-                                           """)
-                           ),
-                CouponType('plane_long', 500.0,
-                           u'Apžvalginis skrydis lėktuvu virš Trakų 3 asmenims',
-                           textwrap.dedent(u"""
-                                           Kviečiame į Paluknio aerodromą —
-                                           įspūdingam 30-ties minučių
-                                           apžvalginiam skrydžiui virš Trakų
-                                           keturviečiu lėktuvu — patirti
-                                           skrydžio jausmą, pasigrožėti gamta
-                                           iš aukštai bei iš arčiau susipažinti
-                                           su aviacija.
-                                           """)
-                           ),
-                ]
+coupon_types = [
+    CouponType('training', 150.0,
+               u'Apžvalginis skrydis sklandytuvu'),
+    CouponType('acro', 300.0,
+               u'Pilotavimo skrydis sklandytuvu'),
+    CouponType('plane_short', 200.0,
+               u'Apžvalginis skrydis lėktuvu 3 asmenims'),
+    CouponType('plane_long', 500.0,
+               u'Apžvalginis skrydis lėktuvu virš Trakų 3 asmenims'),
+]
 
 
 def list_coupon_types():

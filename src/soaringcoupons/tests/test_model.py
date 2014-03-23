@@ -21,7 +21,7 @@ class ModelTestCase(unittest.TestCase):
                 self.assertEqual(model.coupon_gen_id(), '123000000')
 
     def test_order_create(self):
-        ct = model.CouponType('test', 300.0, "Test flight", "Test flight")
+        ct = model.CouponType('test', 300.0, "Test flight")
         order = model.order_create(model.order_gen_id(), ct, test=True)
 
         self.assertEqual(order.coupon_type, 'test')
@@ -32,7 +32,7 @@ class ModelTestCase(unittest.TestCase):
 
     def test_order_cancel(self):
         # Create order
-        ct = model.CouponType('test', 300.0, "Test flight", "Test flight")
+        ct = model.CouponType('test', 300.0, "Test flight")
         order = model.order_create(model.order_gen_id(), ct, test=True)
 
         # Cancelling order changes its status
@@ -46,7 +46,7 @@ class ModelTestCase(unittest.TestCase):
 
     def test_order_process(self):
         # Create sample order
-        ct = model.CouponType('test', 300.0, "Test flight", "Test flight")
+        ct = model.CouponType('test', 300.0, "Test flight")
         order = model.order_create('1', ct, test=True)
 
         # Process successful payment
@@ -79,7 +79,7 @@ class ModelTestCase(unittest.TestCase):
     def test_order_process_twice(self):
         # Create sample order
 
-        ct = model.CouponType('test', 300.0, "Test flight", "Test flight")
+        ct = model.CouponType('test', 300.0, "Test flight")
         order = model.order_create('2', ct, test=True)
 
         # Process successful payment
@@ -100,7 +100,7 @@ class ModelTestCase(unittest.TestCase):
         self.cpolicy.SetProbability(1.0)
 
         # Create two orders and process successful payment
-        ct = model.CouponType('test', 300.0, "Test flight", "Test flight")
+        ct = model.CouponType('test', 300.0, "Test flight")
         order1 = model.order_create('1', ct, test=True)
         model.order_process(order1.order_id, 'test@test.com', 100.0, 'EUR')
         order2 = model.order_create('2', ct, test=True)
@@ -114,7 +114,7 @@ class ModelTestCase(unittest.TestCase):
     def test_coupon_search(self):
         self.cpolicy.SetProbability(1.0)
 
-        ct = model.CouponType('test', 300.0, "Test flight", "Test flight")
+        ct = model.CouponType('test', 300.0, "Test flight")
 
         with freeze_time(datetime.datetime(2013, 2, 16)):
             order1 = model.order_create('1', ct, test=True)
@@ -199,7 +199,7 @@ class ModelTestCase(unittest.TestCase):
         self.assertEqual(model.counter_next(), 6)
 
     def test_spawn_coupons(self):
-        ct = model.CouponType('test', 300.0, "Test flight", "Test flight")
+        ct = model.CouponType('test', 300.0, "Test flight")
         coupons = model.coupon_spawn(ct, 4,
                                      email="test@test.com",
                                      notes="2% parama")

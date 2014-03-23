@@ -1,0 +1,62 @@
+{% macro title(coupon) -%}
+    {{ coupon.order.get_coupon_type().title }}
+{%- endmacro %}
+
+{% macro welcome(coupon) -%}
+    {% set ct = coupon.order.coupon_type %}
+
+    {% if ct == 'training' %}
+
+        Kviečiame į Paluknio aerodromą patirti skrydžio jausmą bemotoriu
+        sklandytuvu, pasigrožėti gamta ir susipažinti su sklandymo sportu.
+        Sklandytuvas išvilktas autoišvilktuvu į 300 m. aukštį, atkabinamas.
+        Pakilę su patyrusiu pilotu, virš aerodromo apsuksite apžvalginį ratą.
+        Skrydis truks apie 5 min.
+
+
+    {% elif ct == 'acro' %}
+
+        Kviečiame į Paluknio aerodromą patirti skrydžio jausmą bemotoriu
+        sklandytuvu, pasigrožėti gamta ir susipažinti su sklandymo sportu.
+        Sklandytuvas, išvilktas lėktuvu, aerodromo rajone atkabinamas.
+        Sklęsdami su patyrusiu pilotu, susipažinsite su sklandytuvo skrydžio
+        galimybėmis, išbandysite jį patys pilotuodami. Skrydis truks 20-30 min.
+
+    {% elif ct == 'plane_short' %}
+
+        Kviečiame į Paluknio aerodromą — 10-ties minučių apžvalginiam skrydžiui
+        keturviečiu lėktuvu — patirti skrydžio jausmą, pasigrožėti gamta bei iš
+        arčiau susipažinti su aviacija ir lėktuvo skrydžio galimybėmnis.
+
+    {% elif ct == 'plane_long' %}
+
+        Kviečiame į Paluknio aerodromą — 30-ties minučių apžvalginiam skrydžiui
+        į Trakus keturviečiu lėktuvu — patirti skrydžio jausmą, pasigrožėti
+        gamta bei iš arčiau susipažinti su aviacija ir lėktuvo skrydžio
+        galimybėmnis.
+
+    {% else %}
+
+        {{unknown_coupon_type}}  {# this will cause macro to fail #}
+
+    {% endif %}
+
+{%- endmacro %}
+
+{% macro validity(coupon) -%}
+
+    {% set ct = coupon.order.coupon_type %}
+
+    {% if ct == 'training' %}
+        Kvietimas galioja 1 skrydžiui 1 asmeniui iki šių metų rugsėjo 30 d
+    {% elif ct == 'acro' %}
+        Kvietimas galioja 1 skrydžiui 1 asmeniui iki šių metų rugsėjo 30 d
+    {% elif ct == 'plane_short' %}
+        Kvietimas galioja 1 skrydžiui 3 asmenims iki šių metų rugsėjo 30 d
+    {% elif ct == 'plane_long' %}
+        Kvietimas galioja 1 skrydžiui 3 asmenims iki šių metų rugsėjo 30 d
+    {% else %}
+        {{unknown_coupon_type}}  {# this will cause macro to fail #}
+    {% endif %}
+
+{%- endmacro %}

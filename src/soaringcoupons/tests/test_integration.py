@@ -22,7 +22,7 @@ class IntegrationTestCase(unittest.TestCase):
     def test_callback_success(self):
         # Create test order
 
-        ct = model.CouponType('test', 200.0, 'Test coupon', 'Test coupon')
+        ct = model.CouponType('test', 200.0, 'Test coupon')
         order = model.order_create('1', ct)
 
         # Prepare request as webtopay would
@@ -69,7 +69,7 @@ class IntegrationTestCase(unittest.TestCase):
         # We need to see results of order_process immediately in this test
         self.cpolicy.SetProbability(1.0)
 
-        ct = model.CouponType('test', 200.0, 'Test coupon', 'Test coupon')
+        ct = model.CouponType('test', 200.0, 'Test coupon')
         order = model.order_create('1', ct)
         with mock.patch('soaringcoupons.model.coupon_gen_id') as m:
             m.return_value = '1001'
@@ -123,6 +123,22 @@ class IntegrationTestCase(unittest.TestCase):
             resp = app.get('/coupon/%s' % cid)
 
             self.assertIn(cid, resp)
+
+    def test_coupon_unknown_type(self):
+        # Make sure we fail if we try to generate coupon for unknown type
+        app = create_testapp()
+
+        ct = model.CouponType('test', 200.0, 'Test coupon')
+        order = model.order_create("1", ct)
+        coupons = model.coupon_create(order)
+        self.assertEquals(len(coupons), 1)
+        cid = coupons[0].coupon_id
+
+        # Let's pretend coupon_type test is a registered type
+        with mock.patch('soaringcoupons.model.get_coupon_type') as m:
+            m.return_value = ct
+            with self.assertRaises(webtest.AppError):
+                app.get('/coupon/%s' % cid)
 
     def setUp(self):
         self.testbed = testbed.Testbed()
