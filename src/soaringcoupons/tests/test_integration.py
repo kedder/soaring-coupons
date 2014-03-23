@@ -110,6 +110,20 @@ class IntegrationTestCase(unittest.TestCase):
         self.assertEqual(len(messages), 10)
         self.assertEqual(messages[0].to, 'test@test.com')
 
+    def test_coupon(self):
+        # Make sure coupon page is generated with all registered coupon types
+        app = create_testapp()
+
+        for idx, ct in enumerate(model.coupon_types):
+            order = model.order_create(str(idx), ct)
+            coupons = model.coupon_create(order)
+
+            self.assertEquals(len(coupons), 1)
+            cid = coupons[0].coupon_id
+            resp = app.get('/coupon/%s' % cid)
+
+            self.assertIn(cid, resp)
+
     def setUp(self):
         self.testbed = testbed.Testbed()
         self.testbed.activate()

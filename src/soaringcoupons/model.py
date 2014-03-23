@@ -280,6 +280,8 @@ def coupon_gen_id():
 
 
 def coupon_create(order):
+    """Create couponse for given order
+    """
     coupons = []
     for x in range(order.quantity):
         coupon_id = coupon_gen_id()
