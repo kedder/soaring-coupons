@@ -162,6 +162,20 @@ class IntegrationTestCase(unittest.TestCase):
             with self.assertRaises(webtest.AppError):
                 app.get('/coupon/%s' % cid)
 
+    def test_qr(self):
+        app = create_testapp()
+
+        ct = model.get_coupon_type("plane_long")
+        order = model.order_create("1", ct)
+        coupons = model.coupon_create(order)
+        self.assertEquals(len(coupons), 1)
+        cid = coupons[0].coupon_id
+        resp = app.get("/qr/%s" % cid)
+
+        self.assertEqual(resp.status, "200 OK")
+        self.assertEqual(resp.headers['Content-Type'], 'image/png')
+        self.assertEqual(resp.body[:4], '\x89PNG')
+
     def setUp(self):
         self.testbed = testbed.Testbed()
         self.testbed.activate()
