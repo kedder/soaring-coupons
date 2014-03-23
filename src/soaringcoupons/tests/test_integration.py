@@ -221,6 +221,22 @@ class IntegrationTestCase(unittest.TestCase):
         used = model.coupon_get(cid)
         self.assertEqual(used.status, model.Coupon.ST_USED)
 
+    def test_dashboard(self):
+        app = create_testapp()
+        self.cpolicy.SetProbability(1.0)
+
+        # Pre-generate some coupons
+        ct = model.get_coupon_type("plane_long")
+        order = model.order_create("1", ct)
+        model.coupon_create(order)
+
+        model.coupon_spawn(model.get_coupon_type("training"), 3,
+                           "test@example.com", "test")
+
+        resp = app.get("/admin")
+        self.assertEqual(resp.status, "200 OK")
+        self.assertIn("Statistika", resp)
+
     def setUp(self):
         self.testbed = testbed.Testbed()
         self.testbed.activate()
@@ -232,6 +248,7 @@ class IntegrationTestCase(unittest.TestCase):
         self.mail_stub = self.testbed.get_stub(testbed.MAIL_SERVICE_NAME)
 
         self.testbed.init_user_stub()
+        self.testbed.init_memcache_stub()
 
     def tearDown(self):
         self.testbed.deactivate()
