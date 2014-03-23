@@ -176,6 +176,22 @@ class IntegrationTestCase(unittest.TestCase):
         self.assertEqual(resp.headers['Content-Type'], 'image/png')
         self.assertEqual(resp.body[:4], '\x89PNG')
 
+    def test_admin_list(self):
+        app = create_testapp()
+        self.cpolicy.SetProbability(1.0)
+
+        # Pre-generate some coupons
+        ct = model.get_coupon_type("plane_long")
+        order = model.order_create("1", ct)
+        model.coupon_create(order)
+
+        model.coupon_spawn(model.get_coupon_type("training"), 3,
+                           "test@example.com", "test")
+
+        resp = app.get("/admin/list")
+        self.assertEqual(resp.status, "200 OK")
+        self.assertIn("Galiojančių kvietimų: <strong>4</strong> vnt.", resp)
+
     def setUp(self):
         self.testbed = testbed.Testbed()
         self.testbed.activate()
