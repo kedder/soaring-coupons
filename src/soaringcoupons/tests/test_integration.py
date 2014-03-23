@@ -192,6 +192,20 @@ class IntegrationTestCase(unittest.TestCase):
         self.assertEqual(resp.status, "200 OK")
         self.assertIn("Galiojančių kvietimų: <strong>4</strong> vnt.", resp)
 
+    def test_admin_check(self):
+        app = create_testapp()
+        self.cpolicy.SetProbability(1.0)
+
+        ct = model.get_coupon_type("plane_long")
+        order = model.order_create("1", ct)
+        coupons = model.coupon_create(order)
+        cid = coupons[0].coupon_id
+
+        resp = app.get("/admin/check/%s" % cid)
+
+        self.assertEqual(resp.status, "200 OK")
+        self.assertIn("Kvietimas galioja.", resp)
+
     def setUp(self):
         self.testbed = testbed.Testbed()
         self.testbed.activate()
