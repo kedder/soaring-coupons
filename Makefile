@@ -35,3 +35,12 @@ upload-testing:
 .PHONY: test
 test:
 	./bin/test -c
+
+.PHONY: coverage
+coverage:
+	coverage run --source=src/soaringcoupons --omit='*.html,*.txt' ./bin/test
+	coverage html
+	@echo
+	@echo Now run:
+	@echo
+	@echo "    $$ sensible-browser htmlcov/index.html"
