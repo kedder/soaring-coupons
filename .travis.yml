@@ -6,8 +6,8 @@ install:
   - python bootstrap.py
   - ./bin/buildout
   - pip install coverage
-  - pip install python-coveralls
+  - pip install coveralls
 script:
-  - coverage run --source=src/soaringcoupons --omit='*.html,*.txt' ./bin/test
+  - coverage run --source=src/soaringcoupons ./bin/test
 after_success:
   coveralls
