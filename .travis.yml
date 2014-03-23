@@ -8,6 +8,6 @@ install:
   - pip install coverage
   - pip install python-coveralls
 script:
-  - coverage run --source=src/soaringcoupons ./bin/test
+  - coverage run --source=src/soaringcoupons --omit='*.html,*.txt' ./bin/test
 after_success:
   coveralls
