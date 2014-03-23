@@ -110,6 +110,28 @@ class IntegrationTestCase(unittest.TestCase):
         self.assertEqual(len(messages), 10)
         self.assertEqual(messages[0].to, 'test@test.com')
 
+    def test_order(self):
+        app = create_testapp()
+        self.cpolicy.SetProbability(1.0)
+
+        resp = app.post('/order/acro')
+        self.assertEqual(resp.status, '302 Moved Temporarily')
+
+        location = resp.headers['Location']
+        self.assertTrue(location.startswith("https://www.mokejimai.lt/pay/"))
+
+        # Make sure there is an order registered
+        orders = list(model.Order.all())
+        self.assertEqual(len(orders), 1)
+
+        order = orders[0]
+        self.assertEqual(order.is_paid(), False)
+        self.assertEqual(order.currency, "LTL")
+        self.assertEqual(order.price, 300.0)
+        self.assertEqual(order.status, model.Order.ST_PENDING)
+        self.assertEqual(order.quantity, 1)
+        self.assertEqual(order.test, False)
+
     def test_coupon(self):
         # Make sure coupon page is generated with all registered coupon types
         app = create_testapp()
