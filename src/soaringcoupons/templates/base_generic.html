@@ -26,6 +26,7 @@
       <div class="status noprint"><div class='inner'>{{ request.msg }}</div></div>
     {% endif %}
     <div class="container">
+    {% block body %}
         {% if user.logged %}
 		<div class="userinfo noprint">
 			<strong>{{ user.nickname }}</strong> |
@@ -44,6 +45,7 @@
         {% block main %}
         {% endblock %}
       </div>
+    {% endblock %}
     </div>
   </body>
 </html>
