@@ -11,9 +11,9 @@ from google.appengine.ext import db
 CouponType = namedtuple('CouponType', ['id', 'price', 'title'])
 
 coupon_types = [
-    CouponType('training', 150.0,
+    CouponType('training', 120.0,
                u'Apžvalginis skrydis sklandytuvu'),
-    CouponType('acro', 300.0,
+    CouponType('acro', 240.0,
                u'Pilotavimo skrydis sklandytuvu'),
     CouponType('plane_short', 200.0,
                u'Apžvalginis skrydis lėktuvu 3 asmenims'),
