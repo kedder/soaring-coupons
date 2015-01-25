@@ -48,13 +48,13 @@
     {% set ct = coupon.order.coupon_type %}
 
     {% if ct == 'training' %}
-        Kvietimas galioja 1 skrydžiui 1 asmeniui iki šių metų rugsėjo 30 d
+        Kvietimas galioja 1 skrydžiui 1 asmeniui iki šių metų rugsėjo 20 d
     {% elif ct == 'acro' %}
-        Kvietimas galioja 1 skrydžiui 1 asmeniui iki šių metų rugsėjo 30 d
+        Kvietimas galioja 1 skrydžiui 1 asmeniui iki šių metų rugsėjo 20 d
     {% elif ct == 'plane_short' %}
-        Kvietimas galioja 1 skrydžiui 3 asmenims iki šių metų rugsėjo 30 d
+        Kvietimas galioja 1 skrydžiui 3 asmenims iki šių metų rugsėjo 20 d
     {% elif ct == 'plane_long' %}
-        Kvietimas galioja 1 skrydžiui 3 asmenims iki šių metų rugsėjo 30 d
+        Kvietimas galioja 1 skrydžiui 3 asmenims iki šių metų rugsėjo 20 d
     {% else %}
         {{unknown_coupon_type}}  {# this will cause macro to fail #}
     {% endif %}
