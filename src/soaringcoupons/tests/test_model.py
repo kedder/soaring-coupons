@@ -27,7 +27,7 @@ class ModelTestCase(unittest.TestCase):
         self.assertEqual(order.coupon_type, 'test')
         self.assertEqual(order.price, 300.0)
         self.assertEqual(order.status == model.Order.ST_PENDING, True)
-        self.assertEqual(order.currency, 'LTL')
+        self.assertEqual(order.currency, 'EUR')
         self.assertIsNotNone(order.create_time)
 
     def test_order_cancel(self):

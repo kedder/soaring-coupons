@@ -11,13 +11,13 @@ from google.appengine.ext import db
 CouponType = namedtuple('CouponType', ['id', 'price', 'title'])
 
 coupon_types = [
-    CouponType('training', 150.0,
+    CouponType('training', 45.0,
                u'Apžvalginis skrydis sklandytuvu'),
-    CouponType('acro', 300.0,
+    CouponType('acro', 90.0,
                u'Pilotavimo skrydis sklandytuvu'),
-    CouponType('plane_short', 200.0,
+    CouponType('plane_short', 60.0,
                u'Apžvalginis skrydis lėktuvu 3 asmenims'),
-    CouponType('plane_long', 500.0,
+    CouponType('plane_long', 150.0,
                u'Apžvalginis skrydis lėktuvu virš Trakų 3 asmenims'),
 ]
 
@@ -81,7 +81,7 @@ class Order(db.Model):
     coupon_type = db.StringProperty(required=True)
     quantity = db.IntegerProperty(required=True, default=1)
     price = db.FloatProperty(required=True)
-    currency = db.StringProperty(required=True, default='LTL')
+    currency = db.StringProperty(required=True, default='EUR')
     paid_amount = db.FloatProperty()
     paid_currency = db.StringProperty()
     payer_name = db.StringProperty()
@@ -123,7 +123,7 @@ def order_create(order_id, coupon_type, test=False):
     order = Order(key_name=order_id,
                   coupon_type=coupon_type.id,
                   price=coupon_type.price,
-                  currency='LTL',
+                  currency='EUR',
                   test=test,
                   create_time=datetime.datetime.now(),
                   status=Order.ST_PENDING)

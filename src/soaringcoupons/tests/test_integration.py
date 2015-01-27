@@ -126,8 +126,8 @@ class IntegrationTestCase(unittest.TestCase):
 
         order = orders[0]
         self.assertEqual(order.is_paid(), False)
-        self.assertEqual(order.currency, "LTL")
-        self.assertEqual(order.price, 300.0)
+        self.assertEqual(order.currency, "EUR")
+        self.assertEqual(order.price, 90.0)
         self.assertEqual(order.status, model.Order.ST_PENDING)
         self.assertEqual(order.quantity, 1)
         self.assertEqual(order.test, False)

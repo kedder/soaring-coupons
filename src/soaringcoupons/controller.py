@@ -106,7 +106,7 @@ class OrderHandler(webapp2.RequestHandler):
         data['orderid'] = order.order_id
         data['lang'] = 'LIT'
         data['amount'] = order.price * 100
-        data['currency'] = 'LTL'
+        data['currency'] = order.currency
         data['country'] = 'LT'
         data['paytext'] = (u'%s. Užsakymas nr. [order_nr] svetainėje '
                            u'[site_name]' % (ct.title))
