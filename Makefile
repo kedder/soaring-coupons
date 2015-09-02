@@ -5,6 +5,7 @@ all: bin/python
 
 .venv:
 	virtualenv -p python2.7 .venv
+	.venv/bin/pip install --upgrade setuptools
 
 bin/buildout: .venv
 	.venv/bin/python bootstrap.py
