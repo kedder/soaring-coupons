@@ -15,10 +15,14 @@ coupon_types = [
                u'Apžvalginis skrydis sklandytuvu'),
     CouponType('acro', 90.0,
                u'Pilotavimo skrydis sklandytuvu'),
-    CouponType('plane_short', 60.0,
+    CouponType('plane_short', 75.0,
                u'Apžvalginis skrydis lėktuvu 3 asmenims'),
     CouponType('plane_long', 150.0,
                u'Apžvalginis skrydis lėktuvu virš Trakų 3 asmenims'),
+    CouponType('ultralight_short', 35.0,
+               u'Apžvalginis skrydis Ultralengvuoju lėktuvu 1 asmeniui'),
+    CouponType('ultralight_long', 70.0,
+               u'Apžvalginis skrydis Ultralengvuoju lėktuvu virš Trakų 1 asmeniui'),
 ]
 
 

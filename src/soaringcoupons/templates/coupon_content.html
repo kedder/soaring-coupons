@@ -24,16 +24,25 @@
 
     {% elif ct == 'plane_short' %}
 
-        Kviečiame į Paluknio aerodromą — 10-ties minučių apžvalginiam skrydžiui
-        keturviečiu lėktuvu — patirti skrydžio jausmą, pasigrožėti gamta bei iš
-        arčiau susipažinti su aviacija ir lėktuvo skrydžio galimybėmnis.
+        Kviečiame į Paluknio aerodromą — 10-ties minučių apžvalginiam
+        skrydžiui keturviečiu lėktuvu — patirti skrydžio jausmą, pasigrožėti
+        gamta bei iš arčiau susipažinti su aviacija ir lėktuvo skrydžio
+        galimybėmnis.
 
     {% elif ct == 'plane_long' %}
 
-        Kviečiame į Paluknio aerodromą — 30-ties minučių apžvalginiam skrydžiui
-        į Trakus keturviečiu lėktuvu — patirti skrydžio jausmą, pasigrožėti
-        gamta bei iš arčiau susipažinti su aviacija ir lėktuvo skrydžio
-        galimybėmnis.
+        Kviečiame į Paluknio aerodromą — 15-kos minučių apžvalginiam skrydžiui
+        keturviečiu lėktuvu — patirti skrydžio jausmą, pasigrožėti gamta bei
+        iš arčiau susipažinti su aviacija ir lėktuvo skrydžio galimybėmnis.
+
+    {% elif ct == 'ultralight_short' %}
+
+        Kviečiame į Paluknio aerodromą — 30-ties minučių apžvalginiam
+        skrydžiui virš Trakų keturviečiu lėktuvu — patirti skrydžio jausmą,
+        pasigrožėti gamta bei iš arčiau susipažinti su aviacija ir lėktuvo
+        skrydžio galimybėmnis.
+
+    {% elif ct == 'ultralight_long' %}
 
     {% else %}
 
@@ -55,6 +64,10 @@
         Kvietimas galioja 1 skrydžiui 3 asmenims iki šių metų rugsėjo 20 d
     {% elif ct == 'plane_long' %}
         Kvietimas galioja 1 skrydžiui 3 asmenims iki šių metų rugsėjo 20 d
+    {% elif ct == 'ultralight_short' %}
+        Kvietimas galioja 1 skrydžiui 1 asmeniui  iki šių metų rugsėjo 30d
+    {% elif ct == 'ultralight_long' %}
+        Kvietimas galioja 1 skrydžiui 1 asmeniui  iki šių metų rugsėjo 30d
     {% else %}
         {{unknown_coupon_type}}  {# this will cause macro to fail #}
     {% endif %}
