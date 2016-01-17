@@ -211,6 +211,7 @@ class Coupon(db.Model):
     ST_ACTIVE = 1
     ST_USED = 2
     order = db.ReferenceProperty(Order)
+    year = db.IntegerProperty()
     status = db.IntegerProperty(required=True, default=ST_ACTIVE,
                                 choices=set([ST_ACTIVE, ST_USED]))
     use_time = db.DateTimeProperty()
@@ -224,7 +225,7 @@ class Coupon(db.Model):
         return self.status == Coupon.ST_ACTIVE
 
 
-class CouponeSearchSpec(object):
+class CouponSearchSpec(object):
     def __init__(self, year=None, active=None, number=None):
         self.year = year
         self.active = active
@@ -251,7 +252,13 @@ def coupon_create(order):
     coupons = []
     for x in range(order.quantity):
         coupon_id = coupon_gen_id()
-        coupon = Coupon(order=order, key_name=coupon_id)
+        if order.payment_time:
+            year = order.payment_time.year
+        else:
+            year = order.create_time.year
+        coupon = Coupon(order=order,
+                        year=year,
+                        key_name=coupon_id)
         db.put(coupon)
         coupons.append(coupon)
         logging.info("Coupon %s created" % coupon_id)
@@ -272,9 +279,15 @@ def coupon_use(coupon_id):
 
 
 def coupon_search(spec):
-    """Search coupons given CouponeSearchSpec
+    """Search coupons given CouponSearchSpec
     """
-    return []
+    items = Coupon.all()
+    if spec.year is not None:
+        items.filter('year =', spec.year)
+    if spec.active:
+        items.filter('status =', Coupon.ST_ACTIVE)
+
+    return items
 
 
 def coupon_count(spec):
