@@ -48,3 +48,6 @@ def format_coupon_status(value):
     statusmap = {model.Coupon.ST_ACTIVE: u"Kvietimų galioja",
                  model.Coupon.ST_USED: u"Kvietimų panaudota"}
     return statusmap[value]
+
+def get_coupon_type_map():
+    return {ct.id: ct.title for ct in model.list_coupon_types()}

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import re
 import logging
+import json
 from email.header import Header
 
 import webapp2
@@ -8,7 +9,7 @@ import qrcode
 from wtforms import Form, validators, SelectField, TextField, IntegerField
 from google.appengine.api import mail, memcache
 
-from soaringcoupons import model
+from soaringcoupons import model, formatters
 from soaringcoupons.template import write_template, render_template
 from soaringcoupons import webtopay
 
@@ -34,6 +35,9 @@ def get_routes():
                           name='list_active'),
             webapp2.Route(r'/admin/spawn', handler=CouponSpawnHandler,
                           name='spawn'),
+            # API routes
+            webapp2.Route(r'/api/1/coupons', handler=ApiCouponListHandler,
+                          name='api_coupons_list'),
             ]
 
 
@@ -278,3 +282,22 @@ class DashboardHandler(webapp2.RequestHandler):
             memcache.add('stats', values, 60 * 60 * 24)
 
         write_template(self.response, "dashboard.html", values)
+
+
+class ApiCouponListHandler(webapp2.RequestHandler):
+    def get(self):
+        filt = model.CouponSearchSpec()
+        filt.year = int(self.request.params['year'])
+        filt.active = True
+        qry_coupons = model.coupon_search(filt)
+
+        formatted = [model.jsonify(ob) for ob in qry_coupons.run(limit=100)]
+        output = {
+            'coupons': formatted,
+            'count': qry_coupons.count(),
+            'refs': {
+                'coupon_types': formatters.get_coupon_type_map(),
+                'coupon_url_pattern': webapp2.uri_for('check', id='@@@')
+            }
+        }
+        json.dump(output, self.response.out)
