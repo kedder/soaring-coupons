@@ -331,3 +331,32 @@ def coupon_count_by_status():
         counts[coupon.status] += 1
 
     return counts
+
+
+def jsonify(obj):
+    """Convert model object to dict, suitable for converting to json
+    """
+    out = {}
+    for fldname, fldtype in obj.fields().items():
+        val = getattr(obj, fldname)
+        val_jsonified = jsonify_value(val, fldtype)
+        out[fldname] = val_jsonified
+
+    key = obj.key()
+    out['__path'] = key.to_path()
+    out['__key'] = str(key)
+    out['__name'] = key.name()
+    return out
+
+
+def jsonify_value(val, fldtype):
+    if val is None:
+        return None
+
+    if isinstance(fldtype, db.DateTimeProperty):
+        return val.isoformat()
+
+    if isinstance(fldtype, db.ReferenceProperty):
+        return jsonify(val)
+
+    return val

@@ -215,6 +215,50 @@ class ModelTestCase(unittest.TestCase):
         coupon_ids = [c.coupon_id for c in coupons]
         self.assertEqual(len(set(coupon_ids)), 4)
 
+    def test_jsonify_coupon(self):
+        # Create sample order
+        ct = model.CouponType('test', 300.0, "Test flight")
+
+        # Process successful payment
+        with freeze_time(datetime.datetime(2012, 1, 4)):
+            order = model.order_create('1', ct, test=True)
+            order, coupons = model.order_process(order.order_id,
+                                                 'test@test.com', 100.0, 'EUR',
+                                                 payer_name='Andrey',
+                                                 payer_surname='Lebedev',
+                                                 payment_provider='dnb')
+
+        c0 = coupons[0]
+
+        self.maxDiff = None
+        formatted = model.jsonify(c0)
+        self.assertDictContainsSubset(
+            {'order': {'__key': 'agx0ZXN0YmVkLXRlc3RyDAsSBU9yZGVyIgExDA',
+                       '__name': u'1',
+                       '__path': [u'Order', u'1'],
+                       'coupon_type': u'test',
+                       'create_time': '2012-01-04T00:00:00',
+                       'currency': u'EUR',
+                       'notes': None,
+                       'paid_amount': 100.0,
+                       'paid_currency': 'EUR',
+                       'payer_email': u'test@test.com',
+                       'payer_name': 'Andrey',
+                       'payer_surname': 'Lebedev',
+                       'payment_provider': None,
+                       'payment_time': '2012-01-04T00:00:00',
+                       'price': 300.0,
+                       'quantity': 1L,
+                       'status': 2,
+                       'test': True},
+             'status': 1,
+             'use_time': None},
+            formatted,
+        )
+        self.assertIn('__key', formatted)
+        self.assertIn('__name', formatted)
+        self.assertIn('__path', formatted)
+
     def setUp(self):
         self.testbed = testbed.Testbed()
         self.testbed.activate()
