@@ -9,3 +9,5 @@ tmp
 *.sublime-*
 .coverage
 htmlcov
+node_modules
+src/webpack

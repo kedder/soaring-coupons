@@ -2,29 +2,10 @@
 {% block title %}Galiojantys kvietimai |{% endblock %}
 {% block main %}
 
-<h2>Galiojantys kvietimai</h2>
-<p>Galiojančių kvietimų: <strong>{{ coupon_count }}</strong> vnt.</p>
-<table class='condensed'>
-  <tr>
-    <th>Nr</th>
-    <th>Email</th>
-    <th>Tipas</th>
-    <th>Pirkimo data</th>
-    <th>Sumokėta</th>
-    <th>Pastabos</th>
-    <th>Testinis?</th>
-  </tr>
-  {% for c in coupons %}
-  <tr>
-    <td><a href='{{ check_url(c.coupon_id) }}'>{{ c.coupon_id }}</a></td>
-    <td><a href="mailto:{{ c.order.payer_email }}">{{ c.order.payer_email }}</a></td>
-    <td>{{ c.order.coupon_type | coupon_type }}</td>
-    <td>{{ c.order.payment_time | datetime }}</td>
-    <td>{{ c.order.paid_amount or ''}} {{ c.order.paid_currency or ''}}</td>
-    <td>{{ c.order.notes or '' }}</td>
-    <td>{{ c.order.test | yesno }}</td>
-  </tr>
-  {% endfor %}
-</table>
+<div id="react-content"></div>
+
+<script>
+  renderCouponList(document.getElementById("react-content"));
+</script>
 
 {% endblock %}

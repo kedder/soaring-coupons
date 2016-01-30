@@ -212,10 +212,7 @@ class CheckHandler(webapp2.RequestHandler):
 
 class CouponListHandler(webapp2.RequestHandler):
     def get(self):
-        values = {'coupons': model.coupon_list_active(),
-                  'coupon_count': model.coupon_count_active(),
-                  'check_url': lambda id: webapp2.uri_for('check', id=id)}
-        write_template(self.response, 'coupon_list.html', values)
+        write_template(self.response, 'coupon_list.html', {})
 
 
 class CouponSpawnForm(Form):
