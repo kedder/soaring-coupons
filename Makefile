@@ -25,12 +25,12 @@ run:
 #--use_sqlite --high_replication parts/gae
 
 .PHONY: upload-production
-upload-production:
+upload-production: assets
 	./bin/buildout -N
 	$(APPCFG) update parts/gae
 
 .PHONY: upload-testing
-upload-testing:
+upload-testing: assets
 	./bin/buildout -N
 	$(APPCFG) update parts/gae --version=test
 
@@ -58,3 +58,9 @@ download-prod-data:
 
 watch:
 	bin/webpack --progress --watch
+
+assets: src/webpack/app.js src/webpack/vendor.js
+	./bin/webpack --progress
+
+src/webpack/vendor.js: webpack-vendor.config.js
+	bin/webpack --progress --config webpack-vendor.config.js
