@@ -190,7 +190,7 @@ class IntegrationTestCase(unittest.TestCase):
 
         resp = app.get("/admin/list")
         self.assertEqual(resp.status, "200 OK")
-        self.assertIn("Galiojančių kvietimų: <strong>4</strong> vnt.", resp)
+        self.assertIn("react-content", resp)
 
     def test_admin_check(self):
         app = create_testapp()
