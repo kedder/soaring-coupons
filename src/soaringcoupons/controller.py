@@ -35,6 +35,8 @@ def get_routes():
                           name='list_active'),
             webapp2.Route(r'/admin/spawn', handler=CouponSpawnHandler,
                           name='spawn'),
+            webapp2.Route(r'/admin/migrate', handler=MigrateHandler,
+                          name='migrate'),
             # API routes
             webapp2.Route(r'/api/1/coupons', handler=ApiCouponListHandler,
                           name='api_coupons_list'),
@@ -298,3 +300,8 @@ class ApiCouponListHandler(webapp2.RequestHandler):
             }
         }
         json.dump(output, self.response.out)
+
+
+class MigrateHandler(webapp2.RequestHandler):
+    def get(self):
+        self.response.write("Nothing to migrate")

@@ -39,4 +39,4 @@ class MainTest(unittest.TestCase):
         app = main.make_app()
 
         self.assertIsNotNone(app)
-        self.assertEqual(len(app.router.match_routes), 12)
+        self.assertEqual(len(app.router.match_routes), 13)
