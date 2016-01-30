@@ -1,5 +1,6 @@
 APPCFG=./bin/python ./parts/google_appengine/appcfg.py
 #APPCFG=./bin/appcfg
+NODE_MODULES_BIN=node_modules/.bin
 
 all: bin/python
 
@@ -19,7 +20,7 @@ bin/python: bin/buildout buildout.cfg setup.py
 
 .PHONY: run
 run:
-	./bin/python parts/google_appengine/dev_appserver.py parts/gae
+	./bin/python parts/google_appengine/dev_appserver.py --datastore_path=var/datastore.db parts/gae
 #	./bin/dev_appserver parts/gae
 #--use_sqlite --high_replication parts/gae
 
@@ -46,3 +47,14 @@ coverage:
 	@echo Now run:
 	@echo
 	@echo "    $$ sensible-browser htmlcov/index.html"
+
+.PHONY: npm
+npm: bin/buildout
+	npm install
+	ln -sf `pwd`/$(NODE_MODULES_BIN)/webpack ./bin
+
+download-prod-data:
+	$(APPCFG) download_data --filename=tmp/data.csv parts/gae
+
+watch:
+	bin/webpack --progress --watch
