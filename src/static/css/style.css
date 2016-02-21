@@ -96,6 +96,10 @@ dd:after {
 }
 
 @media print {
+  body {
+    font-size: 10pt;
+    color: black;
+  }
   .noprint {
       display:none;
   }
