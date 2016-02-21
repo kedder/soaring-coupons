@@ -74,6 +74,7 @@ def send_confirmation_email(coupon):
     logging.info("Sending confirmation email to %s" % coupon.order.payer_email)
     mail.send_mail(sender=EMAIL_SENDER,
                    reply_to=EMAIL_REPLYTO,
+                   bcc=EMAIL_SENDER,
                    to=coupon.order.payer_email,
                    subject=Header(subject, 'utf-8').encode(),
                    body=body)
