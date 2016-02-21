@@ -8,7 +8,13 @@ from collections import namedtuple, defaultdict
 from google.appengine.ext import db
 
 
-CouponType = namedtuple('CouponType', ['id', 'price', 'title'])
+class CouponType(object):
+    def __init__(self, id, price, title, in_stock=True):
+        self.id = id
+        self.price = price
+        self.title = title
+        self.in_stock = in_stock
+
 
 coupon_types = [
     CouponType('training', 45.0,
@@ -20,9 +26,12 @@ coupon_types = [
     CouponType('plane_long', 150.0,
                u'Apžvalginis skrydis lėktuvu virš Trakų 3 asmenims'),
     CouponType('ultralight_short', 35.0,
-               u'Apžvalginis skrydis Ultralengvuoju lėktuvu 1 asmeniui'),
+               u'Apžvalginis skrydis ultralengvuoju lėktuvu 1 asmeniui'),
     CouponType('ultralight_long', 70.0,
-               u'Apžvalginis skrydis Ultralengvuoju lėktuvu virš Trakų 1 asmeniui'),
+               u'Apžvalginis skrydis ultralengvuoju lėktuvu virš Trakų 1 asmeniui'),
+    CouponType('donation', 0.0,
+               u'Skrydis už skirtus 2%',
+               in_stock=False)
 ]
 
 

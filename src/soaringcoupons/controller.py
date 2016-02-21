@@ -87,6 +87,7 @@ class OrderHandler(webapp2.RequestHandler):
 
     def post(self, name):
         ct = model.get_coupon_type(name)
+        assert ct.in_stock, "Cannot order this item"
 
         order_id = model.order_gen_id()
         order = model.order_create(order_id, ct, test=self.app.config['debug'])
