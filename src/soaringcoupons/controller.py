@@ -292,7 +292,7 @@ class ApiCouponListHandler(webapp2.RequestHandler):
         filt.active = True
         qry_coupons = model.coupon_search(filt)
 
-        formatted = [model.jsonify(ob) for ob in qry_coupons.run(limit=100)]
+        formatted = [model.jsonify(ob) for ob in qry_coupons.run()]
         output = {
             'coupons': formatted,
             'count': qry_coupons.count(),
