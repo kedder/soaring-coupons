@@ -13,3 +13,4 @@ htmlcov
 node_modules
 src/webpack
 frontend/manifest
+.venv
