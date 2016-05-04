@@ -23,7 +23,7 @@ module.exports = {
     plugins: [
         new webpack.DllReferencePlugin({
             context: __dirname + '/frontend',
-            manifest: require(__dirname + "/var/vendor-manifest.json")
+            manifest: require(__dirname + "/frontend/manifest/vendor-manifest.json")
         }),
     ]
 };
