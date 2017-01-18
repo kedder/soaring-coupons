@@ -40,6 +40,9 @@ def get_routes():
             # API routes
             webapp2.Route(r'/api/1/coupons', handler=ApiCouponListHandler,
                           name='api_coupons_list'),
+            webapp2.Route(r'/api/1/coupon/<id>/resend',
+                          handler=ApiCouponResendHandler,
+                          name='api_coupon_resend'),
             ]
 
 
@@ -205,7 +208,8 @@ class CheckHandler(webapp2.RequestHandler):
         if coupon is None:
             webapp2.abort(404)
 
-        values = {'coupon': coupon}
+        values = {'coupon': coupon,
+                  'coupon_json': model.jsonify(coupon)}
         write_template(self.response, 'check.html', values)
 
     def post(self, id):
@@ -302,6 +306,16 @@ class ApiCouponListHandler(webapp2.RequestHandler):
             }
         }
         json.dump(output, self.response.out)
+
+
+class ApiCouponResendHandler(webapp2.RequestHandler):
+    def post(self, id):
+        coupon = model.coupon_get(id)
+        if coupon is None:
+            webapp2.abort(404)
+
+        send_confirmation_email(coupon)
+        json.dump(model.jsonify(coupon), self.response.out)
 
 
 class MigrateHandler(webapp2.RequestHandler):

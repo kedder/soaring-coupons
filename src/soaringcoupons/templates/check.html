@@ -43,4 +43,12 @@
         </div>
     {% endif %}
 </form>
+
+<hr />
+<div id="react-content"></div>
+
+<script>
+  renderCoupon(document.getElementById("react-content"),
+               {{coupon_json | tojson | safe}});
+</script>
 {% endblock %}

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
+import json
 
 import jinja2
 import webapp2
@@ -48,6 +49,7 @@ FILTERS = {'error': formatters.filter_error,
            'coupon_type': formatters.format_coupon_type,
            'coupon_status': formatters.format_coupon_status,
            'order_status': formatters.format_order_status,
+           'tojson': json.dumps
            }
 
 loader = jinja2.FileSystemLoader(os.path.join(os.path.dirname(__file__),
