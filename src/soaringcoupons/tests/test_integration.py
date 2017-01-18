@@ -19,7 +19,8 @@ class IntegrationTestCase(unittest.TestCase):
         self.assertEqual(resp.status, '200 OK')
         self.assertTrue(u'Pramoginiai skrydžiai' in resp)
 
-    def test_callback_success(self):
+    @mock.patch('soaringcoupons.mailgun.send_mail')
+    def test_callback_success(self, send_mail_mock):
         # Create test order
 
         ct = model.CouponType('test', 200.0, 'Test coupon')
@@ -56,13 +57,11 @@ class IntegrationTestCase(unittest.TestCase):
         self.assertEqual(coupon.status, model.Coupon.ST_ACTIVE)
 
         # Make sure email was sent
-        messages = self.mail_stub.get_sent_messages()
-        self.assertEqual(len(messages), 1)
+        self.assertEqual(len(send_mail_mock.mock_calls), 1)
 
         # Make sure email contains correct link to coupon
-        msg = messages[0]
-        self.assertEqual(msg.body.encoding, 'base64')
-        msg_contents = base64.b64decode(msg.body.payload)
+        msg = send_mail_mock.mock_calls[0][2]
+        msg_contents = msg['body']
         self.assertRegexpMatches(msg_contents, r'http://.*/coupon/1001')
 
     def test_accept(self):
@@ -81,7 +80,8 @@ class IntegrationTestCase(unittest.TestCase):
         resp = app.get('/accept/1')
         self.assertIn('<a href="/coupon/1001"', resp)
 
-    def test_spawn(self):
+    @mock.patch('soaringcoupons.mailgun.send_mail')
+    def test_spawn(self, send_mail_mock):
         app = create_testapp()
         resp = app.get('/admin/spawn')
         self.assertEqual(resp.status, '200 OK')
@@ -106,9 +106,7 @@ class IntegrationTestCase(unittest.TestCase):
         self.assertEqual(resp.status, '302 Moved Temporarily')
 
         # Make sure emails are sent out
-        messages = self.mail_stub.get_sent_messages()
-        self.assertEqual(len(messages), 10)
-        self.assertEqual(messages[0].to, 'test@test.com')
+        self.assertEqual(len(send_mail_mock.mock_calls), 10)
 
     def test_order(self):
         app = create_testapp()
@@ -244,9 +242,6 @@ class IntegrationTestCase(unittest.TestCase):
         self.cpolicy = PseudoRandomHRConsistencyPolicy(probability=0)
         self.testbed.init_datastore_v3_stub(consistency_policy=self.cpolicy)
 
-        self.testbed.init_mail_stub()
-        self.mail_stub = self.testbed.get_stub(testbed.MAIL_SERVICE_NAME)
-
         self.testbed.init_user_stub()
         self.testbed.init_memcache_stub()
 
@@ -258,6 +253,8 @@ def create_testapp():
     config = {'webtopay_project_id': 'test',
               'webtopay_password': 'pass',
               'home_url': None,
+              'mailgun_domain': '-',
+              'mailgun_apikey': '-',
               'debug': False}
     app = webapp2.WSGIApplication(routes=controller.get_routes(),
                                   debug=True,

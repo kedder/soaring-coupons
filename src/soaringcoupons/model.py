@@ -68,6 +68,8 @@ class Settings(db.Model):
     webtopay_password = db.StringProperty(required=False, default='')
     debug = db.BooleanProperty(required=True, default=True)
     home_url = db.StringProperty(required=False, default='')
+    mailgun_domain = db.StringProperty(required=False, default='')
+    mailgun_apikey = db.StringProperty(required=False, default='')
 
     def is_configured(self):
         return bool(self.webtopay_project_id)
@@ -82,6 +84,7 @@ def get_settings(version='main'):
     settings = {key: getattr(entity, key)
                 for key in Settings.properties().keys()}
     settings['configured'] = entity.is_configured()
+
     return settings
 
 

@@ -12,6 +12,7 @@ from google.appengine.api import mail, memcache
 from soaringcoupons import model, formatters
 from soaringcoupons.template import write_template, render_template
 from soaringcoupons import webtopay
+from soaringcoupons import mailgun
 
 
 def get_routes():
@@ -64,23 +65,24 @@ class MainHandler(webapp2.RequestHandler):
 
 EMAIL_RE = re.compile(r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$')
 
-EMAIL_SENDER = "Vilniaus Aeroklubas <dalia.vainiene@gmail.com>"
+EMAIL_SENDER = "Vilniaus Aeroklubas <aeroklubas@sklandymas.lt>"
 EMAIL_REPLYTO = "Vilniaus Aeroklubas <aeroklubas@sklandymas.lt>"
 
-
-def send_confirmation_email(coupon):
+def send_confirmation_email(coupon, config):
     subject = (u"Kvietimas skrydziui "
                u"Paluknio aerodrome nr. %s" % coupon.coupon_id)
     coupon_url = webapp2.uri_for('coupon', id=coupon.coupon_id, _full=True)
     body = render_template('coupon_email.txt', {'coupon': coupon,
                                                 'url': coupon_url})
     logging.info("Sending confirmation email to %s" % coupon.order.payer_email)
-    mail.send_mail(sender=EMAIL_SENDER,
-                   reply_to=EMAIL_REPLYTO,
-                   bcc=EMAIL_SENDER,
-                   to=coupon.order.payer_email,
-                   subject=Header(subject, 'utf-8').encode(),
-                   body=body)
+    mailgun.send_mail(config['mailgun_domain'],
+                      config['mailgun_apikey'],
+                      sender=EMAIL_SENDER,
+                      reply_to=EMAIL_REPLYTO,
+                      bcc=EMAIL_SENDER,
+                      to=coupon.order.payer_email,
+                      subject=subject,
+                      body=body)
 
 
 class OrderHandler(webapp2.RequestHandler):
@@ -146,7 +148,7 @@ class OrderCallbackHandler(webapp2.RequestHandler):
         if status == webtopay.STATUS_SUCCESS:
             order, coupons = self.process_order(orderid, params)
             for coupon in coupons:
-                send_confirmation_email(coupon)
+                send_confirmation_email(coupon, self.app.config)
         else:
             logging.info("Request unprocessed. params: %s" % params)
 
@@ -269,7 +271,7 @@ class CouponSpawnHandler(webapp2.RequestHandler):
                                      test=self.app.config['debug'])
 
         for c in coupons:
-            send_confirmation_email(c)
+            send_confirmation_email(c, self.app.config)
 
 
 class DashboardHandler(webapp2.RequestHandler):
@@ -314,7 +316,7 @@ class ApiCouponResendHandler(webapp2.RequestHandler):
         if coupon is None:
             webapp2.abort(404)
 
-        send_confirmation_email(coupon)
+        send_confirmation_email(coupon, self.app.config)
         json.dump(model.jsonify(coupon), self.response.out)
 
 

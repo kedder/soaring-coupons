@@ -37,6 +37,7 @@ setup(
                         'webapp2',
                         'qrcode',
                         'wtforms',
+                        'httplib2',
                         'six'
                         ],
     include_package_data = True,
