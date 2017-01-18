@@ -66,7 +66,7 @@ EMAIL_REPLYTO = "Vilniaus Aeroklubas <aeroklubas@sklandymas.lt>"
 
 
 def send_confirmation_email(coupon):
-    subject = (u"Kvietimas skrydziui sklandytuvu "
+    subject = (u"Kvietimas skrydziui "
                u"Paluknio aerodrome nr. %s" % coupon.coupon_id)
     coupon_url = webapp2.uri_for('coupon', id=coupon.coupon_id, _full=True)
     body = render_template('coupon_email.txt', {'coupon': coupon,
