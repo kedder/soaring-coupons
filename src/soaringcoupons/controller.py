@@ -87,8 +87,9 @@ def send_confirmation_email(coupon, config):
 
 class OrderHandler(webapp2.RequestHandler):
     def get(self, name):
-        ct = model.get_coupon_type(name)
-        self.show_form(ct)
+        return self.post(name)
+        # ct = model.get_coupon_type(name)
+        # self.show_form(ct)
 
     def post(self, name):
         ct = model.get_coupon_type(name)
@@ -102,11 +103,11 @@ class OrderHandler(webapp2.RequestHandler):
         url = webtopay.get_redirect_to_payment_url(data)
         webapp2.redirect(url, abort=True)
 
-    def show_form(self, ct, errors={}):
-        values = {'request': self.request.params,
-                  'coupon_type': ct,
-                  'errors': errors}
-        write_template(self.response, 'order.html', values)
+    # def show_form(self, ct, errors={}):
+    #     values = {'request': self.request.params,
+    #               'coupon_type': ct,
+    #               'errors': errors}
+    #     write_template(self.response, 'order.html', values)
 
     def prepare_webtopay_request(self, order, ct):
         data = {}
