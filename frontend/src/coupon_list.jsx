@@ -44,6 +44,13 @@ class CouponListUI extends React.Component {
     renderFilterForm() {
         let filter = this.state.filter
 
+        var thisYear = new Date().getFullYear();
+
+        var years = [];
+        for (var year = thisYear; year >= 2012; year--) {
+            years.push(<option value={year} key={year}>{year}</option>);
+        }
+
         return (
             <div>
             <form className="form-inline">
@@ -51,11 +58,7 @@ class CouponListUI extends React.Component {
                     label="Metai&nbsp;"
                     value={this.state.filter.year}
                     onChange={(evt) => {filter.year = evt.target.value; this.refresh()}}>
-                    <option value="2016">2016</option>
-                    <option value="2015">2015</option>
-                    <option value="2014">2014</option>
-                    <option value="2013">2013</option>
-                    <option value="2012">2012</option>
+                    {years}
                 </Input>
             </form>
             </div>
