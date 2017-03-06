@@ -12,6 +12,7 @@ def send_mail(domain, apikey,
     data = {
         'from': sender,
         'to': to,
+        'bcc': bcc,
         'subject': subject.encode('utf-8'),
         'text': body.encode('utf-8')
     }
