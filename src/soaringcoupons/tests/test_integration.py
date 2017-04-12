@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import unittest
+import datetime
 import base64
 
 import webtest
@@ -80,8 +81,11 @@ class IntegrationTestCase(unittest.TestCase):
         resp = app.get('/accept/1')
         self.assertIn('<a href="/coupon/1001"', resp)
 
+    @mock.patch('soaringcoupons.date.today')
     @mock.patch('soaringcoupons.mailgun.send_mail')
-    def test_spawn(self, send_mail_mock):
+    def test_spawn(self, send_mail_mock, today_mock):
+        today_mock.return_value = datetime.date(2016, 3, 5)
+
         app = create_testapp()
         resp = app.get('/admin/spawn')
         self.assertEqual(resp.status, '200 OK')
@@ -100,6 +104,7 @@ class IntegrationTestCase(unittest.TestCase):
         data = {'coupon_type': 'acro',
                 'email': 'test@test.com',
                 'count': '10',
+                'expires': '2016-10-01',
                 'notes': '2%'}
 
         resp = app.post('/admin/spawn', data)

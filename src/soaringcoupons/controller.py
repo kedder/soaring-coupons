@@ -14,6 +14,7 @@ from soaringcoupons import model, formatters
 from soaringcoupons.template import write_template, render_template
 from soaringcoupons import webtopay
 from soaringcoupons import mailgun
+from soaringcoupons import date
 
 
 def get_routes():
@@ -250,7 +251,8 @@ class CouponSpawnForm(Form):
         ctypes.insert(0, ('', ''))  # empty choice at the front
         self.coupon_type.choices = ctypes
 
-        today = datetime.date.today()
+        today = date.today()
+
         expirations = model.coupon_get_valid_expirations(today, 4)
 
         self.expires.choices = [(d.isoformat(), d.isoformat())
@@ -283,7 +285,8 @@ class CouponSpawnHandler(webapp2.RequestHandler):
 
         ct = model.get_coupon_type(data['coupon_type'])
         coupons = model.coupon_spawn(ct, data['count'],
-                                     data['email'], exp, data['notes'],
+                                     data['email'], data['notes'],
+                                     expires=exp,
                                      test=self.app.config['debug'])
 
         for c in coupons:

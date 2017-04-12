@@ -8,6 +8,8 @@ from collections import namedtuple, defaultdict
 
 from google.appengine.ext import db
 
+from soaringcoupons import date
+
 SEASON_START_MONTH = 4
 SEASON_END_MONTH = 10
 
@@ -144,7 +146,7 @@ def order_create(order_id, coupon_type, test=False):
                   price=coupon_type.price,
                   currency='EUR',
                   test=test,
-                  create_time=datetime.datetime.now(),
+                  create_time=date.now(),
                   status=Order.ST_PENDING)
     db.put(order)
     logging.info("Order %s (%s, test=%s) created" %
@@ -189,7 +191,7 @@ def order_process(order_id, payer_email,
     order.payer_name = payer_name
     order.payer_surname = payer_surname
     order.status = Order.ST_PAID
-    order.payment_time = datetime.datetime.now()
+    order.payment_time = date.now()
     db.put(order)
     logging.info("Order %s processed" % order.order_id)
 
@@ -238,7 +240,7 @@ class Coupon(db.Model):
 
     @property
     def active(self):
-        expired = self.expires and datetime.date.today() > self.expires
+        expired = self.expires and date.today() > self.expires
         active = self.status == Coupon.ST_ACTIVE
         return active and not expired
 
@@ -260,7 +262,7 @@ def coupon_gen_id():
     cnt = counter_next()
     # add some random digits to make order ids less predictable
     seed = ''.join(random.choice(string.digits) for i in range(6))
-    year = datetime.datetime.now().strftime('%y')
+    year = date.now().strftime('%y')
     return "%s%s%s" % (year, cnt, seed)
 
 
@@ -291,7 +293,7 @@ def coupon_use(coupon_id):
     if not c.active:
         raise ValueError("Cannot use non-active coupon %s" % coupon_id)
     c.status = Coupon.ST_USED
-    c.use_time = datetime.datetime.now()
+    c.use_time = date.now()
     db.put(c)
     logging.info("Coupon %s used" % coupon_id)
     return c
@@ -321,7 +323,7 @@ def coupon_count_active():
     return coupon_list_active().count()
 
 
-def coupon_spawn(coupon_type, count, email, expires, notes, test=False):
+def coupon_spawn(coupon_type, count, email, notes, expires=None, test=False):
     """ Create given number of coupons without going through purchase workflow
 
     """
@@ -333,7 +335,7 @@ def coupon_spawn(coupon_type, count, email, expires, notes, test=False):
     order.notes = notes
     order.payer_email = email
     order.quantity = count
-    order.payment_time = datetime.datetime.now()
+    order.payment_time = date.now()
     db.put(order)
 
     return coupon_create(order, expires)
