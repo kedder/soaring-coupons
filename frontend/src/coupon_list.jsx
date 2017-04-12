@@ -81,6 +81,7 @@ class CouponListUI extends React.Component {
                 <td><a href="mailto:{ coupon.order.payer_email }">{coupon.order.payer_email}</a></td>
                 <td>{formatCouponType(this, coupon.order.coupon_type)}</td>
                 <td><Time value={coupon.order.payment_time} format="YYYY-MM-DD" /></td>
+                <td>{coupon.expires}</td>
                 <td>{coupon.order.paid_amount} { coupon.order.paid_currency}</td>
                 <td>{coupon.order.notes}</td>
                 <td>{coupon.order.test}</td>
@@ -103,6 +104,7 @@ class CouponListUI extends React.Component {
                     <th>Email</th>
                     <th>Tipas</th>
                     <th>Pirkimo data</th>
+                    <th>Galioja iki</th>
                     <th>Sumokėta</th>
                     <th>Pastabos</th>
                     <th>Testinis?</th>

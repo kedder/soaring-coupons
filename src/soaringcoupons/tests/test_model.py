@@ -215,6 +215,29 @@ class ModelTestCase(unittest.TestCase):
         coupon_ids = [c.coupon_id for c in coupons]
         self.assertEqual(len(set(coupon_ids)), 4)
 
+    def test_coupon_get_valid_expirations_season_start(self):
+        today = datetime.date(2017, 2, 5)
+
+        expirations = model.coupon_get_valid_expirations(today, 4)
+        self.assertEqual(expirations,
+                         [datetime.date(2017, 7, 1),
+                          datetime.date(2017, 8, 1),
+                          datetime.date(2017, 9, 1),
+                          datetime.date(2017, 10, 1),
+                         ])
+
+    def test_coupon_get_valid_expirations_mid_season(self):
+        today = datetime.date(2017, 6, 5)
+
+        expirations = model.coupon_get_valid_expirations(today, 4)
+        self.assertEqual(expirations,
+                         [datetime.date(2017, 10, 1),
+                          datetime.date(2018, 7, 1),
+                          datetime.date(2018, 8, 1),
+                          datetime.date(2018, 9, 1),
+                         ])
+
+
     def test_jsonify_coupon(self):
         # Create sample order
         ct = model.CouponType('test', 300.0, "Test flight")

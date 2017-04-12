@@ -25,6 +25,9 @@
         <dt>Pirkimo laikas</dt>
         <dd>{{ coupon.order.payment_time | datetime }}</dd>
 
+        <dt>Galioja iki</dt>
+        <dd>{{ coupon.expires | date}}</dd>
+
         <dt>Užsakymo pastabos</dt>
         <dd>{{ coupon.order.notes or ''}}</dd>
 
@@ -39,7 +42,7 @@
         <input type='submit' style='width: 100%; height: 60px' value='Panaudoti' />
     {% else %}
         <div class="important">
-            Kvietimas jau panaudotas.
+            Kvietimas nebegalioja.
         </div>
     {% endif %}
 </form>

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import re
+import datetime
 import logging
 import json
 from email.header import Header
@@ -75,14 +76,17 @@ def send_confirmation_email(coupon, config):
     body = render_template('coupon_email.txt', {'coupon': coupon,
                                                 'url': coupon_url})
     logging.info("Sending confirmation email to %s" % coupon.order.payer_email)
-    mailgun.send_mail(config['mailgun_domain'],
-                      config['mailgun_apikey'],
-                      sender=EMAIL_SENDER,
-                      reply_to=EMAIL_REPLYTO,
-                      bcc=EMAIL_SENDER,
-                      to=coupon.order.payer_email,
-                      subject=subject,
-                      body=body)
+    if config['debug']:
+        logging.warning("Not sending email in debug mode")
+    else:
+        mailgun.send_mail(config['mailgun_domain'],
+                          config['mailgun_apikey'],
+                          sender=EMAIL_SENDER,
+                          reply_to=EMAIL_REPLYTO,
+                          bcc=EMAIL_SENDER,
+                          to=coupon.order.payer_email,
+                          subject=subject,
+                          body=body)
 
 
 class OrderHandler(webapp2.RequestHandler):
@@ -238,12 +242,19 @@ class CouponSpawnForm(Form):
                           validators.NumberRange(min=1, max=100)])
     notes = TextField(u'Pastabos',
                       [validators.InputRequired()])
+    expires = SelectField(u'Galioja iki', [])
 
     def __init__(self, *args, **kwargs):
         super(CouponSpawnForm, self).__init__(*args, **kwargs)
         ctypes = [(t.id, t.title) for t in model.list_coupon_types()]
         ctypes.insert(0, ('', ''))  # empty choice at the front
         self.coupon_type.choices = ctypes
+
+        today = datetime.date.today()
+        expirations = model.coupon_get_valid_expirations(today, 4)
+
+        self.expires.choices = [(d.isoformat(), d.isoformat())
+                                   for d in expirations]
 
 
 class CouponSpawnHandler(webapp2.RequestHandler):
@@ -266,9 +277,13 @@ class CouponSpawnHandler(webapp2.RequestHandler):
             write_template(self.response, 'coupon_spawn.html', values)
 
     def generate(self, data):
+        exp = None
+        if data['expires']:
+            exp = datetime.date(*[int(d) for d in data['expires'].split("-")])
+
         ct = model.get_coupon_type(data['coupon_type'])
         coupons = model.coupon_spawn(ct, data['count'],
-                                     data['email'], data['notes'],
+                                     data['email'], exp, data['notes'],
                                      test=self.app.config['debug'])
 
         for c in coupons:

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import datetime
+import itertools
 import random
 import string
 import logging
@@ -7,6 +8,8 @@ from collections import namedtuple, defaultdict
 
 from google.appengine.ext import db
 
+SEASON_START_MONTH = 4
+SEASON_END_MONTH = 10
 
 class CouponType(object):
     def __init__(self, id, price, title, in_stock=True):
@@ -227,6 +230,7 @@ class Coupon(db.Model):
     status = db.IntegerProperty(required=True, default=ST_ACTIVE,
                                 choices=set([ST_ACTIVE, ST_USED]))
     use_time = db.DateTimeProperty()
+    expires = db.DateProperty()
 
     @property
     def coupon_id(self):
@@ -234,7 +238,9 @@ class Coupon(db.Model):
 
     @property
     def active(self):
-        return self.status == Coupon.ST_ACTIVE
+        expired = self.expires and datetime.date.today() > self.expires
+        active = self.status == Coupon.ST_ACTIVE
+        return active and not expired
 
 
 class CouponSearchSpec(object):
@@ -258,7 +264,7 @@ def coupon_gen_id():
     return "%s%s%s" % (year, cnt, seed)
 
 
-def coupon_create(order):
+def coupon_create(order, expires=None):
     """Create couponse for given order
     """
     coupons = []
@@ -270,6 +276,7 @@ def coupon_create(order):
             year = order.create_time.year
         coupon = Coupon(order=order,
                         year=year,
+                        expires=expires,
                         key_name=coupon_id)
         db.put(coupon)
         coupons.append(coupon)
@@ -314,7 +321,7 @@ def coupon_count_active():
     return coupon_list_active().count()
 
 
-def coupon_spawn(coupon_type, count, email, notes, test=False):
+def coupon_spawn(coupon_type, count, email, expires, notes, test=False):
     """ Create given number of coupons without going through purchase workflow
 
     """
@@ -329,8 +336,26 @@ def coupon_spawn(coupon_type, count, email, notes, test=False):
     order.payment_time = datetime.datetime.now()
     db.put(order)
 
-    return coupon_create(order)
+    return coupon_create(order, expires)
 
+
+def coupon_get_valid_expirations(today, count):
+    def seq(start):
+        curmonth = today.month + 4
+        curyear = start.year
+        earliest_month = SEASON_START_MONTH + 3
+        while True:
+            if curmonth > SEASON_END_MONTH:
+                curyear += 1
+                curmonth = 1
+
+            if curmonth <= earliest_month:
+                curmonth = earliest_month
+
+            yield datetime.date(curyear, curmonth, 1)
+            curmonth += 1
+
+    return list(itertools.islice(seq(today), 0, count))
 
 def _coupon_get_valid():
     return (c for c in Coupon.all() if not c.order.test)
