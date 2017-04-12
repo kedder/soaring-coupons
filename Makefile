@@ -59,7 +59,9 @@ download-prod-data:
 watch:
 	bin/webpack --progress --watch
 
-assets: src/webpack/app.js src/webpack/vendor.js
+assets: src/webpack/app.js
+
+src/webpack/app.js: src/webpack/vendor.js
 	./bin/webpack --progress
 
 src/webpack/vendor.js: webpack-vendor.config.js
