@@ -89,7 +89,7 @@
     {% elif ct == 'ultralight_long' %}
         Kvietimas galioja 1 skrydžiui 1 asmeniui  iki {{ expiration(coupon, 'šių metų rugsėjo 30 d') }}.
     {% elif ct == 'donation' %}
-        Kvietimas galioja 1 skrydžiui 1 asmeniui, tik šį skraidymų sezoną.
+        Kvietimas galioja 1 skrydžiui 1 asmeniui, iki {{ expiration(coupon, 'šių metų skraidymų sezono pabaigos') }}.
     {% else %}
         {{unknown_coupon_type}}  {# this will cause macro to fail #}
     {% endif %}
