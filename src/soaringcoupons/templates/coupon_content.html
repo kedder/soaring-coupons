@@ -85,11 +85,11 @@
     {% elif ct == 'plane_long' %}
         Kvietimas galioja 1 skrydžiui 3 asmenims iki {{ expiration(coupon, 'šių metų rugsėjo 20 d') }}.
     {% elif ct == 'ultralight_short' %}
-        Kvietimas galioja 1 skrydžiui 1 asmeniui  iki {{ expiration(coupon, 'šių metų rugsėjo 30 d') }}.
+        Kvietimas galioja 1 skrydžiui 1 asmeniui iki {{ expiration(coupon, 'šių metų rugsėjo 30 d') }}.
     {% elif ct == 'ultralight_long' %}
-        Kvietimas galioja 1 skrydžiui 1 asmeniui  iki {{ expiration(coupon, 'šių metų rugsėjo 30 d') }}.
+        Kvietimas galioja 1 skrydžiui 1 asmeniui iki {{ expiration(coupon, 'šių metų rugsėjo 30 d') }}.
     {% elif ct == 'donation' %}
-        Kvietimas galioja 1 skrydžiui 1 asmeniui, iki {{ expiration(coupon, 'šių metų skraidymų sezono pabaigos') }}.
+        Kvietimas galioja 1 skrydžiui 1 asmeniui iki {{ expiration(coupon, 'šių metų skraidymų sezono pabaigos') }}.
     {% else %}
         {{unknown_coupon_type}}  {# this will cause macro to fail #}
     {% endif %}
