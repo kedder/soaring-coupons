@@ -343,7 +343,7 @@ def coupon_spawn(coupon_type, count, email, notes, expires=None, test=False):
 
 def coupon_get_valid_expirations(today, count):
     def seq(start):
-        curmonth = today.month + 4
+        curmonth = today.month + 1
         curyear = start.year
         earliest_month = SEASON_START_MONTH + 3
         while True:

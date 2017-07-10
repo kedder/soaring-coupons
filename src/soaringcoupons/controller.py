@@ -253,7 +253,7 @@ class CouponSpawnForm(Form):
 
         today = date.today()
 
-        expirations = model.coupon_get_valid_expirations(today, 4)
+        expirations = model.coupon_get_valid_expirations(today, 7)
 
         self.expires.choices = [(d.isoformat(), d.isoformat())
                                    for d in expirations]

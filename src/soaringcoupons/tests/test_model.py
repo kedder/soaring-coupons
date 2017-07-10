@@ -229,9 +229,12 @@ class ModelTestCase(unittest.TestCase):
     def test_coupon_get_valid_expirations_mid_season(self):
         today = datetime.date(2017, 6, 5)
 
-        expirations = model.coupon_get_valid_expirations(today, 4)
+        expirations = model.coupon_get_valid_expirations(today, 7)
         self.assertEqual(expirations,
-                         [datetime.date(2017, 10, 1),
+                         [datetime.date(2017, 7, 1),
+                          datetime.date(2017, 8, 1),
+                          datetime.date(2017, 9, 1),
+                          datetime.date(2017, 10, 1),
                           datetime.date(2018, 7, 1),
                           datetime.date(2018, 8, 1),
                           datetime.date(2018, 9, 1),
