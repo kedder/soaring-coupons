@@ -4,11 +4,11 @@ import React from "react";
 import ReactDOM from "react-dom";
 
 import {Table} from 'react-bootstrap';
-import {Input} from 'react-bootstrap';
+import {Form} from 'react-bootstrap';
 
 const API_URL = '/api/1/'
 
-class CouponListUI extends React.Component {
+export class CouponListUI extends React.Component {
     constructor(props) {
         super(props);
         let now = new Date();
@@ -47,19 +47,19 @@ class CouponListUI extends React.Component {
         var thisYear = new Date().getFullYear();
 
         var years = [];
-        for (var year = thisYear; year >= 2012; year--) {
+        for (var year = thisYear; year >= 2018; year--) {
             years.push(<option value={year} key={year}>{year}</option>);
         }
 
         return (
             <div>
             <form className="form-inline">
-                <Input type='select'
+                <Form.Control as='select'
                     label="Metai&nbsp;"
                     value={this.state.filter.year}
                     onChange={(evt) => {filter.year = evt.target.value; this.refresh()}}>
                     {years}
-                </Input>
+                </Form.Control>
             </form>
             </div>
         )
@@ -97,7 +97,7 @@ class CouponListUI extends React.Component {
                 {this.renderFilterForm()}
             </div>
             <p>Galiojančių kvietimų: {this.state.data.count}</p>
-            <Table condensed bordered hover >
+            <Table bordered hover >
                 <thead>
                   <tr>
                     <th>Nr</th>

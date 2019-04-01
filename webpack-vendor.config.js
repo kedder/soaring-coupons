@@ -1,13 +1,14 @@
 var webpack = require('webpack')
 
 module.exports = {
+    mode: 'development',
     context: __dirname + "/frontend",
     entry: {
         vendor: [
             'jquery',
             'react',
             'react-dom',
-            'react-time',
+            // 'react-time',
             'react-bootstrap',
             "bootstrap-webpack!./src/bootstrap.config.js"
         ]
@@ -17,8 +18,11 @@ module.exports = {
         library: "[name]_[hash]",
         filename: "[name].js"
     },
+    optimization: {
+        minimize: false
+    },
     module: {
-        loaders: [
+        rules: [
             // **IMPORTANT** This is needed so that each bootstrap js file required by
             // bootstrap-webpack has access to the jQuery object
             { test: /bootstrap\/js\//, loader: 'imports?jQuery=jquery' },
@@ -37,9 +41,5 @@ module.exports = {
             path: __dirname + "/frontend/manifest/[name]-manifest.json",
             name: "[name]_[hash]"
         }),
-        new webpack.optimize.UglifyJsPlugin({
-            minimize: true,
-            compress: { warnings: false }}
-        )
     ]
 };

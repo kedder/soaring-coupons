@@ -19,11 +19,11 @@
     <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
   <![endif]-->
 
-  <script src="/frontend/vendor.js"></script>
-  <script src="/frontend/app.js"></script>
-
   </head>
   <body>
+    <script src="/frontend/vendor.js"></script>
+    <script src="/frontend/app.js"></script>
+
     {% if request.msg is defined %}
       <div class="status noprint"><div class='inner'>{{ request.msg }}</div></div>
     {% endif %}

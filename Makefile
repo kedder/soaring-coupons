@@ -64,5 +64,5 @@ assets: src/webpack/app.js
 src/webpack/app.js: src/webpack/vendor.js
 	./bin/webpack --progress
 
-src/webpack/vendor.js: webpack-vendor.config.js
+src/webpack/vendor.js: webpack-vendor.config.js package.json
 	bin/webpack --progress --config webpack-vendor.config.js

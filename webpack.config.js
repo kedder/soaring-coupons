@@ -1,6 +1,7 @@
 var webpack = require('webpack')
 
 module.exports = {
+    mode: 'development',
     context: __dirname + "/frontend",
     entry: {
         app: ["./src/main.jsx"],
@@ -10,12 +11,12 @@ module.exports = {
         filename: "[name].js"
     },
     module: {
-        loaders: [
+        rules: [
             {
                 test: /\.jsx$/,
                 exclude: /node_modules/,
-                loader: "babel",
-                query: {presets:['react', 'es2015']}
+                loader: "babel-loader",
+                query: {presets:['@babel/react', '@babel/env']}
             },
             { test: /\.css$/, loader: 'style-loader!css-loader' },
       ],
