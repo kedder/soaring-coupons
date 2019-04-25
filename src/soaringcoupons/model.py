@@ -32,7 +32,7 @@ coupon_types = [
                u'Apžvalginis skrydis lėktuvu virš Trakų 3 asmenims'),
     CouponType('ultralight_short', 45.0,
                u'Apžvalginis skrydis ultralengvuoju lėktuvu 1 asmeniui'),
-    CouponType('ultralight_long', 75.0,
+    CouponType('ultralight_long', 79.0,
                u'Apžvalginis skrydis ultralengvuoju lėktuvu virš Trakų 1 asmeniui'),
     CouponType('donation', 0.0,
                u'Skrydis už skirtus 2%',
