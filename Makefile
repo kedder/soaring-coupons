@@ -8,24 +8,29 @@ all: .pip-installed
 $(VENV):
 	python3 -m venv $(VENV)
 
-.pip-installed: setup.py | $(VENV)
-	$(PIP) install wheel
-	$(PIP) install -e .[test]
+.pip-installed: requirements.txt requirements-dev.txt | $(VENV)
+	$(PIP) install -r requirements.txt
+	$(PIP) install -r requirements-dev.txt
 	touch .pip-installed
+
+
+.PHONY: run
+run: .pip-installed
+	$(PYTHON) manage.py runserver 10080
 
 
 .PHONY: test
 test: .pip-installed
-	$(VEBIN)/pytest -s -v --cov src --cov-report=html --cov-report=term
+	$(VEBIN)/pytest -s -v --cov soaringcoupons --cov-report=html --cov-report=term
 
 
 .PHONY: mypy
 mypy:
-	$(VEBIN)/mypy src/soaringcoupons tests --strict
+	$(VEBIN)/mypy soaringcoupons tests
 
 .PHONY: mypy-report
 mypy-report:
-	$(VEBIN)/mypy src/soaringcoupons tests \
+	$(VEBIN)/mypy soaringcoupons tests \
 		--strict \
 		--html-report mypy-reports/html \
 		--txt-report mypy-reports/txt
@@ -35,8 +40,8 @@ mypy-report:
 
 .PHONY: black-check
 black-check:
-	$(VEBIN)/black --check setup.py src tests
+	$(VEBIN)/black --check manage.py soaringcoupons tests
 
 .PHONY: black-format
 black-format:
-	$(VEBIN)/black setup.py src tests
+	$(VEBIN)/black manage.py soaringcoupons tests
