@@ -26,11 +26,11 @@ test: .pip-installed
 
 .PHONY: mypy
 mypy:
-	$(VEBIN)/mypy sklandymas tests
+	$(VEBIN)/mypy sklandymas coupons tests
 
 .PHONY: mypy-report
 mypy-report:
-	$(VEBIN)/mypy sklandymas tests \
+	$(VEBIN)/mypy sklandymas coupons tests \
 		--strict \
 		--html-report mypy-reports/html \
 		--txt-report mypy-reports/txt
