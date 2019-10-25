@@ -21,16 +21,16 @@ run: .pip-installed
 
 .PHONY: test
 test: .pip-installed
-	$(VEBIN)/pytest -s -v --cov soaringcoupons --cov-report=html --cov-report=term
+	$(VEBIN)/pytest -s -v --cov sklandymas --cov-report=html --cov-report=term
 
 
 .PHONY: mypy
 mypy:
-	$(VEBIN)/mypy soaringcoupons tests
+	$(VEBIN)/mypy sklandymas tests
 
 .PHONY: mypy-report
 mypy-report:
-	$(VEBIN)/mypy soaringcoupons tests \
+	$(VEBIN)/mypy sklandymas tests \
 		--strict \
 		--html-report mypy-reports/html \
 		--txt-report mypy-reports/txt
@@ -40,8 +40,8 @@ mypy-report:
 
 .PHONY: black-check
 black-check:
-	$(VEBIN)/black --check manage.py soaringcoupons tests
+	$(VEBIN)/black --check manage.py sklandymas coupons tests
 
 .PHONY: black-format
 black-format:
-	$(VEBIN)/black manage.py soaringcoupons tests
+	$(VEBIN)/black manage.py sklandymas coupons tests
