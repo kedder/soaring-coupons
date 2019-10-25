@@ -1,0 +1,7 @@
+ve
+.pip-installed
+tmp
+*.py?
+.coverage
+htmlcov
+src/*.egg-info
