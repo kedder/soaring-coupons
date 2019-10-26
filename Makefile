@@ -21,7 +21,7 @@ run: .pip-installed
 
 .PHONY: test
 test: .pip-installed
-	$(VEBIN)/pytest -s -v --cov sklandymas --cov-report=html --cov-report=term
+	$(VEBIN)/pytest -s -v --cov sklandymas --cov coupons --cov-report=html --cov-report=term
 
 
 .PHONY: mypy
