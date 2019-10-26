@@ -1,7 +1,7 @@
 from typing import Dict, Any
 import logging
 
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 
 from coupons import models, webtopay
@@ -18,11 +18,10 @@ def order(request, coupon_type: str) -> HttpResponse:
     assert ct.in_stock, "Cannot order this item"
     order = models.Order.single(ct)
     order.save()
+    log.info(f"Order {order.id} ({order.coupon_type.id}) created")
     data = _prepare_webtopay_request(order, ct)
     url = webtopay.get_redirect_to_payment_url(data)
-
-    log.info(f"Order {order.id} ({order.coupon_type.id}) created")
-    return HttpResponse(f"Order: {coupon_type}: {ct}, {order}")
+    return redirect(url)
 
 
 def _prepare_webtopay_request(
@@ -46,3 +45,7 @@ def _prepare_webtopay_request(
     data["test"] = order.test
 
     return data
+
+
+def cancel(request) -> HttpResponse:
+    return render(request, 'cancel.html', {})
