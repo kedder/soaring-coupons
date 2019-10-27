@@ -1,0 +1,52 @@
+{% extends "base_generic.html" %}
+{% block title %}Galiojantys kvietimai|{% endblock %}
+
+{% block content %}
+
+<h3>Galiojantys kvietimai</h3>
+
+<form method="get" class="form-inline">
+    <div class="form-group mx-sm-3">
+        <label for="year">Metai: </label>
+        <select name="year" class="form-control">
+            {% for year in years %}
+                <option {% if requested_year == year %}selected{% endif %}
+                  value="{{ year }}">{{ year }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Filtruoti</button>
+</form>
+
+<p>Galiojančių kvietimų: {{ object_count }}
+<table class='table'>
+    <tr>
+        <th>Nr</th>
+        <th>Email</th>
+        <th>Tipas</th>
+        <th>Pirkimo data</th>
+        <th>Galioja iki</th>
+        <th>Sumokėta</th>
+        <th>Pastabos</th>
+    </tr>
+
+
+{% for coupon in object_list %}
+    <tr>
+        <td><a href="{% url 'coupon_check' coupon.id %}">{{ coupon.id }}</a></td>
+        <td><a href="mailto:{{ coupon.order.payer_email }}">{{ coupon.order.payer_email }}</a></td>
+        <td>{{ coupon.coupon_type }}</td>
+        <td>{{ coupon.order.payment_time}}</td>
+        <td>{{ coupon.expires | date }}</td>
+        <td>{{ coupon.order.paid_amount }} {{coupon.order.paid_currency}}</td>
+        <td>{{ coupon.order.notes }}</td>
+    </tr>
+{% empty %}
+    <tr>
+        <td colspan="7">Kuponų nėra</td>
+    </tr>
+{% endfor %}
+</table>
+
+{% endblock %}
+

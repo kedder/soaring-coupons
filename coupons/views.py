@@ -10,7 +10,9 @@ from django.conf import settings
 from django.urls import reverse
 from django.template import loader
 from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
+from django.views.generic.list import ListView
 
 from coupons import models, webtopay, mailgun
 
@@ -125,15 +127,43 @@ def coupon_check(request: HttpRequest, coupon_id: str) -> HttpResponse:
 @login_required
 def coupon_actions(request: HttpRequest, coupon_id: str) -> HttpResponse:
     coupon = get_object_or_404(models.Coupon, pk=coupon_id)
-    if 'use' in request.POST:
+    if "use" in request.POST:
         coupon.use()
         messages.info(request, "Kvietimas panaudotas")
-    elif 'resend' in request.POST:
+    elif "resend" in request.POST:
         _send_confirmation_email(coupon, request)
         messages.info(request, "Kvietimo laiškas išsiųstas")
     else:
         raise ValueError("Unknown action")
     return redirect(reverse("coupon_check", kwargs={"coupon_id": coupon.id}))
+
+
+class CouponListView(LoginRequiredMixin, ListView):
+    template_name = "coupon_list.html"
+    model = models.Coupon
+    paginate_by = 2  # if pagination is desired
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context
+
+
+def coupon_list(request: HttpRequest) -> HttpResponse:
+    years = [v["year"] for v in models.Coupon.objects.values("year").distinct()]
+
+    curyear = int(request.GET.get("year", years[0]))
+    coupons = models.Coupon.objects.filter(year=curyear, status=models.Coupon.ST_ACTIVE)
+
+    return render(
+        request,
+        "coupon_list.html",
+        {
+            "object_list": coupons,
+            "object_count": len(coupons),
+            "years": years,
+            "requested_year": curyear,
+        },
+    )
 
 
 EMAIL_RE = re.compile(r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$")

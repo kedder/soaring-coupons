@@ -16,4 +16,5 @@ urlpatterns = [
         views.coupon_actions,
         name="coupon_actions",
     ),
+    path("admin/list", views.coupon_list, name="coupon_list"),
 ]
