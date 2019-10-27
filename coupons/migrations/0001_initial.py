@@ -8,49 +8,94 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies: list = [
-    ]
+    dependencies: list = []
 
     operations = [
         migrations.CreateModel(
-            name='CouponType',
+            name="CouponType",
             fields=[
-                ('id', models.CharField(max_length=32, primary_key=True, serialize=False)),
-                ('price', models.FloatField()),
-                ('title', models.CharField(max_length=255)),
-                ('in_stock', models.BooleanField(default=True)),
+                (
+                    "id",
+                    models.CharField(max_length=32, primary_key=True, serialize=False),
+                ),
+                ("price", models.FloatField()),
+                ("title", models.CharField(max_length=255)),
+                ("in_stock", models.BooleanField(default=True)),
             ],
         ),
         migrations.CreateModel(
-            name='Order',
+            name="Order",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('quantity', models.IntegerField()),
-                ('price', models.FloatField()),
-                ('currency', models.CharField(max_length=8)),
-                ('paid_amount', models.FloatField(null=True)),
-                ('paid_currency', models.CharField(max_length=8, null=True)),
-                ('payer_name', models.CharField(max_length=255, null=True)),
-                ('payer_surname', models.CharField(max_length=255, null=True)),
-                ('payer_email', models.CharField(max_length=255, null=True)),
-                ('payment_provider', models.CharField(max_length=255, null=True)),
-                ('test', models.BooleanField(default=False)),
-                ('status', models.IntegerField(choices=[(1, 'Pending'), (2, 'Paid'), (3, 'Cancelled'), (4, 'Spawned')], default=1)),
-                ('create_time', models.DateTimeField()),
-                ('payment_time', models.DateTimeField(null=True)),
-                ('notes', models.CharField(max_length=255)),
-                ('coupon_type', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='coupons.CouponType')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("quantity", models.IntegerField()),
+                ("price", models.FloatField()),
+                ("currency", models.CharField(max_length=8)),
+                ("paid_amount", models.FloatField(null=True)),
+                ("paid_currency", models.CharField(max_length=8, null=True)),
+                ("payer_name", models.CharField(max_length=255, null=True)),
+                ("payer_surname", models.CharField(max_length=255, null=True)),
+                ("payer_email", models.CharField(max_length=255, null=True)),
+                ("payment_provider", models.CharField(max_length=255, null=True)),
+                ("test", models.BooleanField(default=False)),
+                (
+                    "status",
+                    models.IntegerField(
+                        choices=[
+                            (1, "Pending"),
+                            (2, "Paid"),
+                            (3, "Cancelled"),
+                            (4, "Spawned"),
+                        ],
+                        default=1,
+                    ),
+                ),
+                ("create_time", models.DateTimeField()),
+                ("payment_time", models.DateTimeField(null=True)),
+                ("notes", models.CharField(max_length=255)),
+                (
+                    "coupon_type",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="coupons.CouponType",
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='Coupon',
+            name="Coupon",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('year', models.IntegerField()),
-                ('status', models.IntegerField(choices=[(1, 'Active'), (2, 'Used')], default=1)),
-                ('use_time', models.DateTimeField(null=True)),
-                ('expires', models.DateField()),
-                ('order', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='coupons.Order')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("year", models.IntegerField()),
+                (
+                    "status",
+                    models.IntegerField(
+                        choices=[(1, "Active"), (2, "Used")], default=1
+                    ),
+                ),
+                ("use_time", models.DateTimeField(null=True)),
+                ("expires", models.DateField()),
+                (
+                    "order",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, to="coupons.Order"
+                    ),
+                ),
             ],
         ),
     ]

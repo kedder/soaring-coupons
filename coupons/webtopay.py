@@ -156,7 +156,7 @@ def _sign(data: bytes, password: bytes) -> bytes:
 
 
 def _is_valid_ss1(ss1: str, data: str, password: str) -> bool:
-    sig = hashlib.md5((data + password).encode('ascii')).hexdigest()
+    sig = hashlib.md5((data + password).encode("ascii")).hexdigest()
     return ss1 == sig
 
 
@@ -187,4 +187,4 @@ def _safe_base64_decode(s64: str) -> str:
     Url-safe-base64 is same as base64, but + is replaced to - and / to _
     """
     s = s64.replace("-", "+").replace("_", "/")
-    return base64.b64decode(s).decode('utf-8')
+    return base64.b64decode(s).decode("utf-8")

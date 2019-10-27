@@ -5,14 +5,10 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('coupons', '0001_initial'),
-    ]
+    dependencies = [("coupons", "0001_initial")]
 
     operations = [
         migrations.AlterField(
-            model_name='coupon',
-            name='expires',
-            field=models.DateField(null=True),
-        ),
+            model_name="coupon", name="expires", field=models.DateField(null=True)
+        )
     ]

@@ -67,7 +67,6 @@ class Order(models.Model):
             create_time=datetime.now(pytz.utc),
         )
 
-
     def process(
         self,
         *,

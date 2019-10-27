@@ -101,7 +101,7 @@ AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
 ]
 
-LOGIN_REDIRECT_URL = '/admin'
+LOGIN_REDIRECT_URL = "/admin"
 
 
 # Internationalization
@@ -124,7 +124,7 @@ USE_TZ = True
 STATIC_URL = "/static/"
 
 
-CRISPY_TEMPLATE_PACK = 'bootstrap4'
+CRISPY_TEMPLATE_PACK = "bootstrap4"
 
 # Coupons specific settings
 COUPONS_WEBTOPAY_PROJECT_ID = ""
@@ -139,7 +139,4 @@ SENTRY_DSN = None
 
 
 if SENTRY_DSN:
-    sentry_sdk.init(
-        dsn=SENTRY_DSN,
-        integrations=[DjangoIntegration()]
-    )
+    sentry_sdk.init(dsn=SENTRY_DSN, integrations=[DjangoIntegration()])
