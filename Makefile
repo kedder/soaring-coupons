@@ -31,7 +31,6 @@ mypy:
 .PHONY: mypy-report
 mypy-report:
 	$(VEBIN)/mypy sklandymas coupons tests \
-		--strict \
 		--html-report mypy-reports/html \
 		--txt-report mypy-reports/txt
 	@cat mypy-reports/txt/index.txt

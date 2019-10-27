@@ -11,7 +11,7 @@ from django.http import HttpResponse, HttpRequest
 from django.conf import settings
 from django.urls import reverse
 from django.template import loader
-from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
 from coupons import models, webtopay, mailgun
@@ -233,9 +233,9 @@ def _send_confirmation_email(coupon: models.Coupon, request: HttpRequest) -> Non
         "coupon_email.txt", {"coupon": coupon, "url": coupon_url}
     )
 
-    logging.info("Sending confirmation email to %s" % coupon.order.payer_email)
+    log.info("Sending confirmation email to %s" % coupon.order.payer_email)
     if settings.DEBUG:
-        logging.warning("Not sending email in debug mode")
+        log.warning("Not sending email in debug mode")
         return
 
     assert coupon.order.payer_email is not None

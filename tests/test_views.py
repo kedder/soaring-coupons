@@ -184,7 +184,7 @@ def test_coupon_qr(client, sample_coupon_type) -> None:
 def test_admin_list(admin_client, sample_coupon_type) -> None:
     # Pre-generate some coupons
     models.Coupon.spawn(
-        sample_coupon_type, count=3, email="test@test.com", expires=None
+        sample_coupon_type, count=3, email="test@test.com", expires=date.today()
     )
 
     resp = admin_client.get("/admin/list")
@@ -196,7 +196,7 @@ def test_admin_list(admin_client, sample_coupon_type) -> None:
 def test_admin_check(admin_client, sample_coupon_type) -> None:
     # GIVEN
     coupons = models.Coupon.spawn(
-        sample_coupon_type, count=3, email="test@test.com", expires=None
+        sample_coupon_type, count=3, email="test@test.com", expires=date.today()
     )
     cid = coupons[0].id
 
@@ -211,7 +211,7 @@ def test_admin_check(admin_client, sample_coupon_type) -> None:
 def test_admin_check_use(admin_client, sample_coupon_type) -> None:
     # GIVEN
     coupons = models.Coupon.spawn(
-        sample_coupon_type, count=3, email="test@test.com", expires=None
+        sample_coupon_type, count=3, email="test@test.com", expires=date.today()
     )
     cid = coupons[0].id
 
@@ -227,7 +227,7 @@ def test_admin_check_use(admin_client, sample_coupon_type) -> None:
 def test_admin_check_resend(send_mail_mock, admin_client, sample_coupon_type) -> None:
     # GIVEN
     coupons = models.Coupon.spawn(
-        sample_coupon_type, count=3, email="test@test.com", expires=None
+        sample_coupon_type, count=3, email="test@test.com", expires=date.today()
     )
     cid = coupons[0].id
 
