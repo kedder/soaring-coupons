@@ -12,9 +12,7 @@ from django.conf import settings
 from django.urls import reverse
 from django.template import loader
 from django.contrib.auth.decorators import login_required, permission_required
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
-from django.views.generic.list import ListView
 
 from coupons import models, webtopay, mailgun
 
@@ -22,6 +20,7 @@ log = logging.getLogger(__name__)
 
 
 def index(request) -> HttpResponse:
+    log.error("Error logged")
     return HttpResponse("Hello, world. You're at the polls index.")
 
 
@@ -43,7 +42,9 @@ def _prepare_webtopay_request(
     data["projectid"] = settings.COUPONS_WEBTOPAY_PROJECT_ID
     data["sign_password"] = settings.COUPONS_WEBTOPAY_PASSWORD
     data["cancelurl"] = request.build_absolute_uri(reverse("order_cancel"))
-    data["accepturl"] = ""  # request.build_absolute_uri(reverse("accept"))
+    data["accepturl"] = request.build_absolute_uri(
+        reverse("order_accept", kwargs={"order_id": order.id})
+    )
     data["callbackurl"] = request.build_absolute_uri(reverse("order_callback"))
     data["orderid"] = order.id
     data["lang"] = "LIT"

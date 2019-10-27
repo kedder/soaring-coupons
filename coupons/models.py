@@ -222,6 +222,7 @@ class Coupon(models.Model):
     def use(self) -> None:
         if not self.active:
             raise ValueError(f"Cannot use non-active coupon {self.id}")
+
         self.status = Coupon.ST_USED
         self.use_time = datetime.now(pytz.utc)
         self.save()

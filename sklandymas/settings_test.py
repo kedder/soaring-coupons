@@ -8,3 +8,5 @@ DATABASES = {
 }
 
 EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
+COUPONS_WEBTOPAY_PROJECT_ID = "test"
+COUPONS_WEBTOPAY_PASSWORD = "pass"
