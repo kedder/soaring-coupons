@@ -3,6 +3,7 @@ import mock
 import re
 
 import pytest
+from django.core import mail
 
 from coupons import models
 from coupons import webtopay
@@ -48,8 +49,7 @@ def test_order(client, sample_coupon_type) -> None:
     assert order.status == models.Order.ST_PENDING
 
 
-@mock.patch("coupons.mailgun.send_mail")
-def test_order_callback_success(send_mail_mock, client, sample_coupon_type) -> None:
+def test_order_callback_success(mailoutbox, client, sample_coupon_type) -> None:
     # GIVEN
     order = models.Order.from_type(sample_coupon_type)
     order.save()
@@ -87,11 +87,11 @@ def test_order_callback_success(send_mail_mock, client, sample_coupon_type) -> N
     assert coupon.active
 
     # Make sure email was sent
-    assert len(send_mail_mock.mock_calls) == 1
+    assert len(mail.outbox) == 1
 
     # Make sure email contains correct link to coupon
-    msg = send_mail_mock.mock_calls[0][2]
-    msg_contents = msg["body"]
+    msg = mail.outbox[0]
+    msg_contents = msg.body
     assert re.findall(r"http://.*/coupon/1001", msg_contents)
 
 
@@ -110,8 +110,7 @@ def test_order_accept(sample_coupon_type, client):
     assert b'<a href="/coupon/1001"' in resp.content
 
 
-@mock.patch("coupons.mailgun.send_mail")
-def test_coupon_spawn(send_mail_mock, sample_coupon_type, admin_client) -> None:
+def test_coupon_spawn(mailoutbox, sample_coupon_type, admin_client) -> None:
     resp = admin_client.get("/admin/spawn")
     assert resp.status_code == 200
 
@@ -143,7 +142,7 @@ def test_coupon_spawn(send_mail_mock, sample_coupon_type, admin_client) -> None:
     assert resp.status_code == 302
 
     # Make sure emails are sent out
-    assert len(send_mail_mock.mock_calls), 10
+    assert len(mail.outbox) == 10
 
 
 def test_coupon_spawn_protected(client) -> None:
@@ -223,8 +222,7 @@ def test_admin_check_use(admin_client, sample_coupon_type) -> None:
     assert not coupon.active
 
 
-@mock.patch("coupons.mailgun.send_mail")
-def test_admin_check_resend(send_mail_mock, admin_client, sample_coupon_type) -> None:
+def test_admin_check_resend(mailoutbox, admin_client, sample_coupon_type) -> None:
     # GIVEN
     coupons = models.Coupon.spawn(
         sample_coupon_type, count=3, email="test@test.com", expires=date.today()
@@ -235,4 +233,4 @@ def test_admin_check_resend(send_mail_mock, admin_client, sample_coupon_type) ->
     resp = admin_client.post(f"/admin/check/{cid}/actions", {"resend": ""})
     assert resp.status_code == 302
 
-    assert len(send_mail_mock.mock_calls), 10
+    assert len(mail.outbox) == 1

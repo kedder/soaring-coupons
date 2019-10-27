@@ -123,15 +123,20 @@ USE_TZ = True
 
 STATIC_URL = "/static/"
 
+# EMAIL
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
+# EMAIL_BACKEND = "django_mailgun.MailgunBackend"
+# MAILGUN_ACCESS_KEY = "ACCESS-KEY"
+# MAILGUN_SERVER_NAME = "SERVER-NAME"
+
+# Crispy forms
 CRISPY_TEMPLATE_PACK = "bootstrap4"
 
 # Coupons specific settings
 COUPONS_WEBTOPAY_PROJECT_ID = ""
 COUPONS_WEBTOPAY_PASSWORD = ""
 COUPONS_HOME_URL = ""
-COUPONS_MAILGUN_DOMAIN = ""
-COUPONS_MAILGUN_APIKEY = ""
 COUPONS_EMAIL_SENDER = "Vilniaus Aeroklubas <aeroklubas@sklandymas.lt>"
 COUPONS_EMAIL_REPLYTO = "Vilniaus Aeroklubas <aeroklubas@sklandymas.lt>"
 

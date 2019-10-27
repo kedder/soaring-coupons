@@ -7,6 +7,7 @@ import re
 import qrcode
 from django import forms
 from django.shortcuts import render, redirect, get_object_or_404
+from django.core.mail import EmailMessage
 from django.http import HttpResponse, HttpRequest
 from django.conf import settings
 from django.urls import reverse
@@ -14,7 +15,7 @@ from django.template import loader
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
-from coupons import models, webtopay, mailgun
+from coupons import models, webtopay
 
 log = logging.getLogger(__name__)
 
@@ -233,19 +234,15 @@ def _send_confirmation_email(coupon: models.Coupon, request: HttpRequest) -> Non
         "coupon_email.txt", {"coupon": coupon, "url": coupon_url}
     )
 
-    log.info("Sending confirmation email to %s" % coupon.order.payer_email)
-    if settings.DEBUG:
-        log.warning("Not sending email in debug mode")
-        return
+    log.info(f"Sending confirmation email to {coupon.order.payer_email}")
 
     assert coupon.order.payer_email is not None
-    mailgun.send_mail(
-        settings.COUPONS_MAILGUN_DOMAIN,
-        settings.COUPONS_MAILGUN_APIKEY,
-        sender=settings.COUPONS_EMAIL_SENDER,
-        reply_to=settings.COUPONS_EMAIL_REPLYTO,
-        bcc=settings.COUPONS_EMAIL_SENDER,
-        to=coupon.order.payer_email,
-        subject=subject,
-        body=body,
+
+    email = EmailMessage(
+        subject,
+        body,
+        from_email=settings.COUPONS_EMAIL_SENDER,
+        to=[coupon.order.payer_email],
+        bcc=[settings.COUPONS_EMAIL_SENDER],
     )
+    email.send(fail_silently=False)
