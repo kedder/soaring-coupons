@@ -1,6 +1,8 @@
 from typing import Sequence
 import logging
 import pytz
+import random
+import string
 from datetime import date, datetime
 
 from django.db import models
@@ -107,6 +109,7 @@ class Coupon(models.Model):
     ST_ACTIVE = 1
     ST_USED = 2
 
+    id = models.CharField(max_length=12, primary_key=True)
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
     year = models.IntegerField()
     status = models.IntegerField(
@@ -116,22 +119,52 @@ class Coupon(models.Model):
     expires = models.DateField(null=True)
 
     @staticmethod
-    def from_order(order: Order, expires=None) -> Sequence["Coupon"]:
+    def from_order(order: Order, expires: date = None) -> Sequence["Coupon"]:
         """Create couponse for given order
         """
+        ctype = order.coupon_type
+        payment_year = (
+            order.payment_time.year if order.payment_time else order.create_time.year
+        )
+
+        if expires is None:
+            # Come up with sensible expiration date from copon type settings
+            expires = ctype.deafult_expiration_date.replace(year=payment_year)
+            # If ticket is sold after this year's expiration date, move it to
+            # the next year
+            if date.today() > expires:
+                expires = expires.replace(year=payment_year + 1)
+
         coupons = []
         for x in range(order.quantity):
-            payment_year = (
-                order.payment_time.year
-                if order.payment_time
-                else order.create_time.year
+            coupon = Coupon(
+                id=Coupon.gen_unique_id(),
+                order=order,
+                year=payment_year,
+                expires=expires,
             )
-            coupon = Coupon(order=order, year=payment_year, expires=expires)
             coupon.save()
             coupons.append(coupon)
             log.info(f"Coupon {coupon.id} created")
 
         return coupons
+
+    @staticmethod
+    def gen_unique_id() -> str:
+        # add some random digits to make order ids less predictable
+        seed = "".join(random.choice(string.digits) for i in range(10))
+        year = date.today().strftime("%y")
+        uniqueid = f"{year}{seed}"
+
+        # make sure it is really unique
+        for attempt in range(10):
+            try:
+                Coupon.objects.get(id=uniqueid)
+                log.warning(f"Generated coupon id '{uniqueid}' is not unique")
+            except Coupon.DoesNotExist:
+                return uniqueid
+
+        raise RuntimeError("Cannot generate unique coupon id")
 
     @property
     def active(self):

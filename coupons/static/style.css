@@ -1,0 +1,51 @@
+h1, h2, h3, h4, h5, h6 {
+    font-family: "Georgia", "Times New Roman", serif
+}
+
+.logo {
+  text-align: center;
+  padding: 1rem;
+}
+
+
+.important {
+  color: #c00;
+  padding: 6pt;
+  border: 2px solid #c00;
+}
+
+
+.rightblock {
+  float: right;
+  margin: 0 0 20px 20px;
+}
+
+@media print {
+  html {
+    font-size: 16pt;
+    color: black;
+  }
+
+  body {
+    color: black;
+  }
+
+  a {
+    text-decoration: none ! important;
+    color: black;
+  }
+
+  .noprint {
+      display:none;
+  }
+
+  .container {
+    width: 100%;
+  }
+}
+
+@media handheld {
+  .nohandheld {
+    display: none;
+  }
+}

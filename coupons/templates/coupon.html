@@ -5,7 +5,7 @@
 
 {% block content %}
 
-<button class="rightblock noprint nohandheld"
+<button class="rightblock noprint nohandheld btn btn-info"
   onclick="window.print()">Spausdinti</button>
 
 <div class="logo">
@@ -22,7 +22,7 @@ turėkite atspausdintą šį kvietimą.</p>
     <img src='{% url "coupon_qr" coupon.id %}' />
 </div>
 
-{{ coupon.content_type.weclome_text }}
+{{ coupon.coupon_type.welcome_text | safe }}
 
 <p>Aerodrome pasiruoškite praleisti daugiau laiko — laukdami skrydžio ar
 dalindamiesi įspūdžiais po jo. Pasigrožėsite sklandytuvų bei lėktuvų

@@ -1,5 +1,11 @@
 {% extends "base_generic.html" %}
+{% load static %}
 {% block content %}
+
+<div class="logo">
+  <img class="logo" alt="Vilniaus Aeroklubas"
+    src="{% static 'images/logo.png' %}" />
+</div>
 
 <h2>Užsakymas {{order.id}} priimtas</h2>
 
@@ -21,9 +27,8 @@
 
   <p>Užsakymas yra priimtas, tačiau informacijos apie amokėjimą dar neturime.
   Kai tik gausime informaciją apie amokėjimą (ši informacija bus perduota mums
-  automatiškai po to, kai apmokėsite užsakymą Jūsų pasirinktu būdų), adresu {{
-  order.payer_email }}
-  išsiusime Jums kvietimą.</p>
+  automatiškai po to, kai apmokėsite užsakymą Jūsų pasirinktu būdų), adresu
+  {{ order.payer_email }} išsiusime Jums kvietimą.</p>
 
 {% endif %}
 
