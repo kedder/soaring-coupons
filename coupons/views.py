@@ -9,6 +9,8 @@ from django.http import HttpResponse, HttpRequest
 from django.conf import settings
 from django.urls import reverse
 from django.template import loader
+from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib import messages
 
 from coupons import models, webtopay, mailgun
 
@@ -114,8 +116,24 @@ def coupon_qr(request: HttpRequest, coupon_id: str) -> HttpResponse:
     return HttpResponse(imgbuf.getvalue(), content_type="image/png")
 
 
+@login_required
 def coupon_check(request: HttpRequest, coupon_id: str) -> HttpResponse:
-    pass
+    coupon = get_object_or_404(models.Coupon, pk=coupon_id)
+    return render(request, "coupon_check.html", {"coupon": coupon})
+
+
+@login_required
+def coupon_actions(request: HttpRequest, coupon_id: str) -> HttpResponse:
+    coupon = get_object_or_404(models.Coupon, pk=coupon_id)
+    if 'use' in request.POST:
+        coupon.use()
+        messages.info(request, "Kvietimas panaudotas")
+    elif 'resend' in request.POST:
+        _send_confirmation_email(coupon, request)
+        messages.info(request, "Kvietimo laiškas išsiųstas")
+    else:
+        raise ValueError("Unknown action")
+    return redirect(reverse("coupon_check", kwargs={"coupon_id": coupon.id}))
 
 
 EMAIL_RE = re.compile(r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$")

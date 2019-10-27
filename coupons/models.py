@@ -175,3 +175,11 @@ class Coupon(models.Model):
     @property
     def coupon_type(self) -> CouponType:
         return self.order.coupon_type
+
+    def use(self) -> None:
+        if not self.active:
+            raise ValueError(f"Cannot use non-active coupon {self.id}")
+        self.status = Coupon.ST_USED
+        self.use_time = datetime.now()
+        self.save()
+        log.info(f"Coupon {self.id} used")

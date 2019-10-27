@@ -1,0 +1,68 @@
+{% extends "base_generic.html" %}
+{% block title %}Kvietimas {{coupon.id}} |{% endblock %}
+
+{% block content %}
+<h3>{{ coupon.coupon_type.title }} </h3>
+
+<table class="table">
+    <tr>
+        <th>Kvietimo nr</th>
+        <td>{{ coupon.id }}</td>
+    </tr>
+    <tr>
+        <th>Kaina</th>
+        <td>{{ coupon.order.price }} {{ coupon.order.currency }} </td>
+    </tr>
+    <tr>
+        <th>Sumokėta</th>
+        <td>{{ coupon.order.paid_amount}} {{ coupon.order.paid_currency }} </td>
+    </tr>
+    <tr>
+        <th>Pirkėjas</th>
+        <td><a href="mailto:{{ coupon.order.payer_email }}">{{ coupon.order.payer_email }}</a></td>
+    </tr>
+    <tr>
+        <th>Pirkimo laikas</th>
+        <td>{{ coupon.order.payment_time }}</td>
+    </tr>
+    <tr>
+        <th>Galioja iki</th>
+        <td>{{ coupon.expires }}</td>
+    </tr>
+    <tr>
+        <th>Užsakymo pastabos</th>
+        <td>{{ coupon.order.notes }}</td>
+    </tr>
+
+    {% if not coupon.active %}
+    <tr>
+        <th>Panaudojimo laikas</th>
+        <td>{{ coupon.use_time }}</td>
+    </tr>
+    {% endif %}
+</table>
+
+<form method="post" action="{% url 'coupon_actions' coupon.id %}">
+    {% if coupon.active %}
+        <div class="alert alert-info">Kvietimas galioja.</div>
+            {% csrf_token %}
+            <button type='submit' class="btn btn-primary"
+                name="use"
+                style='width: 100%; height: 60px'>
+                Panaudoti
+            </button>
+    {% else %}
+        <div class="alert alert-danger">
+            Kvietimas nebegalioja.
+        </div>
+    {% endif %}
+
+    <hr />
+    <h4>Kiti vieksmai</h4>
+
+    <button class="btn btn-warning" name="resend" type="submit">
+        Pakartoti kvietimo laišką
+    </button>
+</form>
+
+{% endblock %}

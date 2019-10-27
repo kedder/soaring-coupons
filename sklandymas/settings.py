@@ -56,7 +56,7 @@ ROOT_URLCONF = "sklandymas.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [os.path.join(BASE_DIR, "templates")],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -68,6 +68,8 @@ TEMPLATES = [
         },
     }
 ]
+
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 
 WSGI_APPLICATION = "sklandymas.wsgi.application"
 
@@ -95,6 +97,8 @@ AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
 ]
 
+LOGIN_REDIRECT_URL = '/admin'
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
@@ -117,10 +121,10 @@ STATIC_URL = "/static/"
 
 
 # Coupons specific settings
-COUPONS_WEBTOPAY_PROJECT_ID = ''
-COUPONS_WEBTOPAY_PASSWORD = ''
-COUPONS_HOME_URL = ''
-COUPONS_MAILGUN_DOMAIN = ''
-COUPONS_MAILGUN_APIKEY = ''
+COUPONS_WEBTOPAY_PROJECT_ID = ""
+COUPONS_WEBTOPAY_PASSWORD = ""
+COUPONS_HOME_URL = ""
+COUPONS_MAILGUN_DOMAIN = ""
+COUPONS_MAILGUN_APIKEY = ""
 COUPONS_EMAIL_SENDER = "Vilniaus Aeroklubas <aeroklubas@sklandymas.lt>"
 COUPONS_EMAIL_REPLYTO = "Vilniaus Aeroklubas <aeroklubas@sklandymas.lt>"

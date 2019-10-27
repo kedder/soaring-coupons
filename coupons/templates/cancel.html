@@ -1,8 +1,12 @@
 {% extends "base_generic.html" %}
+{% load static %}
 
 {% block content %}
-<br>
-<div class="alert alert-success">
-Užsakymas atšauktas.
+<div class="logo">
+  <img class="logo" alt="Vilniaus Aeroklubas"
+    src="{% static 'images/logo.png' %}" />
 </div>
+<h3>
+Užsakymas atšauktas.
+</h3>
 {% endblock %}
