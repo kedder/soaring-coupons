@@ -1,0 +1,15 @@
+# Configuration script to Travis-CI
+language: python
+python:
+  - "3.7"
+install:
+  - pip install -r requirements.txt
+  - pip install -r requirements-dev.txt
+  - pip install coverage
+  - pip install coveralls
+script:
+  - mypy sklandymas coupons tests
+  - black --check manage.py sklandymas coupons tests
+  - pytest -v --cov sklandymas --cov coupons --cov-report=html --cov-report=term
+after_success:
+  coveralls
