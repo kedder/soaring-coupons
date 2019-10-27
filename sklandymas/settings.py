@@ -37,6 +37,7 @@ ALLOWED_HOSTS: List[str] = []
 INSTALLED_APPS = [
     "coupons.apps.CouponsConfig",
     "crispy_forms",
+    "django_admin_shell",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",

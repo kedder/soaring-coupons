@@ -1,4 +1,5 @@
 django
+django-admin-shell
 django-crispy-forms
 django-mailgun
 pillow
