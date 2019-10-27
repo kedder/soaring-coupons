@@ -33,6 +33,7 @@ ALLOWED_HOSTS: List[str] = []
 
 INSTALLED_APPS = [
     "coupons.apps.CouponsConfig",
+    "crispy_forms",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -119,6 +120,8 @@ USE_TZ = True
 
 STATIC_URL = "/static/"
 
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 # Coupons specific settings
 COUPONS_WEBTOPAY_PROJECT_ID = ""

@@ -17,4 +17,5 @@ urlpatterns = [
         name="coupon_actions",
     ),
     path("admin/list", views.coupon_list, name="coupon_list"),
+    path("admin/spawn", views.coupon_spawn, name="coupon_spawn"),
 ]

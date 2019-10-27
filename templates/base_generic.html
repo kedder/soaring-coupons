@@ -10,31 +10,31 @@
     <body>
         <div class="container">
 
-{% if user.is_authenticated %}
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-  <a class="navbar-brand" href="#">Sklandymo Kuponai</a>
+            {% if user.is_authenticated %}
+            <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+              <a class="navbar-brand" href="#">Sklandymo kvietimai</a>
 
-  <div class="collapse navbar-collapse">
-    <ul class="navbar-nav mr-auto">
-      <li class="nav-item">
-        <a class="nav-link" href="{% url 'coupon_list' %}">Galiojantys kvietimai</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">Kvietimų generatorius</a>
-      </li>
-    </ul>
-    <div>
-    <div class="navbar-text">{{ user }}</div>
-    <a href="{% url 'logout' %}" class="btn btn-sm btn-outline-info">Baigti darbą</a>
-</nav>
-{% endif %}
+              <div class="collapse navbar-collapse">
+                <ul class="navbar-nav mr-auto">
+                  <li class="nav-item">
+                    <a class="nav-link" href="{% url 'coupon_list' %}">Galiojantys</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="{% url 'coupon_spawn' %}">Generatorius</a>
+                  </li>
+                </ul>
+                <div>
+                <div class="navbar-text">{{ user }}</div>
+                <a href="{% url 'logout' %}" class="btn btn-sm btn-outline-info">Baigti darbą</a>
+            </nav>
+            {% endif %}
 
 
-{% if messages %}
-    {% for message in messages %}
-    <div class="alert alert-success">{{ message }}</div>
-    {% endfor %}
-{% endif %}
+            {% if messages %}
+                {% for message in messages %}
+                <div class="alert alert-success">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
 
 
             {% block content %}

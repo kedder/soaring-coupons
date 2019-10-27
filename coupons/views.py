@@ -1,9 +1,11 @@
-from typing import Dict, Any, cast
+from typing import Dict, Any, cast, List, Tuple
 import logging
+from datetime import date
 import io
 import re
 
 import qrcode
+from django import forms
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, HttpRequest
 from django.conf import settings
@@ -26,7 +28,7 @@ def index(request) -> HttpResponse:
 def order(request: HttpRequest, coupon_type: str) -> HttpResponse:
     ct = get_object_or_404(models.CouponType, pk=coupon_type)
     assert ct.in_stock, "Cannot order this item"
-    order = models.Order.single(ct)
+    order = models.Order.from_type(ct)
     order.save()
     log.info(f"Order {order.id} ({order.coupon_type.id}) created")
     data = _prepare_webtopay_request(order, ct, request)
@@ -138,16 +140,7 @@ def coupon_actions(request: HttpRequest, coupon_id: str) -> HttpResponse:
     return redirect(reverse("coupon_check", kwargs={"coupon_id": coupon.id}))
 
 
-class CouponListView(LoginRequiredMixin, ListView):
-    template_name = "coupon_list.html"
-    model = models.Coupon
-    paginate_by = 2  # if pagination is desired
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        return context
-
-
+@login_required
 def coupon_list(request: HttpRequest) -> HttpResponse:
     years = [v["year"] for v in models.Coupon.objects.values("year").distinct()]
 
@@ -166,7 +159,68 @@ def coupon_list(request: HttpRequest) -> HttpResponse:
     )
 
 
+@login_required
+def coupon_spawn(request: HttpRequest) -> HttpResponse:
+    if request.method == "GET":
+        spawnform = CouponSpawnForm()
+        return render(request, "coupon_spawn.html", {"form": spawnform})
+    else:
+        spawnform = CouponSpawnForm(request.POST)
+        if not spawnform.is_valid():
+            return render(request, "coupon_spawn.html", {"form": spawnform})
+
+        data = spawnform.cleaned_data
+        ct = models.CouponType.objects.get(pk=data["coupon_type"])
+        coupons = models.Coupon.spawn(
+            ct,
+            count=data["count"],
+            email=data["email"],
+            notes=data["notes"],
+            expires=data["expires"],
+        )
+
+        for c in coupons:
+            _send_confirmation_email(c, request)
+
+        messages.info(request, "Kvietimai sugeneruoti")
+        return redirect(reverse("coupon_spawn"))
+
+
 EMAIL_RE = re.compile(r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$")
+
+
+class CouponSpawnForm(forms.Form):
+    coupon_type = forms.ChoiceField(
+        label="Skrydžio tipas", choices=lambda: CouponSpawnForm.coupon_types()
+    )
+    email = forms.EmailField(label="El. pašto adresas")
+    count = forms.IntegerField(label="Kvietimų kiekis")
+    notes = forms.CharField(
+        label="Pastabos",
+        max_length=1024,
+        required=False,
+        widget=forms.Textarea(attrs={"rows": 2}),
+    )
+    expires = forms.TypedChoiceField(
+        label="Galioja iki",
+        choices=lambda: CouponSpawnForm.expire_choices(),
+        coerce=lambda v: CouponSpawnForm.to_date(v),
+    )
+
+    @staticmethod
+    def coupon_types() -> List[Tuple[str, str]]:
+        ctypes = models.CouponType.objects.all()
+        return [(ctype.id, ctype.title) for ctype in ctypes]
+
+    @staticmethod
+    def expire_choices() -> List[Tuple[str, str]]:
+        today = date.today()
+        expirations = models.Coupon.get_valid_expirations(today, 7)
+        return [(d.isoformat(), d.isoformat()) for d in expirations]
+
+    @staticmethod
+    def to_date(v: str) -> date:
+        return date.fromisoformat(v)
 
 
 def _send_confirmation_email(coupon: models.Coupon, request: HttpRequest) -> None:

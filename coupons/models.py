@@ -3,11 +3,15 @@ import logging
 import pytz
 import random
 import string
+import itertools
 from datetime import date, datetime
 
 from django.db import models
 
 log = logging.getLogger(__name__)
+
+SEASON_START_MONTH = 4
+SEASON_END_MONTH = 10
 
 
 class CouponType(models.Model):
@@ -54,10 +58,10 @@ class Order(models.Model):
     notes = models.CharField(max_length=255)
 
     @classmethod
-    def single(cls, coupon_type: CouponType) -> "Order":
+    def from_type(cls, coupon_type: CouponType, quantity: int = 1) -> "Order":
         return Order(
             coupon_type=coupon_type,
-            quantity=1,
+            quantity=quantity,
             price=coupon_type.price,
             currency="EUR",
             create_time=datetime.now(pytz.utc),
@@ -150,6 +154,25 @@ class Coupon(models.Model):
         return coupons
 
     @staticmethod
+    def spawn(
+        coupon_type: CouponType,
+        *,
+        count: int,
+        email: str,
+        expires: date,
+        notes: str = None,
+    ) -> Sequence["Coupon"]:
+        log.info("Spawning %s coupons", count)
+        order = Order.from_type(coupon_type, quantity=count)
+        order.status = Order.ST_SPAWNED
+        order.notes = notes
+        order.payer_email = email
+        order.payment_time = datetime.now()
+        order.save()
+
+        return Coupon.from_order(order)
+
+    @staticmethod
     def gen_unique_id() -> str:
         # add some random digits to make order ids less predictable
         seed = "".join(random.choice(string.digits) for i in range(10))
@@ -165,6 +188,25 @@ class Coupon(models.Model):
                 return uniqueid
 
         raise RuntimeError("Cannot generate unique coupon id")
+
+    @staticmethod
+    def get_valid_expirations(today, count):
+        def seq(start):
+            curmonth = today.month + 1
+            curyear = start.year
+            earliest_month = SEASON_START_MONTH + 3
+            while True:
+                if curmonth > SEASON_END_MONTH:
+                    curyear += 1
+                    curmonth = 1
+
+                if curmonth <= earliest_month:
+                    curmonth = earliest_month
+
+                yield date(curyear, curmonth, 1)
+                curmonth += 1
+
+        return list(itertools.islice(seq(today), 0, count))
 
     @property
     def active(self):
