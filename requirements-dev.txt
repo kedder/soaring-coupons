@@ -1,6 +1,7 @@
+black
+django-stubs
 mock
+mypy
 pytest
 pytest-cov
-black
-mypy
-django-stubs
+pytest-django

@@ -55,7 +55,7 @@ class Order(models.Model):
     )
     create_time = models.DateTimeField()
     payment_time = models.DateTimeField(null=True)
-    notes = models.CharField(max_length=255)
+    notes = models.CharField(max_length=255, null=True)
 
     @classmethod
     def from_type(cls, coupon_type: CouponType, quantity: int = 1) -> "Order":
@@ -66,6 +66,7 @@ class Order(models.Model):
             currency="EUR",
             create_time=datetime.now(pytz.utc),
         )
+
 
     def process(
         self,
@@ -167,7 +168,7 @@ class Coupon(models.Model):
         order.status = Order.ST_SPAWNED
         order.notes = notes
         order.payer_email = email
-        order.payment_time = datetime.now()
+        order.payment_time = datetime.now(pytz.utc)
         order.save()
 
         return Coupon.from_order(order)
@@ -222,6 +223,6 @@ class Coupon(models.Model):
         if not self.active:
             raise ValueError(f"Cannot use non-active coupon {self.id}")
         self.status = Coupon.ST_USED
-        self.use_time = datetime.now()
+        self.use_time = datetime.now(pytz.utc)
         self.save()
         log.info(f"Coupon {self.id} used")
