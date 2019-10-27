@@ -1,12 +1,20 @@
+from typing import Sequence
+import logging
+import pytz
 from datetime import date, datetime
 
 from django.db import models
+
+log = logging.getLogger(__name__)
 
 
 class CouponType(models.Model):
     id = models.CharField(max_length=32, primary_key=True)
     price = models.FloatField()
     title = models.CharField(max_length=255)
+    welcome_text = models.TextField()
+    validity_cond_text = models.CharField(max_length=255)
+    deafult_expiration_date = models.DateField()
     in_stock = models.BooleanField(default=True)
 
     def __str__(self) -> str:
@@ -50,8 +58,49 @@ class Order(models.Model):
             quantity=1,
             price=coupon_type.price,
             currency="EUR",
-            create_time=datetime.now(),
+            create_time=datetime.now(pytz.utc),
         )
+
+    def process(
+        self,
+        *,
+        paid_amount: float,
+        paid_currency: str,
+        payer_email: str = None,
+        payer_name: str = None,
+        payer_surname: str = None,
+        payment_provider: str = None,
+    ) -> Sequence["Coupon"]:
+        """ Process order payment.
+
+        Updates order with supplied information and updates status to ST_PAID.
+        Creates Coupon object.  Payment information must be validated before
+        passing to this method.
+        """
+        if self.status != Order.ST_PENDING:
+            raise ValueError(f"Cannot process non-pending order {self.id}")
+
+        self.paid_amount = paid_amount
+        self.paid_currency = paid_currency
+        self.payer_email = payer_email
+        self.payer_name = payer_name
+        self.payer_surname = payer_surname
+        self.status = Order.ST_PAID
+        self.payment_time = datetime.now(pytz.utc)
+        self.payment_provider = payment_provider
+        self.save()
+        log.info("Order %s processed" % self.id)
+
+        # create coupon
+        assert self.quantity == 1
+        return Coupon.from_order(self)
+
+    def find_coupons(self) -> Sequence["Coupon"]:
+        return list(Coupon.objects.filter(order=self))
+
+    @property
+    def paid(self) -> bool:
+        return self.status == Order.ST_PAID
 
 
 class Coupon(models.Model):
@@ -64,10 +113,32 @@ class Coupon(models.Model):
         choices=[(ST_ACTIVE, "Active"), (ST_USED, "Used")], default=ST_ACTIVE
     )
     use_time = models.DateTimeField(null=True)
-    expires = models.DateField()
+    expires = models.DateField(null=True)
+
+    @staticmethod
+    def from_order(order: Order, expires=None) -> Sequence["Coupon"]:
+        """Create couponse for given order
+        """
+        coupons = []
+        for x in range(order.quantity):
+            payment_year = (
+                order.payment_time.year
+                if order.payment_time
+                else order.create_time.year
+            )
+            coupon = Coupon(order=order, year=payment_year, expires=expires)
+            coupon.save()
+            coupons.append(coupon)
+            log.info(f"Coupon {coupon.id} created")
+
+        return coupons
 
     @property
     def active(self):
         expired = self.expires and date.today() > self.expires
         active = self.status == Coupon.ST_ACTIVE
         return active and not expired
+
+    @property
+    def coupon_type(self) -> CouponType:
+        return self.order.coupon_type

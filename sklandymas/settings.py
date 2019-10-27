@@ -114,3 +114,13 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = "/static/"
+
+
+# Coupons specific settings
+COUPONS_WEBTOPAY_PROJECT_ID = ''
+COUPONS_WEBTOPAY_PASSWORD = ''
+COUPONS_HOME_URL = ''
+COUPONS_MAILGUN_DOMAIN = ''
+COUPONS_MAILGUN_APIKEY = ''
+COUPONS_EMAIL_SENDER = "Vilniaus Aeroklubas <aeroklubas@sklandymas.lt>"
+COUPONS_EMAIL_REPLYTO = "Vilniaus Aeroklubas <aeroklubas@sklandymas.lt>"

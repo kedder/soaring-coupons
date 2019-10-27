@@ -1,0 +1,30 @@
+{% extends "base_generic.html" %}
+{% block content %}
+
+<h2>Užsakymas {{order.id}} priimtas</h2>
+
+{% if order.paid %}
+
+  <p>Užsakymas yra priimtas ir apmokėtas. Dabar galite atspausdinti Jūsų
+  kvietimą:
+
+    {% for coupon in coupons %}
+    {% spaceless %}
+        <a href="{% url 'coupon' coupon.id %}">{{ coupon.id }}</a>{% if forloop.last %}.{% else %},{% endif %}
+    {% endspaceless %}
+    {% endfor %}
+
+  Nuoroda į
+  kvietimo puslapį taip pat atsiuntėme el. pašto adresu {{ order.payer_email }}.</p>
+
+{% else %}
+
+  <p>Užsakymas yra priimtas, tačiau informacijos apie amokėjimą dar neturime.
+  Kai tik gausime informaciją apie amokėjimą (ši informacija bus perduota mums
+  automatiškai po to, kai apmokėsite užsakymą Jūsų pasirinktu būdų), adresu {{
+  order.payer_email }}
+  išsiusime Jums kvietimą.</p>
+
+{% endif %}
+
+{% endblock %}
