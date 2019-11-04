@@ -2,7 +2,7 @@
 import re
 import urllib
 import urllib.parse
-import mock
+from unittest import mock
 
 import pytest  # type: ignore
 

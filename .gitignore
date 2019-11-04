@@ -1,5 +1,4 @@
-ve
-.pip-installed
+.pipenv-installed
 tmp
 *.py?
 .coverage

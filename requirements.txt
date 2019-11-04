@@ -1,8 +1,0 @@
-django
-django-admin-shell
-django-crispy-forms
-django-mailgun
-pillow
-qrcode
-requests
-sentry-sdk

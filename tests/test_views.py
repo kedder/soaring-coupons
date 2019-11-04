@@ -1,5 +1,5 @@
 from datetime import date
-import mock
+from unittest import mock
 import re
 
 import pytest

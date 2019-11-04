@@ -1,7 +1,0 @@
-black
-django-stubs
-mock
-mypy
-pytest
-pytest-cov
-pytest-django
