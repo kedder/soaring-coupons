@@ -1,0 +1,11 @@
+var
+htmlconv
+*.egg-info
+mypy-reports
+Makefile
+htmlcov
+.mypy_cache
+.pipenv-installed
+.pytest-cache
+.git
+.coverage
