@@ -9,3 +9,4 @@ htmlcov
 .pytest-cache
 .git
 .coverage
+.env

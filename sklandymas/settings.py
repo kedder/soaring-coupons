@@ -15,6 +15,16 @@ import os
 
 import sentry_sdk
 from sentry_sdk.integrations.django import DjangoIntegration
+import environ
+
+env = environ.Env(
+    # set casting, default value
+    DEBUG=(bool, False),
+    EMAIL_ENABLED=(bool, False),
+    SENTRY_ENABLED=(bool, False),
+)
+# reading .env file
+environ.Env.read_env()
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -24,10 +34,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "ogz=h#*lvlrs^*%$4at1_m0e-1bn+@sqm9s(8b9@p)01_+n)^3"
+SECRET_KEY = env("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env("DEBUG")
 
 ALLOWED_HOSTS: List[str] = []
 
@@ -43,6 +53,7 @@ INSTALLED_APPS = [
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
+    "social_django",
     "django.contrib.staticfiles",
 ]
 
@@ -54,7 +65,14 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "social_django.middleware.SocialAuthExceptionMiddleware",
 ]
+
+AUTHENTICATION_BACKENDS = (
+    "social_core.backends.google.GoogleOAuth2",
+    "django.contrib.auth.backends.ModelBackend",
+)
+
 
 ROOT_URLCONF = "sklandymas.urls"
 
@@ -69,12 +87,14 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "social_django.context_processors.backends",
+                "social_django.context_processors.login_redirect",
             ]
         },
     }
 ]
 
-LOGIN_URL = '/dbadmin/login/'
+# LOGIN_URL = '/dbadmin/login/'
 
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 
@@ -84,12 +104,21 @@ WSGI_APPLICATION = "sklandymas.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": os.path.join(BASE_DIR, "var", "db.sqlite3"),
-    }
-}
+DATABASES = {"default": env.db("DATABASE_URL")}
+
+SOCIAL_AUTH_PIPELINE = (
+    "social_core.pipeline.social_auth.social_details",
+    "social_core.pipeline.social_auth.social_uid",
+    "social_core.pipeline.social_auth.auth_allowed",
+    "social_core.pipeline.social_auth.social_user",
+    "social_core.pipeline.social_auth.associate_by_email",
+    "social_core.pipeline.social_auth.associate_user",
+    "social_core.pipeline.social_auth.load_extra_data",
+    "social_core.pipeline.user.user_details",
+)
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = env("SOCIAL_AUTH_GOOGLE_OAUTH2_KEY")
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = env("SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET")
 
 
 # Password validation
@@ -104,7 +133,7 @@ AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
 ]
 
-LOGIN_REDIRECT_URL = "/admin"
+LOGIN_REDIRECT_URL = "/admin/spawn"
 
 
 # Internationalization
@@ -126,25 +155,24 @@ USE_TZ = True
 
 STATIC_URL = "/static/"
 
-# EMAIL
-EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
-
-# EMAIL_BACKEND = "django_mailgun.MailgunBackend"
-# MAILGUN_ACCESS_KEY = "ACCESS-KEY"
-# MAILGUN_SERVER_NAME = "SERVER-NAME"
+# Email
+if env("EMAIL_ENABLED"):
+    EMAIL_BACKEND = "django_mailgun.MailgunBackend"
+    MAILGUN_ACCESS_KEY = env("MAILGUN_ACCESS_KEY")
+    MAILGUN_SERVER_NAME = env("MAILGUN_SERVER_NAME")
+else:
+    EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
 # Crispy forms
 CRISPY_TEMPLATE_PACK = "bootstrap4"
 
 # Coupons specific settings
-COUPONS_WEBTOPAY_PROJECT_ID = ""
-COUPONS_WEBTOPAY_PASSWORD = ""
+COUPONS_WEBTOPAY_PROJECT_ID = env("WEBTOPAY_PROJECT_ID")
+COUPONS_WEBTOPAY_PASSWORD = env("WEBTOPAY_PASSWORD")
 COUPONS_HOME_URL = ""
 COUPONS_EMAIL_SENDER = "Vilniaus Aeroklubas <aeroklubas@sklandymas.lt>"
 COUPONS_EMAIL_REPLYTO = "Vilniaus Aeroklubas <aeroklubas@sklandymas.lt>"
 
-SENTRY_DSN = None
 
-
-if SENTRY_DSN:
-    sentry_sdk.init(dsn=SENTRY_DSN, integrations=[DjangoIntegration()])
+if env("SENTRY_ENABLED"):
+    sentry_sdk.init(dsn=env("SENTRY_DSN"), integrations=[DjangoIntegration()])
