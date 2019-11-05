@@ -74,6 +74,8 @@ TEMPLATES = [
     }
 ]
 
+LOGIN_URL = '/dbadmin/login/'
+
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 
 WSGI_APPLICATION = "sklandymas.wsgi.application"

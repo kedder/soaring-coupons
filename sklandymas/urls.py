@@ -20,5 +20,5 @@ urlpatterns = [
     path("", include("coupons.urls")),
     path(r"dbadmin/shell/", include("django_admin_shell.urls")),
     path("dbadmin/", admin.site.urls),
-    path("accounts/", include("django.contrib.auth.urls")),
+    # path("accounts/", include("django.contrib.auth.urls")),
 ]
