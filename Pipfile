@@ -21,6 +21,7 @@ sentry-sdk = "*"
 Django = "*"
 Pillow = "*"
 gunicorn = "*"
+social-auth-app-django = "*"
 
 [requires]
 python_version = "3.7"

@@ -18,7 +18,8 @@ from django.urls import include, path
 
 urlpatterns = [
     path("", include("coupons.urls")),
-    path(r"dbadmin/shell/", include("django_admin_shell.urls")),
+    path("dbadmin/shell/", include("django_admin_shell.urls")),
     path("dbadmin/", admin.site.urls),
-    # path("accounts/", include("django.contrib.auth.urls")),
+    path("accounts/", include("django.contrib.auth.urls")),
+    path("", include("social_django.urls", namespace="social")),
 ]
