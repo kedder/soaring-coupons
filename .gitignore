@@ -7,4 +7,5 @@ htmlcov
 .mypy_cache
 var/*
 mypy-reports
+env
 .env

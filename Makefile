@@ -5,16 +5,16 @@ all: .pipenv-installed
 	touch .pipenv-installed
 
 .PHONY: run
-run: .pipenv-installed
+run:
 	pipenv run python manage.py runserver 10080
 
 .PHONY: test
-test: .pipenv-installed
-	pipenv run pytest -s -v --cov sklandymas --cov coupons --cov-report=html --cov-report=term
+test:
+	pipenv run pytest -v --cov sklandymas --cov coupons --cov-report=html --cov-report=term
 
 .PHONY: mypy
 mypy:
-	pipenv run mypy sklandymas coupons tests
+	ENV_PATH=env.test pipenv run mypy sklandymas coupons tests
 
 .PHONY: mypy-report
 mypy-report:
