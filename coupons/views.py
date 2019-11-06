@@ -1,6 +1,6 @@
 from typing import Dict, Any, cast, List, Tuple
 import logging
-from datetime import date
+from datetime import date, datetime
 import io
 import re
 
@@ -14,6 +14,7 @@ from django.urls import reverse
 from django.template import loader
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.db import connection
 
 from coupons import models, webtopay
 
@@ -120,6 +121,95 @@ def coupon_qr(request: HttpRequest, coupon_id: str) -> HttpResponse:
     img = qr.make_image()
     img.save(imgbuf)
     return HttpResponse(imgbuf.getvalue(), content_type="image/png")
+
+
+@login_required
+def admin_summary(request: HttpRequest) -> HttpResponse:
+    years = [v["year"] for v in models.Coupon.objects.values("year").distinct()]
+    stats = []
+    for year in sorted(years, reverse=True):
+        with connection.cursor() as cursor:
+            # Find total number of coupons
+            cursor.execute("SELECT COUNT(id) FROM coupons_coupon WHERE year=%s", [year])
+            total_coupons = cursor.fetchall()[0][0]
+
+            # Find used coupons
+            cursor.execute(
+                "SELECT COUNT(id) FROM coupons_coupon WHERE status=%s AND year=%s",
+                [models.Coupon.ST_USED, year],
+            )
+            used_coupons = cursor.fetchall()[0][0]
+
+            # Find expired
+            cursor.execute(
+                "SELECT COUNT(id) FROM coupons_coupon "
+                "WHERE year=%s AND status=%s AND expires <= %s",
+                [year, models.Coupon.ST_ACTIVE, date.today()],
+            )
+            expired_coupons = cursor.fetchall()[0][0]
+
+            by_active = {
+                "total": total_coupons,
+                "active": total_coupons - used_coupons - expired_coupons,
+                "used": used_coupons,
+                "expired": expired_coupons,
+            }
+            # Aggregate by coupon type
+            cursor.execute(
+                """
+                SELECT ct.id, ct.title, COUNT(c.id)
+                FROM coupons_coupon c
+                JOIN coupons_order o ON c.order_id = o.id
+                JOIN coupons_coupontype ct ON o.coupon_type_id = ct.id
+                WHERE c.year=%s
+                GROUP BY ct.id
+            """,
+                [year],
+            )
+            by_coupon_type = []
+            for rec in cursor.fetchall():
+                by_coupon_type.append(
+                    {"type": rec[0], "type_title": rec[1], "count": rec[2]}
+                )
+
+            # Aggregate by order status
+            cursor.execute(
+                """
+                SELECT o.status, COUNT(c.id)
+                FROM coupons_coupon c
+                JOIN coupons_order o ON c.order_id = o.id
+                WHERE c.year=%s
+                GROUP BY o.status
+            """,
+                [year],
+            )
+            res = dict(cursor.fetchall())
+            by_order_status = {
+                "paid": res.get(models.Order.ST_PAID, 0),
+                "spawned": res.get(models.Order.ST_SPAWNED, 0),
+            }
+
+            # Total money paid
+            cursor.execute(
+                "SELECT SUM(paid_amount) FROM coupons_order "
+                "WHERE payment_time>=%s AND payment_time<%s",
+                [datetime(year, 1, 1), datetime(year + 1, 1, 1)],
+            )
+            total_paid = cursor.fetchall()[0][0]
+
+            stats.append(
+                {
+                    "year": year,
+                    "stats": {
+                        "by_active": by_active,
+                        "by_coupon_type": by_coupon_type,
+                        "by_order_status": by_order_status,
+                        "total_paid": total_paid or 0,
+                    },
+                }
+            )
+
+    return render(request, "admin_summary.html", {"by_year": stats})
 
 
 @login_required

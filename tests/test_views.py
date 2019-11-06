@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, timedelta
 from unittest import mock
 import re
 
@@ -190,6 +190,21 @@ def test_admin_list(admin_client, sample_coupon_type) -> None:
     assert resp.status_code == 200
     assert b"Test Flight" in resp.content
     assert b"test@test.com" in resp.content
+
+
+def test_admin_summary(admin_client, sample_coupon_type) -> None:
+    # GIVEN
+    coupons = models.Coupon.spawn(
+        sample_coupon_type,
+        count=3,
+        email="test@test.com",
+        expires=date.today() + timedelta(1),
+    )
+    coupons[0].use()
+
+    # WHEN
+    resp = admin_client.get("/admin/")
+    assert resp.status_code == 200
 
 
 def test_admin_check(admin_client, sample_coupon_type) -> None:

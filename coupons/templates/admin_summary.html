@@ -1,0 +1,66 @@
+{% extends "base_generic.html" %}
+{% load static %}
+
+{% block title %}Statistika|{% endblock %}
+
+{% block content %}
+<h1>Statistika</h1>
+
+{% for yearstats in by_year %}
+
+<h2 class="alert alert-info">{{yearstats.year}}</h2>
+<div class="row">
+    <div class="col-4">
+        <h3>Pagal panaudojimą</h3>
+        <table class="table">
+            <tr>
+                <th>Galiojančių</th>
+                <td>{{yearstats.stats.by_active.active}}</td>
+            </tr>
+            <tr>
+                <th>Panaudotų</th>
+                <td>{{yearstats.stats.by_active.used}}</td>
+            </tr>
+            <tr>
+                <th>Praleistas galiojimas</th>
+                <td>{{yearstats.stats.by_active.expired}}</td>
+            </tr>
+            <tr>
+                <th>Iš viso</th>
+                <td>{{yearstats.stats.by_active.total}}</td>
+            </tr>
+        </table>
+    </div>
+    <div class="col-4">
+        <h3>Pagal tipą</h3>
+        <table class="table">
+            <tr>
+                {% for data in yearstats.stats.by_coupon_type %}
+                <th>{{data.type_title}}</th>
+                <td>{{data.count}}</td>
+                {% endfor %}
+
+            </tr>
+        </table>
+    </div>
+    <div class="col-4">
+        <h3>Pagal mokejimą</h3>
+        <table class="table">
+            <tr>
+                <th>Apmokėtų</th>
+                <td>{{yearstats.stats.by_order_status.paid}}</td>
+            </tr>
+            <tr>
+                <th>Sugeneruotų</th>
+                <td>{{yearstats.stats.by_order_status.spawned}}</td>
+            </tr>
+            <tr>
+                <th>Viso sumokėta</th>
+                <td>{{yearstats.stats.total_paid}} €</td>
+            </tr>
+        </table>
+    </div>
+</div>
+{% endfor %}
+
+{% endblock %}

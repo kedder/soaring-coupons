@@ -10,6 +10,7 @@ urlpatterns = [
     path("accept/<int:order_id>", views.order_accept, name="order_accept"),
     path("coupon/<str:coupon_id>", views.coupon, name="coupon"),
     path("coupon/<str:coupon_id>/qr", views.coupon_qr, name="coupon_qr"),
+    path("admin/", views.admin_summary, name="admin_summary"),
     path("admin/check/<str:coupon_id>", views.coupon_check, name="coupon_check"),
     path(
         "admin/check/<str:coupon_id>/actions",
