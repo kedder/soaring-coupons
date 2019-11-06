@@ -28,6 +28,6 @@ mypy-report:
 black-check:
 	pipenv run black --check manage.py sklandymas coupons tests
 
-.PHONY: black-format
-black-format:
+.PHONY: black
+black:
 	pipenv run black manage.py sklandymas coupons tests

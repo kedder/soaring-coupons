@@ -132,7 +132,9 @@ AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
 ]
 
+LOGIN_URL = "/login/google-oauth2"
 LOGIN_REDIRECT_URL = "/admin/spawn"
+LOGOUT_REDIRECT_URL = "/"
 
 
 # Internationalization
