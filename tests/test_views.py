@@ -30,7 +30,7 @@ def test_index(client) -> None:
     assert response.status_code == 302
 
 
-def test_about(client) -> None:
+def test_about(client, db) -> None:
     # WHEN
     response = client.get("/about")
     # THEN
@@ -198,6 +198,11 @@ def test_admin_list(admin_client, sample_coupon_type) -> None:
     assert resp.status_code == 200
     assert b"Test Flight" in resp.content
     assert b"test@test.com" in resp.content
+
+
+def test_admin_list_empty(admin_client, db) -> None:
+    resp = admin_client.get("/admin/list")
+    assert resp.status_code == 200
 
 
 def test_admin_summary(admin_client, sample_coupon_type) -> None:

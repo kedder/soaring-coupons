@@ -240,6 +240,9 @@ def coupon_actions(request: HttpRequest, coupon_id: str) -> HttpResponse:
 def coupon_list(request: HttpRequest) -> HttpResponse:
     years = [v["year"] for v in models.Coupon.objects.values("year").distinct()]
 
+    if not years:
+        years = [date.today().year]
+
     curyear = int(request.GET.get("year", years[0]))
     coupons = models.Coupon.objects.filter(year=curyear, status=models.Coupon.ST_ACTIVE)
 
