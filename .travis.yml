@@ -2,13 +2,17 @@
 language: python
 python:
   - "3.7"
+env:
+  global:
+    - ENV_PATH=env.test
 install:
   - pip install pipenv
   - pipenv install --dev --system
   - pip install coveralls
 script:
-  - ENV_PATH=env.test mypy sklandymas coupons tests
+  - mypy sklandymas coupons tests
   - black --check manage.py sklandymas coupons tests
+  - python manage.py collectstatic --no-input
   - pytest -v --cov sklandymas --cov coupons --cov-report=html --cov-report=term
 after_success:
   coveralls
