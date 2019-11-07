@@ -11,3 +11,4 @@ htmlcov
 .coverage
 env
 .env
+static/*

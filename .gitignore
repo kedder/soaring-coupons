@@ -9,3 +9,4 @@ var/*
 mypy-reports
 env
 .env
+static/*
