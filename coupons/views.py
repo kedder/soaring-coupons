@@ -12,6 +12,7 @@ from django.http import HttpResponse, HttpRequest
 from django.conf import settings
 from django.urls import reverse
 from django.template import loader
+from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db import connection
@@ -22,8 +23,7 @@ log = logging.getLogger(__name__)
 
 
 def index(request) -> HttpResponse:
-    log.error("Error logged")
-    return HttpResponse("Hello, world. You're at the polls index.")
+    return redirect(settings.COUPONS_HOME_URL)
 
 
 def order(request: HttpRequest, coupon_type: str) -> HttpResponse:
@@ -53,10 +53,8 @@ def _prepare_webtopay_request(
     data["amount"] = order.price * 100
     data["currency"] = order.currency
     data["country"] = "LT"
-    data["paytext"] = "%s. Užsakymas nr. [order_nr] svetainėje " "[site_name]" % (
-        ct.title
-    )
-    data["test"] = order.test
+    data["paytext"] = f"{ct.title}. Užsakymas nr. [order_nr] svetainėje [site_name]"
+    data["test"] = settings.COUPONS_WEBTOPAY_TEST
     return data
 
 

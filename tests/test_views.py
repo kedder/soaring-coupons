@@ -26,8 +26,7 @@ def sample_coupon_type(db):
 def test_index(client) -> None:
     # WHEN
     response = client.get("/")
-
-    assert b"Hello" in response.content
+    assert response.status_code == 302
 
 
 def test_order(client, sample_coupon_type) -> None:

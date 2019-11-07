@@ -22,6 +22,7 @@ env = environ.Env(
     DEBUG=(bool, False),
     EMAIL_ENABLED=(bool, False),
     SENTRY_ENABLED=(bool, False),
+    WEBTOPAY_TEST=(bool, True),
 )
 # reading .env file
 environ.Env.read_env(env.str("ENV_PATH", "env"))
@@ -38,7 +39,7 @@ SECRET_KEY = env("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env("DEBUG")
 
-ALLOWED_HOSTS: List[str] = ['*']
+ALLOWED_HOSTS: List[str] = ["*"]
 
 
 # Application definition
@@ -141,13 +142,9 @@ LOGOUT_REDIRECT_URL = "/"
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
 
 LANGUAGE_CODE = "en-us"
-
 TIME_ZONE = "UTC"
-
 USE_I18N = True
-
 USE_L10N = True
-
 USE_TZ = True
 
 
@@ -168,9 +165,10 @@ else:
 CRISPY_TEMPLATE_PACK = "bootstrap4"
 
 # Coupons specific settings
+COUPONS_HOME_URL = env("HOME_URL")
 COUPONS_WEBTOPAY_PROJECT_ID = env("WEBTOPAY_PROJECT_ID")
 COUPONS_WEBTOPAY_PASSWORD = env("WEBTOPAY_PASSWORD")
-COUPONS_HOME_URL = ""
+COUPONS_WEBTOPAY_TEST = env("WEBTOPAY_TEST")
 COUPONS_EMAIL_SENDER = "Vilniaus Aeroklubas <aeroklubas@sklandymas.lt>"
 COUPONS_EMAIL_REPLYTO = "Vilniaus Aeroklubas <aeroklubas@sklandymas.lt>"
 
