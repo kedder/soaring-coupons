@@ -26,6 +26,12 @@ def index(request) -> HttpResponse:
     return redirect(settings.COUPONS_HOME_URL)
 
 
+def about(request) -> HttpResponse:
+    # Ping database to make sure it is working
+    count = models.Coupon.objects.count()
+    return render(request, "about.html", {"count": count})
+
+
 def order(request: HttpRequest, coupon_type: str) -> HttpResponse:
     ct = get_object_or_404(models.CouponType, pk=coupon_type)
     assert ct.in_stock, "Cannot order this item"

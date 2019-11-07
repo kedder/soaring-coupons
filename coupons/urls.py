@@ -4,6 +4,7 @@ from . import views
 
 urlpatterns = [
     path("", views.index, name="index"),
+    path("about", views.about, name="about"),
     path("order/<str:coupon_type>", views.order, name="order"),
     path("cancel", views.order_cancel, name="order_cancel"),
     path("callback", views.order_callback, name="order_callback"),

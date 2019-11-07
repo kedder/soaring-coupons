@@ -26,7 +26,16 @@ def sample_coupon_type(db):
 def test_index(client) -> None:
     # WHEN
     response = client.get("/")
+    # THEN
     assert response.status_code == 302
+
+
+def test_about(client) -> None:
+    # WHEN
+    response = client.get("/about")
+    # THEN
+    assert response.status_code == 200
+    assert "Soaring Coupons" in response.content.decode("utf-8")
 
 
 def test_order(client, sample_coupon_type) -> None:
