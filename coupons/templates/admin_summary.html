@@ -34,13 +34,12 @@
     <div class="col-4">
         <h3>Pagal tipą</h3>
         <table class="table">
+            {% for data in yearstats.stats.by_coupon_type %}
             <tr>
-                {% for data in yearstats.stats.by_coupon_type %}
                 <th>{{data.type_title}}</th>
                 <td>{{data.count}}</td>
-                {% endfor %}
-
             </tr>
+            {% endfor %}
         </table>
     </div>
     <div class="col-4">
