@@ -119,8 +119,8 @@ class Coupon(models.Model):
     status = models.IntegerField(
         choices=[(ST_ACTIVE, "Active"), (ST_USED, "Used")], default=ST_ACTIVE
     )
-    use_time = models.DateTimeField(null=True)
-    expires = models.DateField(null=True)
+    use_time = models.DateTimeField(null=True, blank=True)
+    expires = models.DateField(null=True, blank=True)
 
     @staticmethod
     def from_order(order: Order, expires: date = None) -> Sequence["Coupon"]:
