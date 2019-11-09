@@ -95,6 +95,17 @@ TEMPLATES = [
     }
 ]
 
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "default": {"format": "{asctime} {levelname} {name} {message}", "style": "{",},
+    },
+    "handlers": {
+        "console": {"class": "logging.StreamHandler", "formatter": "default"},
+    },
+    "loggers": {"coupons": {"handlers": ["console"], "level": "INFO",},},
+}
 # LOGIN_URL = '/dbadmin/login/'
 
 # Static files (CSS, JavaScript, Images)

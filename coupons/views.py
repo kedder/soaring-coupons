@@ -28,6 +28,7 @@ def index(request) -> HttpResponse:
 
 def about(request) -> HttpResponse:
     # Ping database to make sure it is working
+    log.info("About view requested")
     count = models.Coupon.objects.count()
     return render(request, "about.html", {"count": count})
 
