@@ -16,6 +16,7 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db import connection
+from django.db.models import Q
 
 from coupons import models, webtopay
 
@@ -240,12 +241,17 @@ def coupon_actions(request: HttpRequest, coupon_id: str) -> HttpResponse:
 @login_required
 def coupon_list(request: HttpRequest) -> HttpResponse:
     years = [v["year"] for v in models.Coupon.objects.values("year").distinct()]
+    years = sorted(years, reverse=True)
 
     if not years:
         years = [date.today().year]
 
     curyear = int(request.GET.get("year", years[0]))
-    coupons = models.Coupon.objects.filter(year=curyear, status=models.Coupon.ST_ACTIVE)
+    coupons = models.Coupon.objects.filter(
+        Q(year=curyear),
+        Q(status=models.Coupon.ST_ACTIVE),
+        Q(expires__gte=date.today()) | Q(expires=None),
+    )
 
     return render(
         request,
