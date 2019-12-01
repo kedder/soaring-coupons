@@ -27,6 +27,10 @@ def index(request) -> HttpResponse:
     return redirect(settings.COUPONS_HOME_URL)
 
 
+def robots_txt(request) -> HttpResponse:
+    return HttpResponse("User-Agent: *\nDisallow: /\n", content_type="text/plain")
+
+
 def about(request) -> HttpResponse:
     # Ping database to make sure it is working
     log.info("About view requested")

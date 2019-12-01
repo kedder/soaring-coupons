@@ -30,6 +30,14 @@ def test_index(client) -> None:
     assert response.status_code == 302
 
 
+def test_robots_txt(client) -> None:
+    # WHEN
+    response = client.get("/robots.txt")
+    # THEN
+    assert response.status_code == 200
+    assert response.content == b"User-Agent: *\nDisallow: /\n"
+
+
 def test_about(client, db) -> None:
     # WHEN
     response = client.get("/about")
