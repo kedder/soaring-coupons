@@ -4,9 +4,12 @@ tmp
 .coverage
 htmlcov
 *.egg-info
+.pytest_cache
 .mypy_cache
 var/*
 mypy-reports
 env
 .env
 static/*
+.vscode
+*.code-workspace
