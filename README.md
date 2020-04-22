@@ -19,3 +19,27 @@ docker-compose up
 
 The app should be available on http://localhost:8080. Django admin is available
 under `/dbadmin` url.
+
+
+## Developing
+
+Few hints for my future self.
+
+### Database migrations
+
+After changes to data schemas, migrations has to be generated and applied:
+
+```
+./manage.py makemigrations
+./manage.py migrate
+```
+
+See https://docs.djangoproject.com/en/3.0/topics/migrations/ for more info.
+
+### Deploying to dokku
+
+Whenever new version is complete, push it to dokku:
+
+```
+git push dokku master
+```
