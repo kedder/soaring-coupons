@@ -1,6 +1,6 @@
 from typing import Dict, Any, cast, List, Tuple
 import logging
-from datetime import date, datetime
+from datetime import date, datetime, timezone
 import io
 import re
 
@@ -42,8 +42,11 @@ def order(request: HttpRequest, coupon_type: str) -> HttpResponse:
     ct = get_object_or_404(models.CouponType, pk=coupon_type)
     assert ct.in_stock, "Cannot order this item"
     order = models.Order.from_type(ct)
+    discount = models.ScheduledDiscount.find_discount_on(datetime.now(timezone.utc))
+    order.apply_discount(discount)
     order.save()
     log.info(f"Order {order.id} ({order.coupon_type.id}) created")
+
     data = _prepare_webtopay_request(order, ct, request)
     url = webtopay.get_redirect_to_payment_url(data)
     return redirect(url)

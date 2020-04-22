@@ -1,4 +1,5 @@
-from datetime import date, timedelta
+from datetime import date, timedelta, datetime, timezone
+from decimal import Decimal
 from unittest import mock
 import re
 
@@ -47,10 +48,10 @@ def test_about(client, db) -> None:
 
 
 def test_order(client, sample_coupon_type) -> None:
-    # GIVEN
+    # WHEN
     response = client.get(f"/order/{sample_coupon_type.id}")
 
-    # Then
+    # THEN
     assert response.status_code == 302
     assert response.has_header("Location")
 
@@ -63,6 +64,38 @@ def test_order(client, sample_coupon_type) -> None:
     assert order.coupon_type == sample_coupon_type
     assert not order.paid
     assert order.status == models.Order.ST_PENDING
+
+
+def test_order_with_discount(client, sample_coupon_type) -> None:
+    # GIVEN
+    d1 = models.ScheduledDiscount(
+        date_from=datetime(2020, 1, 1, 20, 14, tzinfo=timezone.utc),
+        date_to=datetime(2020, 1, 10, 22, 12, tzinfo=timezone.utc),
+        discount=15,
+        comment="Broad",
+    )
+    d1.save()
+
+    # WHEN
+    with mock.patch("coupons.views.datetime") as dt_mock:
+        dt_mock.now.return_value = datetime(2020, 1, 4, 0, 0, tzinfo=timezone.utc)
+        response = client.get(f"/order/{sample_coupon_type.id}")
+
+    # THEN
+    assert response.status_code == 302
+    assert response.has_header("Location")
+
+    # Order was created
+    orders = models.Order.objects.all()
+
+    assert orders.count() == 1
+
+    order = orders[0]
+    assert order.coupon_type == sample_coupon_type
+    assert not order.paid
+    assert order.status == models.Order.ST_PENDING
+    assert order.price == Decimal("10.46")
+    assert order.discount == Decimal("1.84")
 
 
 def test_order_callback_success(mailoutbox, client, sample_coupon_type) -> None:
