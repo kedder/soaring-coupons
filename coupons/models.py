@@ -226,3 +226,24 @@ class Coupon(models.Model):
         self.use_time = datetime.now(pytz.utc)
         self.save()
         log.info(f"Coupon {self.id} used")
+
+
+class ScheduledDiscount(models.Model):
+    date_from = models.DateTimeField()
+    date_to = models.DateTimeField()
+    discount = models.IntegerField()
+    comment = models.TextField(null=True)
+
+    @staticmethod
+    def find_discount_on(now: datetime) -> int:
+        """Return discount in percent (0-100) for given time
+
+        Or 0 if no discount."""
+        relevant = ScheduledDiscount.objects.filter(date_from__lte=now, date_to__gt=now)
+        # Latest discount takes precedence
+        relevant = relevant.order_by("-date_from")
+        for sd in relevant:
+            return sd.discount
+
+        # No discounts found
+        return 0

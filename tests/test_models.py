@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, datetime, timezone
 
 import pytest
 
@@ -123,3 +123,51 @@ def test_coupon_use(sample_coupon_type) -> None:
     # THEN
     assert not c.active
     assert c.use_time is not None
+
+
+def test_scheduled_discount_find_discount_on(db) -> None:
+    # GIVEN
+    d1 = models.ScheduledDiscount(
+        date_from=datetime(2020, 1, 1, 20, 14, tzinfo=timezone.utc),
+        date_to=datetime(2020, 1, 1, 22, 12, tzinfo=timezone.utc),
+        discount=15,
+        comment="Test",
+    )
+    d1.save()
+
+    dt_before = datetime(2020, 1, 1, 1, 1, tzinfo=timezone.utc)
+    dt_on = datetime(2020, 1, 1, 20, 14, tzinfo=timezone.utc)
+    dt_after = datetime(2020, 1, 1, 22, 12, tzinfo=timezone.utc)
+
+    # WHEN, THEN
+    assert models.ScheduledDiscount.find_discount_on(dt_before) == 0
+    assert models.ScheduledDiscount.find_discount_on(dt_on) == 15
+    assert models.ScheduledDiscount.find_discount_on(dt_after) == 0
+
+
+def test_scheduled_discount_overlapping(db) -> None:
+    # GIVEN
+    d1 = models.ScheduledDiscount(
+        date_from=datetime(2020, 1, 1, 20, 14, tzinfo=timezone.utc),
+        date_to=datetime(2020, 1, 10, 22, 12, tzinfo=timezone.utc),
+        discount=15,
+        comment="Broad",
+    )
+    d1.save()
+
+    d2 = models.ScheduledDiscount(
+        date_from=datetime(2020, 1, 3, 20, 14, tzinfo=timezone.utc),
+        date_to=datetime(2020, 1, 3, 22, 12, tzinfo=timezone.utc),
+        discount=20,
+        comment="Narrow",
+    )
+    d2.save()
+
+    dt_broad = datetime(2020, 1, 2, 1, 1, tzinfo=timezone.utc)
+    dt_narrow = datetime(2020, 1, 3, 21, 14, tzinfo=timezone.utc)
+    dt_after_narrow = datetime(2020, 1, 5, 0, 0, tzinfo=timezone.utc)
+
+    # WHEN, THEN
+    assert models.ScheduledDiscount.find_discount_on(dt_broad) == 15
+    assert models.ScheduledDiscount.find_discount_on(dt_narrow) == 20
+    assert models.ScheduledDiscount.find_discount_on(dt_after_narrow) == 15
