@@ -25,6 +25,3 @@ social-auth-app-django = "*"
 django-environ = "*"
 psycopg2-binary = "*"
 whitenoise = "*"
-
-[requires]
-python_version = "3.7"
