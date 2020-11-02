@@ -47,6 +47,14 @@ def test_about(client, db) -> None:
     assert "Soaring Coupons" in response.content.decode("utf-8")
 
 
+def test_cancel(client, db) -> None:
+    # WHEN
+    response = client.get("/cancel")
+    # THEN
+    assert response.status_code == 200
+    assert "Užsakymas atšauktas" in response.content.decode("utf-8")
+
+
 def test_order(client, sample_coupon_type) -> None:
     # WHEN
     response = client.get(f"/order/{sample_coupon_type.id}")
