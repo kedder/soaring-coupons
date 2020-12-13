@@ -13,6 +13,7 @@ nav.navbar {
 
 
 .important {
+  display: flex;  /* so that border isn't rendered below qr code */
   color: #c00;
   padding: 6pt;
   border: 2px solid #c00;
