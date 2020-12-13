@@ -1,17 +1,15 @@
 Sveiki!
 
-Siunčiame Jums Vilniaus aeroklubo kvietimą skrydžiui
-(užsakymas {{ coupon.order.id }}). Atvažiuodami skristi, būtinai
-su savimi turėkite atspausdintą kvietimą. Atspausdinti kvietimą galite
-čia:
+Siunčiame Jums Vilniaus aeroklubo kvietimą (užsakymas {{ coupon.order.id }}).
+Atspausdinti kvietimą galite čia:
 
 {{ url }}
 
 Jei turite klausimų, kreipkitės el. paštu aeroklubas@sklandymas.lt arba
 telefonu +370 615 15060.
 
-Iki pasimatymo aerodrome!
+Iki pasimatymo!
 
---
-Vilniaus aeroklubo kolektyvas
+-- 
+Vilniaus aeroklubas
 http://sklandymas.lt
