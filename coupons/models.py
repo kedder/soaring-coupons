@@ -19,14 +19,15 @@ class CouponType(models.Model):
     id = models.CharField(max_length=32, primary_key=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     title = models.CharField(max_length=255)
-    welcome_text = models.TextField()
-    validity_cond_text = models.CharField(max_length=255)
+    welcome_text = models.TextField(null=True)
+    validity_cond_text = models.CharField(max_length=255, null=True)
     deafult_expiration_date = models.DateField()
     in_stock = models.BooleanField(default=True)
     # Template to use when printing the coupon. Will use django template in
     # `templates/coupons/{}.html`
     print_template = models.CharField(
-        max_length=32, choices=[("flight", "Flight Coupon")]
+        max_length=32,
+        choices=[("flight", "Flight Coupon"), ("courses", "Courses Coupon")],
     )
 
     def __str__(self) -> str:
