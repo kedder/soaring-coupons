@@ -208,8 +208,25 @@ def test_coupon_spawn_protected(client) -> None:
     assert resp.status_code == 302  # Redirect to login
 
 
-def test_coupon(client, sample_coupon_type) -> None:
+def test_coupon_flight(client, sample_coupon_type) -> None:
     # GIVEN
+    sample_coupon_type.print_template = "flight"
+    order = models.Order.from_type(sample_coupon_type)
+    order.save()
+    coupons = order.process(paid_amount=32.4, paid_currency="EUR")
+    assert len(coupons) == 1
+    cid = coupons[0].id
+
+    # WHEN
+    resp = client.get(f"/coupon/{cid}")
+
+    # THEN
+    assert cid.encode("utf-8") in resp.content
+
+
+def test_coupon_courses(client, sample_coupon_type) -> None:
+    # GIVEN
+    sample_coupon_type.print_template = "courses"
     order = models.Order.from_type(sample_coupon_type)
     order.save()
     coupons = order.process(paid_amount=32.4, paid_currency="EUR")
