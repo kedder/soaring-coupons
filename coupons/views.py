@@ -119,7 +119,9 @@ def order_accept(request: HttpRequest, order_id: int) -> HttpResponse:
 
 def coupon(request: HttpRequest, coupon_id: str) -> HttpResponse:
     coupon = get_object_or_404(models.Coupon, pk=coupon_id)
-    return render(request, "coupons/flight.html", {"coupon": coupon})
+    ct = coupon.coupon_type
+    template_name = ct.print_template
+    return render(request, f"coupons/{template_name}.html", {"coupon": coupon})
 
 
 def coupon_qr(request: HttpRequest, coupon_id: str) -> HttpResponse:
