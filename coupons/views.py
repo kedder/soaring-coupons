@@ -339,7 +339,8 @@ class CouponSpawnForm(forms.Form):
 
 
 def _send_confirmation_email(coupon: models.Coupon, request: HttpRequest) -> None:
-    subject = "Kvietimas skrydziui " "Paluknio aerodrome nr. %s" % coupon.id
+    ct = coupon.order.coupon_type
+    subject = f"{ct.title} (kvietimas {coupon.id})"
     coupon_url = request.build_absolute_uri(
         reverse("coupon", kwargs={"coupon_id": coupon.id})
     )
