@@ -19,6 +19,7 @@ def sample_coupon_type(db):
         welcome_text="",
         validity_cond_text="",
         deafult_expiration_date=date.today(),
+        print_template="flight",
     )
     ct.save()
     return ct
