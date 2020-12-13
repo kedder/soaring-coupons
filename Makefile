@@ -1,4 +1,6 @@
-all: .pipenv-installed
+all: test mypy black
+
+dev-environment: .pipenv-installed
 
 .pipenv-installed: Pipfile Pipfile.lock  | $(VENV)
 	pipenv install --dev
@@ -6,11 +8,11 @@ all: .pipenv-installed
 
 .PHONY: run
 run:
-	pipenv run python manage.py runserver 10080
+	python manage.py runserver 10080
 
 .PHONY: test
 test:
-	pipenv run pytest -v --cov sklandymas --cov coupons --cov-report=html --cov-report=term
+	pytest -v --cov sklandymas --cov coupons --cov-report=html --cov-report=term
 
 .PHONY: mypy
 mypy:
@@ -18,7 +20,7 @@ mypy:
 
 .PHONY: mypy-report
 mypy-report:
-	pipenv run mypy sklandymas coupons tests \
+	mypy sklandymas coupons tests \
 		--html-report mypy-reports/html \
 		--txt-report mypy-reports/txt
 	@cat mypy-reports/txt/index.txt
@@ -26,8 +28,8 @@ mypy-report:
 
 .PHONY: black-check
 black-check:
-	pipenv run black --check manage.py sklandymas coupons tests
+	black --check manage.py sklandymas coupons tests
 
 .PHONY: black
 black:
-	pipenv run black manage.py sklandymas coupons tests
+	black manage.py sklandymas coupons tests
