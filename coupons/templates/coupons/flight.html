@@ -1,26 +1,8 @@
-{% extends "base_generic.html" %}
-{% load static %}
-
-{% block title %}Kvietimas {{coupon.id}} |{% endblock %}
-
-{% block content %}
-
-<button class="rightblock noprint nohandheld btn btn-info"
-  onclick="window.print()">Spausdinti</button>
-
-<div class="logo">
-  <img class="logo" alt="Vilniaus Aeroklubas"
-    src="{% static 'coupons/images/logo.png' %}" />
-</div>
-<h3>{{ coupon.id }}. {{ coupon.coupon_type.title}}.</h3>
+{% extends "coupons/base_coupon.html" %}
+{% block coupon_content %}
 
 <p class='noprint important'>Atvažiuodami skristi, būtinai su savimi
 turėkite atspausdintą šį kvietimą.</p>
-
-
-<div class="rightblock">
-    <img src='{% url "coupon_qr" coupon.id %}' />
-</div>
 
 {{ coupon.coupon_type.welcome_text | safe }}
 
