@@ -165,9 +165,14 @@ USE_TZ = True
 
 # Email
 if env("EMAIL_ENABLED"):
-    EMAIL_BACKEND = "django_mailgun.MailgunBackend"
+    EMAIL_BACKEND = "anymail.backends.mailgun.EmailBackend"
+    ANYMAIL = {
+        "MAILGUN_API_KEY": env("MAILGUN_ACCESS_KEY"),
+        "MAILGUN_SENDER_DOMAIN": env("MAILGUN_SERVER_NAME"),
+    }
     MAILGUN_ACCESS_KEY = env("MAILGUN_ACCESS_KEY")
     MAILGUN_SERVER_NAME = env("MAILGUN_SERVER_NAME")
+    DEFAULT_FROM_EMAIL = "Vilniaus Aeroklubas <aeroklubas@sklandymas.lt>"
 else:
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
@@ -181,7 +186,6 @@ COUPONS_WEBTOPAY_PASSWORD = env("WEBTOPAY_PASSWORD")
 COUPONS_WEBTOPAY_TEST = env("WEBTOPAY_TEST")
 COUPONS_EMAIL_SENDER = "Vilniaus Aeroklubas <aeroklubas@sklandymas.lt>"
 COUPONS_EMAIL_REPLYTO = "Vilniaus Aeroklubas <aeroklubas@sklandymas.lt>"
-
 
 if env("SENTRY_ENABLED"):
     sentry_sdk.init(dsn=env("SENTRY_DSN"), integrations=[DjangoIntegration()])
