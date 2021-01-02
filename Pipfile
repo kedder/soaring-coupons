@@ -14,7 +14,6 @@ black = "==19.10b0"
 [packages]
 django-admin-shell = "*"
 django-crispy-forms = "*"
-django-mailgun = "*"
 qrcode = "*"
 requests = "*"
 sentry-sdk = "*"
