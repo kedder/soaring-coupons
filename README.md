@@ -1,6 +1,6 @@
 # Soaring Coupons
 
-[![Build Status](https://travis-ci.org/kedder/soaring-coupons.png?branch=master)](https://travis-ci.org/kedder/soaring-coupons)
+[![Build Status](https://circleci.com/gh/kedder/soaring-coupons.svg?style=svg)](https://app.circleci.com/pipelines/github/kedder/soaring-coupons/)
 [![Coverage Status](https://coveralls.io/repos/kedder/soaring-coupons/badge.png)](https://coveralls.io/r/kedder/soaring-coupons)
 
 Soaring Coupons is a basic application that is capable of organizing sales of
