@@ -160,11 +160,11 @@
         },
         "importlib-metadata": {
             "hashes": [
-                "sha256:2ec0faae539743ae6aaa84b49a169670a465f7f5d64e6add98388cc29fd1f2f6",
-                "sha256:c9356b657de65c53744046fa8f7358afe0714a1af7d570c00c3835c2d724a7c1"
+                "sha256:8c501196e49fb9df5df43833bdb1e4328f64847763ec8a50703148b73784d581",
+                "sha256:d7eb1dea6d6a6086f8be21784cc9e3bcfa55872b52309bc5fad53a8ea444465d"
             ],
             "index": "pypi",
-            "version": "==3.10.1"
+            "version": "==4.0.1"
         },
         "oauthlib": {
             "hashes": [
@@ -477,10 +477,10 @@
         },
         "django-stubs-ext": {
             "hashes": [
-                "sha256:2cf0f9615c0f7c399d23e4be4d9ab4b354e550480a950f659cdf1aa3ba19bd38",
-                "sha256:663469e7452ead59ae9235eb62b35ef09a15ae94f2193fedf1b84aea471fc011"
+                "sha256:bd4a1e36ef2ba0ef15801933c85c68e59b383302c873795c6ecfc25950c7ecdb",
+                "sha256:c14f297835a42c1122421ec7e2d06579996b29d33b8016002762afa5d78863af"
             ],
-            "version": "==0.1.0"
+            "version": "==0.2.0"
         },
         "iniconfig": {
             "hashes": [
