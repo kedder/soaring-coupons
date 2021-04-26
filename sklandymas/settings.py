@@ -120,6 +120,7 @@ WSGI_APPLICATION = "sklandymas.wsgi.application"
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
 DATABASES = {"default": env.db("DATABASE_URL")}
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 ATOMIC_REQUESTS = True
 
 SOCIAL_AUTH_PIPELINE = (
