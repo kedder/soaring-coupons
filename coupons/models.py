@@ -95,7 +95,7 @@ class Order(models.Model):
         payer_surname: str = None,
         payment_provider: str = None,
     ) -> Sequence["Coupon"]:
-        """ Process order payment.
+        """Process order payment.
 
         Updates order with supplied information and updates status to ST_PAID.
         Creates Coupon object.  Payment information must be validated before
@@ -142,8 +142,7 @@ class Coupon(models.Model):
 
     @staticmethod
     def from_order(order: Order, expires: date = None) -> Sequence["Coupon"]:
-        """Create couponse for given order
-        """
+        """Create couponse for given order"""
         ctype = order.coupon_type
         payment_year = (
             order.payment_time.year if order.payment_time else order.create_time.year

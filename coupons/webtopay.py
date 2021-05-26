@@ -70,7 +70,7 @@ class WebToPayException_Validation(WebToPayException):
 
 
 def build_request(data: Dict[str, Any]) -> Dict[str, bytes]:
-    """ Builds request data array.
+    """Builds request data array.
 
     This method checks all given data and generates correct request data
     array or raises WebToPayException on failure.
@@ -97,7 +97,7 @@ def build_request(data: Dict[str, Any]) -> Dict[str, bytes]:
 
 
 def get_redirect_to_payment_url(data: Dict[str, Any]) -> str:
-    """ Builds request and returns url to payment page with generated request
+    """Builds request and returns url to payment page with generated request
     data
 
     Possible array keys are described here:
@@ -116,7 +116,7 @@ def get_redirect_to_payment_url(data: Dict[str, Any]) -> str:
 def validate_and_parse_data(
     query: Dict[str, str], project_id: str, password: str
 ) -> Dict[str, str]:
-    """ Parses request (query) data and validates its signature.
+    """Parses request (query) data and validates its signature.
 
     query - usually GET data.
 
