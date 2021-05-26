@@ -1,26 +1,30 @@
-from typing import Dict, Any, cast, List, Tuple
-import logging
-from datetime import date, datetime, timezone
 import io
+import logging
 import re
+from datetime import date, datetime, timezone
+from typing import Any, Dict, List, Tuple, cast
 
 import qrcode
+from anymail.exceptions import AnymailError
 from django import forms
-from django.shortcuts import render, redirect, get_object_or_404
-from django.core.mail import EmailMessage
-from django.http import HttpResponse, HttpRequest
 from django.conf import settings
-from django.urls import reverse
-from django.template import loader
-from django.conf import settings
-from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.core.mail import EmailMessage
 from django.db import connection
 from django.db.models import Q
+from django.http import HttpRequest, HttpResponse
+from django.shortcuts import get_object_or_404, redirect, render
+from django.template import loader
+from django.urls import reverse
 
 from coupons import models, webtopay
 
 log = logging.getLogger(__name__)
+
+
+class EmailFailed(Exception):
+    pass
 
 
 def index(request) -> HttpResponse:
@@ -102,8 +106,11 @@ def order_callback(request: HttpRequest) -> HttpResponse:
             payment_provider=params["payment"],
         )
 
-        for coupon in coupons:
-            _send_confirmation_email(coupon, request)
+        try:
+            for coupon in coupons:
+                _send_confirmation_email(coupon, request)
+        except EmailFailed as e:
+            log.exception(f"Failed to send coupon for order {order.id}")
     else:
         log.warning("Request unprocessed. params: %s" % params)
 
@@ -359,4 +366,7 @@ def _send_confirmation_email(coupon: models.Coupon, request: HttpRequest) -> Non
         to=[coupon.order.payer_email],
         bcc=[settings.COUPONS_EMAIL_SENDER],
     )
-    email.send(fail_silently=False)
+    try:
+        email.send(fail_silently=False)
+    except AnymailError as err:
+        raise EmailFailed() from err

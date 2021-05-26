@@ -1,13 +1,12 @@
-from datetime import date, timedelta, datetime, timezone
+import re
+from datetime import date, datetime, timedelta, timezone
 from decimal import Decimal
 from unittest import mock
-import re
 
 import pytest
+from anymail.exceptions import AnymailRequestsAPIError
+from coupons import models, webtopay
 from django.core import mail
-
-from coupons import models
-from coupons import webtopay
 
 
 @pytest.fixture
@@ -151,6 +150,37 @@ def test_order_callback_success(mailoutbox, client, sample_coupon_type) -> None:
     msg = mail.outbox[0]
     msg_contents = msg.body
     assert re.findall(r"http://.*/coupon/1001", msg_contents)
+
+
+def test_order_callback_notif_fail(mailoutbox, client, sample_coupon_type) -> None:
+    # GIVEN
+    order = models.Order.from_type(sample_coupon_type)
+    order.save()
+
+    # Prepare request as webtopay would
+    req = {
+        "orderid": order.id,
+        "payamount": "20000",
+        "paycurrency": "LTL",
+        "p_email": "test@test.com",
+        "status": "1",
+        "name": "Bill",
+        "surename": "Gates",
+        "payment": "test",
+    }
+
+    data = webtopay._safe_base64_encode(webtopay._prepare_query_string(req, "test"))
+    signature = webtopay._sign(data, b"pass")
+
+    params = {"data": data, "ss1": signature}
+    with mock.patch("coupons.models.Coupon.gen_unique_id") as m, mock.patch(
+        "django.core.mail.EmailMessage.send"
+    ) as s:
+        m.return_value = "1001"
+        s.side_effect = AnymailRequestsAPIError()
+        resp = client.get("/callback", params)
+
+    assert resp.content == b"OK"
 
 
 def test_order_accept(sample_coupon_type, client):
