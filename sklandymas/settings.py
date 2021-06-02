@@ -153,6 +153,7 @@ AUTH_PASSWORD_VALIDATORS = [
 LOGIN_URL = "/login/google-oauth2"
 LOGIN_REDIRECT_URL = "/admin/spawn"
 LOGOUT_REDIRECT_URL = "/"
+REDIRECT_IS_HTTPS = env.bool("ENABLE_HTTPS", False)
 
 
 # Internationalization
