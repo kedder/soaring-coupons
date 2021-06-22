@@ -10,6 +10,7 @@ django-stubs = "*"
 pytest-cov = "*"
 pytest-django = "*"
 black = "==19.10b0"
+types-pytz = "*"
 
 [packages]
 django-admin-shell = "*"
