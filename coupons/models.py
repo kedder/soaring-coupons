@@ -1,11 +1,11 @@
-from typing import Sequence
+import itertools
 import logging
-import pytz
 import random
 import string
-import itertools
 from datetime import date, datetime
 from decimal import Decimal
+from typing import Sequence
+from zoneinfo import ZoneInfo
 
 from django.db import models
 
@@ -13,6 +13,8 @@ log = logging.getLogger(__name__)
 
 SEASON_START_MONTH = 4
 SEASON_END_MONTH = 10
+
+UTC = ZoneInfo("UTC")
 
 
 class CouponType(models.Model):
@@ -72,7 +74,7 @@ class Order(models.Model):
             quantity=quantity,
             price=coupon_type.price,
             currency="EUR",
-            create_time=datetime.now(pytz.utc),
+            create_time=datetime.now(UTC),
         )
 
     def apply_discount(self, discount: int) -> None:
@@ -110,7 +112,7 @@ class Order(models.Model):
         self.payer_name = payer_name
         self.payer_surname = payer_surname
         self.status = Order.ST_PAID
-        self.payment_time = datetime.now(pytz.utc)
+        self.payment_time = datetime.now(UTC)
         self.payment_provider = payment_provider
         self.save()
         log.info("Order %s processed" % self.id)
@@ -184,7 +186,7 @@ class Coupon(models.Model):
         order.status = Order.ST_SPAWNED
         order.notes = notes
         order.payer_email = email
-        order.payment_time = datetime.now(pytz.utc)
+        order.payment_time = datetime.now(UTC)
         order.save()
 
         return Coupon.from_order(order)
@@ -240,7 +242,7 @@ class Coupon(models.Model):
             raise ValueError(f"Cannot use non-active coupon {self.id}")
 
         self.status = Coupon.ST_USED
-        self.use_time = datetime.now(pytz.utc)
+        self.use_time = datetime.now(UTC)
         self.save()
         log.info(f"Coupon {self.id} used")
 
