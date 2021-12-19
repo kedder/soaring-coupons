@@ -4,7 +4,7 @@ from . import views
 
 urlpatterns = [
     path("", views.index, name="index"),
-    path("robots.txt", views.robots_txt, name="robots_file",),
+    path("robots.txt", views.robots_txt, name="robots_file"),
     path("about", views.about, name="about"),
     path("order/<str:coupon_type>", views.order, name="order"),
     path("cancel", views.order_cancel, name="order_cancel"),
