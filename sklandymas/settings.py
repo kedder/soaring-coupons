@@ -200,5 +200,8 @@ COUPONS_WEBTOPAY_TEST = env("WEBTOPAY_TEST")
 COUPONS_EMAIL_SENDER = "Vilniaus Aeroklubas <aeroklubas@sklandymas.lt>"
 COUPONS_EMAIL_REPLYTO = "Vilniaus Aeroklubas <aeroklubas@sklandymas.lt>"
 
+if "BASE_URL" in env:
+    CSRF_TRUSTED_ORIGINS = [env("BASE_URL")]
+
 if env("SENTRY_ENABLED"):
     sentry_sdk.init(dsn=env("SENTRY_DSN"), integrations=[DjangoIntegration()])
