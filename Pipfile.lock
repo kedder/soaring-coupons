@@ -149,11 +149,11 @@
                 "mailgun"
             ],
             "hashes": [
-                "sha256:2325932f56f914d96e0a54db850f2b246ed2277b753f75319620d051a51551e2",
-                "sha256:677e937dc9e2671ca7631abb1d94ddc6b840beb3d53c0fbf699e866a6a9ba92f"
+                "sha256:49d83d7c16316ca86a624097496881d59b7d71b16bf1c5211cffa5b19ef98d0c",
+                "sha256:783342d49dd07d68778b81dd12a94c86e1d217463a68a85450a0513fabe31345"
             ],
             "index": "pypi",
-            "version": "==8.5"
+            "version": "==8.6"
         },
         "django-crispy-forms": {
             "hashes": [
