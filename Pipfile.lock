@@ -730,11 +730,11 @@
         },
         "types-pytz": {
             "hashes": [
-                "sha256:bea605ce5d5a5d52a8e1afd7656c9b42476e18a0f888de6be91587355313ddf4",
-                "sha256:d078196374d1277e9f9984d49373ea043cf2c64d5d5c491fbc86c258557bd46f"
+                "sha256:1509f182f686ab76e9a8234f22b00b8f50d239974db0cf924b7ae8674bb31a6f",
+                "sha256:4f20c2953b3a3a0587e94489ec4c9e02c3d3aedb9ba5cd7e796e12f4cfa7027e"
             ],
             "index": "pypi",
-            "version": "==2022.6.0.1"
+            "version": "==2022.7.0.0"
         },
         "types-pyyaml": {
             "hashes": [
