@@ -1,4 +1,4 @@
-from typing import Dict, Any
+from typing import Optional, Dict, Any
 import hashlib
 import urllib
 import urllib.parse
@@ -64,7 +64,9 @@ class WebToPayException_Callback(WebToPayException):
 
 
 class WebToPayException_Validation(WebToPayException):
-    def __init__(self, message: str, code: int = 0, field: str = None) -> None:
+    def __init__(
+        self, message: str, code: int = 0, field: Optional[str] = None
+    ) -> None:
         super().__init__(message, code)
         self.field = field
 

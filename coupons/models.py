@@ -4,7 +4,7 @@ import random
 import string
 from datetime import date, datetime
 from decimal import Decimal
-from typing import Sequence
+from typing import Optional, Sequence
 from zoneinfo import ZoneInfo
 
 from django.db import models
@@ -92,10 +92,10 @@ class Order(models.Model):
         *,
         paid_amount: float,
         paid_currency: str,
-        payer_email: str = None,
-        payer_name: str = None,
-        payer_surname: str = None,
-        payment_provider: str = None,
+        payer_email: Optional[str] = None,
+        payer_name: Optional[str] = None,
+        payer_surname: Optional[str] = None,
+        payment_provider: Optional[str] = None,
     ) -> Sequence["Coupon"]:
         """Process order payment.
 
@@ -143,7 +143,7 @@ class Coupon(models.Model):
     expires = models.DateField(null=True, blank=True)
 
     @staticmethod
-    def from_order(order: Order, expires: date = None) -> Sequence["Coupon"]:
+    def from_order(order: Order, expires: Optional[date] = None) -> Sequence["Coupon"]:
         """Create couponse for given order"""
         ctype = order.coupon_type
         payment_year = (
@@ -179,7 +179,7 @@ class Coupon(models.Model):
         count: int,
         email: str,
         expires: date,
-        notes: str = None,
+        notes: Optional[str] = None,
     ) -> Sequence["Coupon"]:
         log.info("Spawning %s coupons", count)
         order = Order.from_type(coupon_type, quantity=count)
