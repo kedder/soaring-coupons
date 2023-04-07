@@ -27,3 +27,4 @@ psycopg2-binary = "*"
 whitenoise = "*"
 importlib-metadata = "*"
 django-anymail = {extras = ["mailgun"], version = "*"}
+crispy-bootstrap4 = "*"

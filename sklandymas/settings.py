@@ -47,6 +47,7 @@ ALLOWED_HOSTS: List[str] = ["*"]
 INSTALLED_APPS = [
     "coupons.apps.CouponsConfig",
     "crispy_forms",
+    "crispy_bootstrap4",
     # "django_admin_shell",
     "django.contrib.admin",
     "django.contrib.auth",
@@ -123,7 +124,11 @@ LOGGING = {
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
 STATIC_URL = "/static/"
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+STORAGES = {
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage"
+    }
+}
 
 WSGI_APPLICATION = "sklandymas.wsgi.application"
 
@@ -173,7 +178,6 @@ REDIRECT_IS_HTTPS = env.bool("ENABLE_HTTPS", False)
 LANGUAGE_CODE = "en-us"
 TIME_ZONE = "UTC"
 USE_I18N = True
-USE_L10N = True
 USE_TZ = True
 
 # Email
