@@ -28,3 +28,5 @@ whitenoise = "*"
 importlib-metadata = "*"
 django-anymail = {extras = ["mailgun"], version = "*"}
 crispy-bootstrap4 = "*"
+exceptiongroup = {markers="python_version < '3.11'"}
+tomli = {markers="python_version < '3.11'"}
