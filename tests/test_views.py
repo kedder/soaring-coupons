@@ -148,7 +148,7 @@ def test_order_callback_success(mailoutbox, client, sample_coupon_type) -> None:
 
     # Make sure email contains correct link to coupon
     msg = mail.outbox[0]
-    msg_contents = msg.body
+    msg_contents = str(msg.body)
     assert re.findall(r"http://.*/coupon/1001", msg_contents)
 
 
