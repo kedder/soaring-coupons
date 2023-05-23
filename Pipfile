@@ -11,6 +11,7 @@ pytest-cov = "*"
 pytest-django = "*"
 black = "==22.12.0"
 types-pytz = "*"
+tomli = "*"
 
 [packages]
 django-admin-shell = "*"
