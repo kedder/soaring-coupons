@@ -9,7 +9,7 @@ mypy = "*"
 django-stubs = "*"
 pytest-cov = "*"
 pytest-django = "*"
-black = "==22.12.0"
+black = "*"
 types-pytz = "*"
 tomli = "*"
 
