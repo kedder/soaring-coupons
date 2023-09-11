@@ -59,18 +59,18 @@ def test_order_process(sample_coupon_type) -> None:
 
 def test_coupon_spawn(sample_coupon_type) -> None:
     # GIVEN
-    today = date.today()
+    future = date(2029, 2, 16)
 
     # WHEN
     coupons = models.Coupon.spawn(
-        sample_coupon_type, count=3, email="test@test.com", expires=today
+        sample_coupon_type, count=3, email="test@test.com", expires=future
     )
 
     # THEN
     assert len(coupons) == 3
 
     c0 = coupons[0]
-    assert c0.expires == today
+    assert c0.expires == future
     assert not c0.order.paid
     assert c0.coupon_type is sample_coupon_type
 

@@ -189,7 +189,7 @@ class Coupon(models.Model):
         order.payment_time = datetime.now(UTC)
         order.save()
 
-        return Coupon.from_order(order)
+        return Coupon.from_order(order, expires=expires)
 
     @staticmethod
     def gen_unique_id() -> str:
