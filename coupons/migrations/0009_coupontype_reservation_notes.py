@@ -4,15 +4,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('coupons', '0008_auto_20201213_1325'),
+        ("coupons", "0008_auto_20201213_1325"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='coupontype',
-            name='reservation_notes',
+            model_name="coupontype",
+            name="reservation_notes",
             field=models.TextField(null=True),
         ),
     ]
