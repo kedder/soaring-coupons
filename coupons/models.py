@@ -31,6 +31,7 @@ class CouponType(models.Model):
         max_length=32,
         choices=[("flight", "Flight Coupon"), ("courses", "Courses Coupon")],
     )
+    reservation_notes = models.TextField(null=True)
 
     def __str__(self) -> str:
         return self.title
