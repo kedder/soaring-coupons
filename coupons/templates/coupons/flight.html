@@ -1,15 +1,14 @@
 {% extends "coupons/base_coupon.html" %}
 {% block coupon_content %}
 
-<p class='noprint important'>Atvažiuodami skristi, būtinai su savimi
-turėkite atspausdintą šį kvietimą.</p>
+<p class='noprint important'>Atvažiuodami skristi, su savimi
+turėkite šį kvietimą.</p>
 
 {{ coupon.coupon_type.welcome_text | safe }}
 
 <p>Aerodrome pasiruoškite praleisti daugiau laiko — laukdami skrydžio ar
 dalindamiesi įspūdžiais po jo. Pasigrožėsite sklandytuvų bei lėktuvų
-skrydžiais, galėsite apsilankyti kavinėje ar surengti savo vaišes aerodromo
-gamtoje.</p>
+skrydžiais.</p>
 
 <h4>Kaip mus rasti?</h4>
 
@@ -18,7 +17,7 @@ link Druskininkų, 35-tąjame kilometre. Pravažiavę Paluknio miestelį, kairė
 pusėje pamatysite aerodromą. Įvažiavimas &mdash; keliuku nuo iškelto
 sklandytuvo.
 
-Žemėlapį
+Adresas &mdash; Sklandytuvų g. 1, Paluknio km., Trakų r. Žemėlapį
 rasite čia: <a
 href="http://goo.gl/maps/edazK">http://goo.gl/maps/edazK</a>.</p>
 
@@ -28,24 +27,18 @@ href="http://goo.gl/maps/edazK">http://goo.gl/maps/edazK</a>.</p>
 
 <h4>Kada skraidome?</h4>
 
-<p>Skraidome nuo gegužės iki rugsėjo pabaigos palankiomis oro sąlygomis
+<p>Skraidome išeiginėmis dienomis nuo gegužės iki rugsėjo pabaigos palankiomis oro sąlygomis
 &mdash; nelyjant, nesant labai stipriam vėjui ar karščiui virš +30&deg;C.</p>
 
 <h4>Svarbu!</h4>
 
-<p>
+<p>Kvietimas galioja {{ coupon.coupon_type.validity_cond_text }} iki
+{{ coupon.expires }}. Būtinai iš anksto rezervuokite skrydį paskambinę telefonu 
+<span itemprop="telephone"><a href="tel:+37061515060">+370&nbsp;615&nbsp;15060</a></span>. 
+Taip pat paskambinkite ir prieš važiuodami į aerodromą, pasitikslinti ar tinkamos 
+oro sąlygos skrydžiui.</p>
 
-Kvietimas galioja {{ coupon.coupon_type.validity_cond_text }} iki
-{{ coupon.expires }}. Kviečiame nelaukti pabaigos ir atvykti
-kuo anksčiau. Gale sezono – orai prastėja, žmonių eilės – ilgėja; galime ir
-nespėti. Skristi neleidžiama apsvaigusiems nuo alkoholio, narkotinių medžiagų
-ar turintiems sveikatos sutrikimų. Būtinai, prieš važiuodami į aerodromą, tą
-pačią dieną, skrydį suderinkite - po  11 val. paskambinę  telefonu <span
-itemprop="telephone"><a
-href="tel:+37063302222">+370&nbsp;633&nbsp;02222</a></span> arba <span
-itemprop="telephone"><a
-href="tel:+37061515060">+370&nbsp;615&nbsp;15060</a></span>.
-
-</p>
+<p>Skristi neleidžiama apsvaigusiems nuo alkoholio, narkotinių medžiagų
+ar turintiems sveikatos sutrikimų.</p>
 
 {% endblock %}
