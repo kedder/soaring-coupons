@@ -33,10 +33,9 @@ href="http://goo.gl/maps/edazK">http://goo.gl/maps/edazK</a>.</p>
 <h4>Svarbu!</h4>
 
 <p>Kvietimas galioja {{ coupon.coupon_type.validity_cond_text }} iki
-{{ coupon.expires }}. Būtinai iš anksto rezervuokite skrydį paskambinę telefonu 
-<span itemprop="telephone"><a href="tel:+37061515060">+370&nbsp;615&nbsp;15060</a></span>. 
-Taip pat paskambinkite ir prieš važiuodami į aerodromą, pasitikslinti ar tinkamos 
-oro sąlygos skrydžiui.</p>
+{{ coupon.expires }}.</p>
+
+{{ coupon.coupon_type.reservation_notes | safe }}
 
 <p>Skristi neleidžiama apsvaigusiems nuo alkoholio, narkotinių medžiagų
 ar turintiems sveikatos sutrikimų.</p>
