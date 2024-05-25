@@ -1,0 +1,15 @@
+{
+    "name": "Soaring coupons",
+    "description": "Soaring coupons POS app",
+    "repository": "https://github.com/kedder/soaring-coupons",
+    "healthchecks": {
+        "web": [
+            {
+                "name": "check-about",
+                "type": "startup",
+                "content": "Soaring Coupons",
+                "path": "/about"
+            }
+        ]
+    }
+}
