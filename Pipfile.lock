@@ -244,6 +244,7 @@
                 "sha256:8363ac062bb4ef7c3f12d078f6fa5d154031d129a15170a1066412af49d30905",
                 "sha256:ff1b61005004e476e0aeea47c7f79b85864c70124030e95146315396f1e7951f"
             ],
+            "index": "pypi",
             "markers": "python_version >= '3.10'",
             "version": "==5.0.6"
         },
@@ -260,11 +261,12 @@
                 "mailgun"
             ],
             "hashes": [
-                "sha256:1e72f059e96930d3675d35fe4c61f82b138ae4a7fcb0337be39dcb4823f94a4f",
-                "sha256:35d8ec20b06000af3c1638492e32f416fd1a584f0a572cded03f1bc570169ed0"
+                "sha256:add43d8dc496b559146be112e8088a9986d5a1253fb8fe1fbd225924db64d947",
+                "sha256:f468b5662ca14f0699886ae18d952236cfc682e8e4c1d1c361a0e1099dbb795d"
             ],
+            "index": "pypi",
             "markers": "python_version >= '3.7'",
-            "version": "==10.3"
+            "version": "==11.0"
         },
         "django-crispy-forms": {
             "hashes": [
@@ -599,7 +601,6 @@
                 "sha256:a448b2f64d686155468037e1ace9f2d2199776e17f0a46610480d311f73e3472",
                 "sha256:dd505485549a7a552833da5e6063639d0d177c04f23bc3864e41e5dc5f612168"
             ],
-            "index": "pypi",
             "markers": "python_version >= '3.8'",
             "version": "==2.2.2"
         },
