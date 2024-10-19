@@ -559,12 +559,12 @@
         },
         "sentry-sdk": {
             "hashes": [
-                "sha256:8fb0d1a4e1a640172f31502e4503543765a1fe8a9209779134a4ac52d4677303",
-                "sha256:a599e7d3400787d6f43327b973e55a087b931ba2c592a7a7afa691f8eb5e75e2"
+                "sha256:625955884b862cc58748920f9e21efdfb8e0d4f98cca4ab0d3918576d5b606ad",
+                "sha256:dd0a05352b78ffeacced73a94e86f38b32e2eae15fff5f30ca5abb568a72eacf"
             ],
             "index": "pypi",
             "markers": "python_version >= '3.6'",
-            "version": "==2.15.0"
+            "version": "==2.17.0"
         },
         "social-auth-app-django": {
             "hashes": [
