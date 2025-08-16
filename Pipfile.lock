@@ -24,11 +24,11 @@
         },
         "certifi": {
             "hashes": [
-                "sha256:0a816057ea3cdefcef70270d2c515e4506bbc954f417fa5ade2021213bb8f0c6",
-                "sha256:30350364dfe371162649852c63336a15c70c6510c2ad5015b21c2345311805f3"
+                "sha256:e564105f78ded564e3ae7c923924435e1daa7463faeab5bb932bc53ffae63407",
+                "sha256:f6c12493cfb1b06ba2ff328595af9350c65d6644968e5d3a2ffd78699af217a5"
             ],
-            "markers": "python_version >= '3.6'",
-            "version": "==2025.4.26"
+            "markers": "python_version >= '3.7'",
+            "version": "==2025.8.3"
         },
         "cffi": {
             "hashes": [
@@ -556,12 +556,12 @@
         },
         "sentry-sdk": {
             "hashes": [
-                "sha256:436369b02afef7430efb10300a344fb61a11fe6db41c2b11f41ee037d2dd7f45",
-                "sha256:59391db1550662f746ea09b483806a631c3ae38d6340804a1a4c0605044f6877"
+                "sha256:5ea58d352779ce45d17bc2fa71ec7185205295b83a9dbb5707273deb64720092",
+                "sha256:6e0c29b9a5d34de8575ffb04d289a987ff3053cf2c98ede445bea995e3830263"
             ],
             "index": "pypi",
             "markers": "python_version >= '3.6'",
-            "version": "==2.30.0"
+            "version": "==2.35.0"
         },
         "social-auth-app-django": {
             "hashes": [
@@ -606,11 +606,11 @@
         },
         "urllib3": {
             "hashes": [
-                "sha256:414bc6535b787febd7567804cc015fee39daab8ad86268f1310a9250697de466",
-                "sha256:4e16665048960a0900c702d4a66415956a584919c03361cac9f1df5c5dd7e813"
+                "sha256:3fc47733c7e419d4bc3f6b3dc2b4f890bb743906a30d56ba4a5bfa4bbff92760",
+                "sha256:e6b01673c0fa6a13e374b50871808eb3bf7046c4b125b216f6bf1cc604cff0dc"
             ],
             "markers": "python_version >= '3.9'",
-            "version": "==2.4.0"
+            "version": "==2.5.0"
         },
         "whitenoise": {
             "hashes": [
