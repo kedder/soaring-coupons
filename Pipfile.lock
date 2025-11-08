@@ -16,11 +16,11 @@
     "default": {
         "asgiref": {
             "hashes": [
-                "sha256:a5ab6582236218e5ef1648f242fd9f10626cfd4de8dc377db215d5d5098e3142",
-                "sha256:f3bba7092a48005b5f5bacd747d36ee4a5a61f4a269a6df590b43144355ebd2c"
+                "sha256:aef8a81283a34d0ab31630c9b7dfe70c812c95eba78171367ca8745e88124734",
+                "sha256:d89f2d8cd8b56dada7d52fa7dc8075baa08fb836560710d38c292a7a3f78c04e"
             ],
             "markers": "python_version >= '3.9'",
-            "version": "==3.9.1"
+            "version": "==3.10.0"
         },
         "certifi": {
             "hashes": [
@@ -244,12 +244,12 @@
         },
         "django": {
             "hashes": [
-                "sha256:40cd7d3f53bc6cd1902eadce23c337e97200888df41e4a73b42d682f23e71d80",
-                "sha256:a6527112c58821a0dfc5ab73013f0bdd906539790a17196658e36e66af43c350"
+                "sha256:23254866a5bb9a2cfa6004e8b809ec6246eba4b58a7589bc2772f1bcc8456c7f",
+                "sha256:37e687f7bd73ddf043e2b6b97cfe02fcbb11f2dbb3adccc6a2b18c6daa054d7f"
             ],
             "index": "pypi",
-            "markers": "python_version >= '3.8'",
-            "version": "==4.2.24"
+            "markers": "python_version >= '3.10'",
+            "version": "==5.2.8"
         },
         "django-admin-shell": {
             "hashes": [
@@ -270,12 +270,12 @@
         },
         "django-crispy-forms": {
             "hashes": [
-                "sha256:5a4b99876cfb1bdd3e47727731b6d4197c51c0da502befbfbec6a93010b02030",
-                "sha256:915e1ffdeb2987d78b33fabfeff8e5203c8776aa910a3a659a2c514ca125f3bd"
+                "sha256:066e72a8f152a1334f1c811cc37740868efe3265e5a218f79079ef89f848c3d8",
+                "sha256:adc99d5901baca09479c53bf536b3909e80a9f2bb299438a223de4c106ebf1f9"
             ],
             "index": "pypi",
-            "markers": "python_version >= '3.8'",
-            "version": "==2.4"
+            "markers": "python_version >= '3.9'",
+            "version": "==2.5"
         },
         "django-environ": {
             "hashes": [
